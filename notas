@@ -1,0 +1,22 @@
+# Mejor poner notas aqui, y que no vuelva  a pasar...
+
+
+# posts de mis amigos
+SELECT post_id, message, attachment  FROM stream WHERE source_id in (SELECT uid2 from friend WHERE uid1 == me())  LIMIT 100
+ 
+
+# mis amigos
+SELECT uid2 from friend WHERE uid1 == me()
+
+# Listado de videos posteados en mi muro por mis amigos
+SELECT message, attachment.href  FROM stream WHERE source_id in (SELECT uid2 from friend WHERE uid1 == me())  and strpos(attachment.href, "youtu") >= 0 LIMIT 100
+
+
+# Requests:
+# Hay una extension para soportar Oauth2
+https://github.com/maraujop/requests-oauth2
+# Con un ejemplo de FB bastante interesante.
+
+
+# testear una query:
+# http://graph.facebook.com/fql?q=SELECT+message%2C+attachment.href++FROM+stream+WHERE+source_id+in%0A++++%28SELECT+uid2+from+friend+WHERE+uid1+%3D%3D+me%28%29%29++and+strpos%28attachment.href%2C%0A++++%22youtu%22%29+%3E%3D+0+LIMIT+100&access_token=CAAHbF03ounQBAD4BDmYd1V7UrbHiQkOsLymkavbKekjRcXMMtMCpm8ZCAQTSUzMSB8LE4Ehvrpm8ZAvX0mpJmbWkHeLVupStAikCWE0czzW1aapobC1yRZBcgyaNybZAM4DGUBV3R70fiETZC9ZCoWFJqbCnYfz3otmlQMSV3YPiUER7bjMcQlvB2HK8OAdfsZD

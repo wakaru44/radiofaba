@@ -1,0 +1,68 @@
+.fancybox-nav {
+    width: 60px;       
+}
+
+.fancybox-nav span {
+    visibility: visible;
+}
+
+.fancybox-next {
+    right: -60px;
+}
+
+.fancybox-prev {
+    left: -60px;
+}
+
+.fancybox {
+    padding:5px;
+    margin:10px;    
+}
+
+h1, h2, h3, h4{
+    color:white;
+}
+body{
+    background-color:black;
+    align:center;
+    padding: 5em auto;
+    margin: auto;
+}
+
+#content{
+    text-align: center;
+    padding: 2em auto;
+}
+#video-list{
+    width: 50%;
+    text-align: left;
+    background-color: #525252;
+    padding:5px 0 2em;
+    margin: 5px auto;
+}
+
+#video-list>ul>li{
+    background-color: grey;
+    margin: 1em;
+    padding: 2px;
+}
+
+
+#video-list>ul>li>a{
+    color: white;
+}
+
+#video-list>ul>li>p{
+    font-family: Helvetica, Arial;
+    font-size: small;
+    width:128px
+}
+
+#video-list>ul>li>img{
+    width:128px;
+}
+
+#debug{
+	background-color: grey;
+}
+

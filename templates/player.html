@@ -1,0 +1,128 @@
+<html>
+
+<head>
+  
+  <script id="www-widgetapi-script" src="style/www-widgetapi.js" async=""> </script>
+  <script type="text/javascript" src="style/jquery-1.8.3.js"> </script>
+  <link rel="stylesheet" type="text/css" href="/css/normalize.css">
+  <link rel="stylesheet" type="text/css" href="/css/result-light.css">
+      <script type="text/javascript" src="style/jquery.fancybox.js"></script>
+      <link rel="stylesheet" type="text/css" href="style/jquery.fancybox.css">
+<script type="text/javascript">//<![CDATA[ 
+
+// Fires whenever a player has finished loading
+function onPlayerReady(event) {
+    event.target.playVideo();
+}
+
+// Fires when the player's state changes.
+function onPlayerStateChange(event) {
+    // Go to the next video after the current one is finished playing
+    if (event.data === 0) {
+        $.fancybox.next();
+    }
+}
+
+// The API will call this function when the page has finished downloading the JavaScript for the player API
+function onYouTubePlayerAPIReady() {
+    
+    // Initialise the fancyBox after the DOM is loaded
+    $(document).ready(function() {
+        $(".fancybox")
+            .attr('rel', 'gallery')
+            .fancybox({
+                openEffect  : 'none',
+                closeEffect : 'none',
+                nextEffect  : 'none',
+                prevEffect  : 'none',
+                padding     : 0,
+                margin      : 50,
+                beforeShow  : function() {
+                    // Find the iframe ID
+                    var id = $.fancybox.inner.find('iframe').attr('id');
+                    
+                    // Create video player object and add event listeners
+                    var player = new YT.Player(id, {
+                        events: {
+                            'onReady': onPlayerReady,
+                            'onStateChange': onPlayerStateChange
+                        }
+                    });
+                }
+            });
+    });
+    
+}
+//]]>  
+
+</script>
+
+<style id="holderjs-style" type="text/css"></style></head>
+<link rel="stylesheet" type="text/css" href="style/player.css">
+<!--
+<link rel="stylesheet" type="text/css" href="style/player.css">
+<link rel="stylesheet" type="text/css" href="http://fancyapps.com/fancybox/source/jquery.fancybox.css">
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.3.js"></script>
+<script id="www-widgetapi-script" src="http://s.ytimg.com/yts/jsbin/www-widgetapi-vflJYItO-.js" async=""></script>
+<script language="javascript" type="text/javascript" src="http://fancyapps.com/fancybox/source/jquery.fancybox.js"></script>
+<script language="javascript" type="text/javascript" src="style/player.js"></script>
+
+</head>
+-->
+
+<body class=" __plain_text_READY__">
+
+<!-- This loads the YouTube IFrame Player API code -->
+<script src="http://www.youtube.com/player_api"></script>
+
+<h2>RadioFB</h2>
+<h4>Start playing one video and the rest will follow automaticlly</h4>
+<div id="user">
+	here comes the user info....
+</div>
+<div id="content">
+<div id="video-list">
+<ul>
+    <li>
+    <a class="fancybox fancybox.iframe" href="http://www.youtube.com/embed/L9szn1QQfas?enablejsapi=1&wmode=opaque">Video #1</a>
+        <p> comments and additional information a bout hte video<br/>
+        friend<br/>
+        bla bla bla<br/>
+        </p>
+        <img src="http://literalminded.files.wordpress.com/2011/07/uhf-weird-al-yankovic.jpg" />
+    </li>
+    <li>
+    <a class="fancybox fancybox.iframe" href="http://www.youtube.com/embed/cYplvwBvGA4?enablejsapi=1&wmode=opaque">Video #2</a>
+        <p> comments and additional information a bout hte video<br/>
+        friend<br/>
+        bla bla bla<br/>
+        </p>
+        <img src="http://s1.evcdn.com/images/block/I0-001/001/102/532-3.jpeg_/rick-astley-32.jpeg" />
+    </li>
+    {% for video in playlist %}
+    <li>
+    <a class="fancybox fancybox.iframe" href="{{ video["link"]}}">{{ video["title"] }}</a>
+	    <p>{{ video["desc"] }}
+	    </p>
+	    <p id="compartir">Compartir
+		    <span class="soc_net">en fb</span>
+		    <span class="soc_net">en tuter</span>
+		    <span class="soc_net">y otras mierdas</span>
+	    </p>
+	    <img src="{{ video["preview"] }}" />
+    </li>
+    {%endfor%}
+    </ul>
+</div>
+    
+<div> <!-- content -->
+
+<div id="debug">
+	<pre>
+{{ thing }}
+	</pre>
+</div>
+
+
+</body>
+</html>
