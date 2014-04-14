@@ -31,6 +31,7 @@ import urllib2
 
 from google.appengine.ext import db
 from webapp2_extras import sessions
+import logging as log
 
 import rfbtools.parsers as rparse
 
@@ -139,7 +140,6 @@ def get_raw_listing(user = None):
     # TODO error handling
     # GraphAPIError , and if there is expired, means that we need to relogin
     # GraphAPIError 606, and if there is "permission" means we have no rights
-    print("DEBUG:","XXXXXX type of response:", type(result))
     return result
 
 
@@ -153,15 +153,15 @@ def get_video_listing(user = None):
     #(SELECT uid2 from friend WHERE uid1 == me())  and strpos(attachment.href,
     #"youtu") >= 0 LIMIT 100"""
     query = """SELECT message, attachment.href, attachment.name,
-    attachment.description, message, attachment.icon, attachment  FROM stream
+    attachment.description, message, attachment.media.src FROM stream
     WHERE source_id in
         (SELECT uid2 from friend WHERE uid1 == me())  and
         strpos(attachment.href,
             "youtu") >= 0 LIMIT 100"""
     graph = facebook.GraphAPI(user['access_token'])
     result = graph.fql(query)
-    print("DEBUG:", "result", dir(result))
-    print("DEBUG:", "result", result)
+    #log.debug("result"+repr( dir(result)))
+    log.debug( "result"+ repr(result))
     # TODO error handling
     # GraphAPIError , and if there is expired, means that we need to relogin
     # GraphAPIError 606, and if there is "permission" means we have no rights

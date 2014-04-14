@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+import logging as log
+
 def parse_json_video_listing(fb_result = None):
     """ converts the result of a fb query to the expected dicts
     
@@ -18,13 +20,13 @@ def parse_json_video_listing(fb_result = None):
     # TODO: do some parsing matey
     #return plist
     for element in fb_result["data"]:
-        print("DEBUG:","element", repr(element))
+        #log.debug("element"+ repr(element))
         current = {}
         #current["link"] = element["attachment"]["href"]
         current["link"] = get_embed(element["attachment"]["href"])
         current["title"] = element["attachment"]["name"]
         current["desc"] = element["attachment"]["description"] + "\n<br />\n" +   element["message"]
-        current["preview"] = element["attachment"]["icon"]
+        current["preview"] = element["attachment"]["media"][0]["src"]
 
         plist.append(current)
     #return [fb_result]  # TODO: by now, for debug, we provide the full list
@@ -50,5 +52,5 @@ def get_embed(link = None):
         #raise ValueError("crap. new kind of link")
 
     flink = "http://www.youtube.com/embed/{0}?enablejsapi=1&wmode=opaque".format(rlink)
-    print("DEBUG:", "compound link", flink)
+    log.debug( "compound link"+ flink)
     return flink
