@@ -133,7 +133,7 @@ def get_raw_listing(user = None):
     WHERE source_id in
         (SELECT uid2 from friend WHERE uid1 == me())  and
         strpos(attachment.href,
-            "youtu") >= 0 LIMIT 100"""
+            "youtu") >= 0 LIMIT 50"""
     graph = facebook.GraphAPI(user['access_token'])
     result = graph.fql(query)
     # TODO error handling
@@ -181,8 +181,9 @@ class ListHandler(BaseHandler):
         self.response.out.write(template.render(dict(
             facebook_app_id=FACEBOOK_APP_ID,
             current_user=self.current_user,
-            playlist = listing,
-            thing = repr(get_raw_listing(self.current_user))
+            #thing = repr(get_raw_listing(self.current_user)),
+            playlist = listing
+
         )))
 
 
