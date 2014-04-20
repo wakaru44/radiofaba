@@ -83,6 +83,7 @@ function onYouTubePlayerAPIReady() {
 <div id="content">
 <div id="video-list">
 <ul>
+{% if error %}
     <li>
     <a class="fancybox fancybox.iframe" href="http://www.youtube.com/embed/L9szn1QQfas?enablejsapi=1&wmode=opaque">Video #1</a>
         <p> comments and additional information a bout hte video<br/>
@@ -99,6 +100,13 @@ function onYouTubePlayerAPIReady() {
         </p>
         <img src="http://s1.evcdn.com/images/block/I0-001/001/102/532-3.jpeg_/rick-astley-32.jpeg" />
     </li>
+    <div id="error">
+	<p style="color:red">
+		{{ error }}
+	</p>
+    </div><!-- error -->
+{% endif %}
+{% if playlist %}
     {% for video in playlist %}
     <li>
     <a class="fancybox fancybox.iframe" href="{{ video["link"]}}">{{ video["title"] }}</a>
@@ -112,6 +120,7 @@ function onYouTubePlayerAPIReady() {
 	    <img src="{{ video["preview"] }}" />
     </li>
     {%endfor%}
+{% endif %}
     </ul>
 </div>
     

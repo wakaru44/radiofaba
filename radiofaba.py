@@ -134,7 +134,7 @@ def get_raw_listing(user = None):
     WHERE source_id in
         (SELECT uid2 from friend WHERE uid1 == me())  and
         strpos(attachment.href,
-            "youtu") >= 0 LIMIT 50"""
+            "youtu") >= 0 LIMIT 100"""
     graph = facebook.GraphAPI(user['access_token'])
     result = graph.fql(query)
     # TODO error handling
@@ -176,15 +176,22 @@ class ListHandler(BaseHandler):
 #        except:
 #            listing = [] # TODO this is intentional for DEBUG
 
-        listing = get_video_listing(self.current_user)
-            
-        self.response.out.write(template.render(dict(
-            facebook_app_id=FACEBOOK_APP_ID,
-            current_user=self.current_user,
-            #thing = repr(get_raw_listing(self.current_user)),
-            playlist = listing
-
-        )))
+        try:    
+            listing = get_video_listing(self.current_user)
+                
+            self.response.out.write(template.render(dict(
+                facebook_app_id=FACEBOOK_APP_ID,
+                current_user=self.current_user,
+                #thing = repr(get_raw_listing(self.current_user)),
+                playlist = listing
+            )))
+        except Exception as e:
+            #TODO: get all the exception data
+            self.response.out.write(template.render(dict(
+                facebook_app_id=FACEBOOK_APP_ID,
+                current_user=self.current_user,
+                error = e
+            )))
 
 
 class HomeHandler(BaseHandler):

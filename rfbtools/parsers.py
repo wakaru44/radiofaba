@@ -25,7 +25,7 @@ def parse_json_video_listing(fb_result = None):
         #current["link"] = element["attachment"]["href"]
         current["link"] = get_embed(element["attachment"]["href"])
         current["title"] = element["attachment"]["name"]
-        current["desc"] = element["attachment"]["description"] + "\n<br />\n" +   element["message"]
+        current["desc"] = element["attachment"]["description"] + "\n<br />\n" + "---------------------<br />" + element["message"]
         current["preview"] = element["attachment"]["media"][0]["src"]
 
         plist.append(current)
