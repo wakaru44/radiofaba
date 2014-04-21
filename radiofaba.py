@@ -157,7 +157,7 @@ def get_video_listing(user = None):
     WHERE source_id in
         (SELECT uid2 from friend WHERE uid1 == me())  and
         strpos(attachment.href,
-            "youtu") >= 0 LIMIT 1000"""
+            "youtu") >= 0 LIMIT 10000"""
     graph = facebook.GraphAPI(user['access_token'])
     result = graph.fql(query)
     #log.debug("result"+repr( dir(result)))
@@ -192,6 +192,8 @@ class ListHandler(BaseHandler):
                 # try to guess if we run out of time
                 if e.message.find("Session has expired") > 0 or e.message.find("the user logged out") > 0:
                     thing = "Please go to <a href=\"/\">home</a>, logout, and come back in"
+                else:
+                    thing = ""
             except:
                 # nasty trick to at least give output
                 import sys
