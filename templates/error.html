@@ -1,0 +1,18 @@
+
+{% if error %}
+
+<div id="error">
+	<p style="color:red">
+	{{ error }}
+	</p>
+</div><!-- error -->
+
+{% endif %}
+
+{% if thing %}
+<div id="debug">
+	<pre>
+	{{ thing }}
+	</pre>
+</div><!-- Error -->
+{% endif %}

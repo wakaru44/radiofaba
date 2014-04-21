@@ -21,6 +21,8 @@
             <div>
 		    <p>Now you can listen to <a href="/list"> your personal radio</a>
     {% endif %}
+
+    {% include "templates/error.html" %}
     <script>
       window.fbAsyncInit = function() {
         FB.init({appId: '{{ facebook_app_id }}', status: true, cookie: true,

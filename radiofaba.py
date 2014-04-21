@@ -187,10 +187,21 @@ class ListHandler(BaseHandler):
             )))
         except Exception as e:
             #TODO: get all the exception data
+            log.debug(repr(e))
+            try:
+                # try to guess if we run out of time
+                if e.message.find("Session has expired") > 0 or e.message.find("the user logged out") > 0:
+                    thing = "Please go to <a href=\"/\">home</a>, logout, and come back in"
+            except:
+                # nasty trick to at least give output
+                import sys
+                thing = repr(sys.exc_info)
+
             self.response.out.write(template.render(dict(
                 facebook_app_id=FACEBOOK_APP_ID,
                 current_user=self.current_user,
-                error = e
+                error = e,
+                thing = thing
             )))
 
 

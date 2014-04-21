@@ -83,31 +83,13 @@ function onYouTubePlayerAPIReady() {
 	here comes the user info....
 </div>
 <div id="content">
+{% include "templates/error.html" %}
 <div id="video-list">
-<ul>
+
 {% if error %}
-    <li>
-    <a class="fancybox fancybox.iframe" href="http://www.youtube.com/embed/L9szn1QQfas?enablejsapi=1&wmode=opaque">Video #1</a>
-        <p> comments and additional information a bout hte video<br/>
-        friend<br/>
-        bla bla bla<br/>
-        </p>
-        <img src="http://literalminded.files.wordpress.com/2011/07/uhf-weird-al-yankovic.jpg" />
-    </li>
-    <li>
-    <a class="fancybox fancybox.iframe" href="http://www.youtube.com/embed/cYplvwBvGA4?enablejsapi=1&wmode=opaque">Video #2</a>
-        <p> comments and additional information a bout hte video<br/>
-        friend<br/>
-        bla bla bla<br/>
-        </p>
-        <img src="http://s1.evcdn.com/images/block/I0-001/001/102/532-3.jpeg_/rick-astley-32.jpeg" />
-    </li>
-    <div id="error">
-	<p style="color:red">
-		{{ error }}
-	</p>
-    </div><!-- error -->
+	{% include "templates/list-example.html" %}
 {% endif %}
+<ul>
 {% if playlist %}
     {% for video in playlist %}
     <li>
@@ -127,13 +109,6 @@ function onYouTubePlayerAPIReady() {
 </div>
     
 <div> <!-- content -->
-
-<div id="debug">
-	<pre>
-{{ thing }}
-	</pre>
-</div>
-
 
 </body>
 </html>
