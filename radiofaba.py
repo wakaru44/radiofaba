@@ -129,12 +129,12 @@ def get_raw_listing(user = None):
     # query = """SELECT message, attachment.href  FROM stream WHERE source_id in
     # (SELECT uid2 from friend WHERE uid1 == me())  and strpos(attachment.href,
     # "youtu") >= 0 LIMIT 100"""
-    query = """SELECT message, attachment.href, attachment.name,
-    attachment.description, message, attachment.icon, attachment  FROM stream
+    query = """SELECT message, attachment 
+    FROM stream
     WHERE source_id in
         (SELECT uid2 from friend WHERE uid1 == me())  and
         strpos(attachment.href,
-            "youtu") >= 0 LIMIT 100"""
+            "youtu") >= 0 LIMIT 1000"""
     graph = facebook.GraphAPI(user['access_token'])
     result = graph.fql(query)
     # TODO error handling
@@ -157,7 +157,7 @@ def get_video_listing(user = None):
     WHERE source_id in
         (SELECT uid2 from friend WHERE uid1 == me())  and
         strpos(attachment.href,
-            "youtu") >= 0 LIMIT 100"""
+            "youtu") >= 0 LIMIT 1000"""
     graph = facebook.GraphAPI(user['access_token'])
     result = graph.fql(query)
     #log.debug("result"+repr( dir(result)))
