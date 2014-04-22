@@ -73,3 +73,14 @@ ul {
 .greyed{
 	color:#eee;
 }
+
+.soc_net{
+	/* the social networks logo on the bottom of each video */
+	width: 10px;
+	height: 10px;
+	background-color:blue;
+	color:white;
+	overflow: hidden;
+}
+
+
