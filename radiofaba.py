@@ -160,8 +160,8 @@ def get_video_listing(user = None):
             "youtu") >= 0 LIMIT 10000"""
     graph = facebook.GraphAPI(user['access_token'])
     result = graph.fql(query)
-    #log.debug("result"+repr( dir(result)))
-    log.debug( "result"+ repr(result))
+    #log.debug(u"result"+repr( dir(result)))
+    log.debug( u"result"+ repr(result))
     # TODO error handling
     # GraphAPIError , and if there is expired, means that we need to relogin
     # GraphAPIError 606, and if there is "permission" means we have no rights
@@ -190,10 +190,10 @@ class ListHandler(BaseHandler):
             log.debug(repr(e))
             try:
                 # try to guess if we run out of time
-                if e.message.find("Session has expired") > 0 or e.message.find("the user logged out") > 0:
-                    thing = "Please go to <a href=\"/\">home</a>, logout, and come back in"
+                if e.message.find(u"Session has expired") > 0 or e.message.find(u"the user logged out") > 0:
+                    thing = u"Please go to <a href=\"/\">home</a>, logout, and come back in"
                 else:
-                    thing = ""
+                    thing = u""
             except:
                 # nasty trick to at least give output
                 import sys
