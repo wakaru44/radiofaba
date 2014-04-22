@@ -41,6 +41,10 @@ body{
     margin: 5px auto;
 }
 
+ul {
+	list-style:none;
+}
+
 #video-list>ul>li{
     background-color: grey;
     margin: 1em;
@@ -66,3 +70,6 @@ body{
 	background-color: grey;
 }
 
+.greyed{
+	color:#eee;
+}

@@ -25,7 +25,10 @@ def parse_json_video_listing(fb_result = None):
         #current["link"] = element["attachment"]["href"]
         current["link"] = get_embed(element["attachment"]["href"])
         current["title"] = element["attachment"]["name"]
-        current["desc"] = element["attachment"]["description"] + "\n<br />\n" + "---------------------<br />" + element["message"]
+        current["desc"] = u"{0}\n<br />\n ---------------------<br /> {1}".format(
+                            shorten_comment(element["attachment"]["description"]),
+                            shorten_comment(element["message"])
+                            )
         current["preview"] = element["attachment"]["media"][0]["src"]
 
         plist.append(current)
@@ -54,3 +57,12 @@ def get_embed(link = None):
     flink = "http://www.youtube.com/embed/{0}?enablejsapi=1&wmode=opaque".format(rlink)
     log.debug( "compound link"+ flink)
     return flink
+
+
+def shorten_comment(comment = None, limit = 100):
+    """ makes a comment shorter than limit"""
+    assert(comment != None)
+    if len(comment) > limit:
+        return comment[0:limit] + u"<span class=\"greyed\">... For more check your timeline</span>"
+    else:
+        return comment 
