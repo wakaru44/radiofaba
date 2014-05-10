@@ -36,11 +36,25 @@ def parse_json_video_listing(fb_result = None):
     return plist  # TODO: by now, for debug, we provide the full list
 
 
+def get_embed_youtube(link = None):
+    """Returns the embed link to the video provided.
+    This is the new method, thinking only in youtube"""
+    assert(link != None)
+    assert(link != "")
+    flink = "http://www.youtube.com/embed/{0}?enablejsapi=1&wmode=opaque".format(
+        link.split("/")[-1].split("&")[0].split("?")[1][2:]
+    )
+    log.debug( "compound link"+ flink)
+    return flink
+
+
 def get_embed(link = None):
     """returns the embed link to the video provided
     """
+    # TODO: a good idea to do this, is just split by / and return the last part
     rlink = "" # resulting link
     assert(link != None)
+    assert(link != "")
     if link.startswith("http://youtu.be/"):
         ## Parse short link
         rlink = link[16:]
@@ -54,10 +68,16 @@ def get_embed(link = None):
         rlink = link
         #raise ValueError("crap. new kind of link")
 
-    flink = "http://www.youtube.com/embed/{0}?enablejsapi=1&wmode=opaque".format(rlink)
+    flink = "http://www.youtube.com/embed/{0}?enablejsapi=1&wmode=opaque".format(
+                     trim_youtube_video(rlink))
     log.debug( "compound link"+ flink)
     return flink
 
+def trim_youtube_video( link_end = None):
+    """ gets the last part of a youtube url and returns only the video id """
+    assert(link_end != None)
+    return link_end.split("?")[0]
+    
 
 def shorten_comment(comment = None, limit = 100):
     """ makes a comment shorter than limit"""

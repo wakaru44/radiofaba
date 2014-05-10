@@ -10,6 +10,7 @@
 
 	<script src="style/jquery-1.10.2.js"></script>
 	<script src="style/jquery-ui.js"></script>
+	<script type="text/javascript" src="style/custom.js"></script>
 
 
   <!-- making it local
@@ -68,17 +69,25 @@ function onYouTubePlayerAPIReady() {
     });
     
 }
-//]]>  
 
-</script>
 
-<script>
 	$(function() {
 		$( "#sortable" ).sortable();
 		$( "#sortable" ).disableSelection();
 	});
+
+	$(".deleter").click(function () {
+	/*$(".deleter").live("click", function() {
+	 * */
+	    $(this).parent("li").hide("slider", function () {
+		$(this).remove();
+				      });
+	});
+//]]>  
+
 </script>
-	
+
+
 <style id="holderjs-style" type="text/css"></style></head>
 <link rel="stylesheet" type="text/css" href="style/player.css">
 <!--
@@ -113,6 +122,7 @@ function onYouTubePlayerAPIReady() {
 {% if playlist %}
     {% for video in playlist %}
     <li>
+    <span class="deleter"><img src="style/close.png" width="20px" /></span>
     <a class="fancybox fancybox.iframe" href="{{ video["link"]}}">{{ video["title"] }}</a>
 	    <p>{{ video["desc"] }}
 	    </p>
