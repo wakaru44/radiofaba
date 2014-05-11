@@ -119,30 +119,6 @@ class BaseHandler(webapp2.RequestHandler):
         """
         return self.session_store.get_session()
 
-
-def get_raw_listing(user = None):
-    """ gets a list of videos and returns it as a list of thingis.
-    To take a look at what kind of list and dicts we expect, take a 
-    look at the parsers.py module in radiofaba
-    """
-    assert(user != None)
-    # query = """SELECT message, attachment.href  FROM stream WHERE source_id in
-    # (SELECT uid2 from friend WHERE uid1 == me())  and strpos(attachment.href,
-    # "youtu") >= 0 LIMIT 100"""
-    query = """SELECT message, attachment 
-    FROM stream
-    WHERE source_id in
-        (SELECT uid2 from friend WHERE uid1 == me())  and
-        strpos(attachment.href,
-            "youtu") >= 0 LIMIT 1000"""
-    graph = facebook.GraphAPI(user['access_token'])
-    result = graph.fql(query)
-    # TODO error handling
-    # GraphAPIError , and if there is expired, means that we need to relogin
-    # GraphAPIError 606, and if there is "permission" means we have no rights
-    return result
-
-
 def get_video_listing(user = None):
     """ gets a list of videos and returns it as a list of thingis.
     To take a look at what kind of list and dicts we expect, take a 
@@ -194,6 +170,7 @@ class ListHandler(BaseHandler):
             self.response.out.write(template.render(dict(
                 facebook_app_id=FACEBOOK_APP_ID,
                 current_user=self.current_user,
+                playlist = listing
                 error = e,
                 thing = thing
             )))

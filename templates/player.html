@@ -141,9 +141,6 @@ window.onload = function () {
 {% include "templates/error.html" %}
 <div id="video-list">
 
-{% if error %}
-	{% include "templates/list-example.html" %}
-{% endif %}
 <ul id="sortable">
 {% if playlist %}
     {% for video in playlist %}

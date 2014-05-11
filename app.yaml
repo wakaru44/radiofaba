@@ -12,6 +12,9 @@ handlers:
 - url: /style
   static_dir: stylesheets
 
+- url: /staticfiles
+  static_dir: staticfiles
+
 - url: /list
   script: radiofaba.app
 

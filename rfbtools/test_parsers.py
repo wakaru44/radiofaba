@@ -80,4 +80,9 @@ class test_get_embed_regular():
         res = pr.get_embed_youtube(tst)
         eq_(res, exp)
 
+    def test_ampersand_link(self):
+        exp = 'http://www.youtube.com/embed/Zf-YtUuYCDE?enablejsapi=1&wmode=opaque'
+        tst = 'https://www.youtube.com/watch?v=Zf-YtUuYCDE#t=289'
+        res = pr.get_embed_youtube(tst)
+        eq_(res, exp)
 
