@@ -51,32 +51,41 @@ def get_embed_youtube(link = None):
 def get_embed(link = None):
     """returns the embed link to the video provided
     """
-    # TODO: a good idea to do this, is just split by / and return the last part
     rlink = "" # resulting link
     assert(link != None)
     assert(link != "")
-    if link.startswith("http://youtu.be/"):
-        ## Parse short link
-        rlink = link[16:]
-    elif link.startswith("http://www.youtube.com/"):
-        ## Parse long link
-        rlink = link[31:]
-    elif link.startswith("https://www.youtube.com/"):
-        ## Parse long link
-        rlink = link[32:]
-    else:
-        rlink = link
-        #raise ValueError("crap. new kind of link")
+    # OBSOLETE: (I'll keep it for a couple of commits for hysterical reasons
+    ## if link.startswith("http://youtu.be/"):
+    ##     ## Parse short link
+    ##     rlink = link[16:]
+    ## elif link.startswith("http://www.youtube.com/"):
+    ##     ## Parse long link
+    ##     rlink = link[31:]
+    ## elif link.startswith("https://www.youtube.com/"):
+    ##     ## Parse long link
+    ##     rlink = link[32:]
+    ## else:
+    ##     rlink = link
+    ##     #raise ValueError("crap. new kind of link")
+    ## flink = "http://www.youtube.com/embed/{0}?enablejsapi=1&wmode=opaque".format(
+    ##               trim_youtube_video(rlink))
 
-    flink = "http://www.youtube.com/embed/{0}?enablejsapi=1&wmode=opaque".format(
-                     trim_youtube_video(rlink))
-    log.debug( "compound link"+ flink)
+    if link.find("youtu") > 0:
+        # it is probably a youtube video
+        flink = get_embed_youtube(link)
+    elif link.find("vimeo") > 0:
+        # Its probably a vimeo Video
+        raise NotImplementedError, "We are still working on new video providers"
+
+    log.debug( "compound link: "+ flink)
     return flink
 
-def trim_youtube_video( link_end = None):
-    """ gets the last part of a youtube url and returns only the video id """
-    assert(link_end != None)
-    return link_end.split("?")[0]
+# OBSOLETE: i will keep it here for a couple of commits for Hysterical (not
+# Historical) reasons
+## def trim_youtube_video( link_end = None):
+##     """ gets the last part of a youtube url and returns only the video id """
+##     assert(link_end != None)
+##     return link_end.split("?")[0]
     
 
 def shorten_comment(comment = None, limit = 100):
@@ -86,3 +95,16 @@ def shorten_comment(comment = None, limit = 100):
         return comment[0:limit] + u"<span class=\"greyed\">... For more check your timeline</span>"
     else:
         return comment 
+
+def nice_exception( exception = None, html = False ):
+    """This paints an exception as an formated string
+    html formatting NOTIMPLEMENTED
+    by now its a pityfull method.
+    TODO: Take real information from exceptions, then format it"""
+    if not exception:
+        return "This is not the exception you are looking for"
+    import sys
+    return repr(sys.exc_info())
+
+
+

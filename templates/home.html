@@ -39,5 +39,10 @@
         document.getElementById('fb-root').appendChild(e);
       }());
     </script>
+    {% if data %}
+    <div>
+	    {{ data }}
+    </div>
+    {% endif %}
   </body>
 </html>

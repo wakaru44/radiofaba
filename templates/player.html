@@ -10,7 +10,7 @@
 
 	<script src="style/jquery-1.10.2.js"></script>
 	<script src="style/jquery-ui.js"></script>
-	<script type="text/javascript" src="style/custom.js"></script>
+	<!--	<script type="text/javascript" src="style/custom.js"></script> -->
 
 
   <!-- making it local
@@ -71,6 +71,7 @@ function onYouTubePlayerAPIReady() {
 }
 
 
+var VanillaRunOnDomReady = function () {
 	$(function() {
 		$( "#sortable" ).sortable();
 		$( "#sortable" ).disableSelection();
@@ -79,10 +80,35 @@ function onYouTubePlayerAPIReady() {
 	$(".deleter").click(function () {
 	/*$(".deleter").live("click", function() {
 	 * */
+
 	    $(this).parent("li").hide("slider", function () {
 		$(this).remove();
 				      });
 	});
+}
+
+var alreadyrunflag = 0;
+
+if (document.addEventListener)
+    document.addEventListener("DOMContentLoaded", function () {
+        alreadyrunflag = 1;
+        VanillaRunOnDomReady();
+    }, false);
+else if (document.all && !window.opera) {
+    document.write('<script type="text/javascript" id="contentloadtag" defer="defer" src="javascript:void(0)"><\/script>');
+    var contentloadtag = document.getElementById("contentloadtag")
+    contentloadtag.onreadystatechange = function () {
+        if (this.readyState == "complete") {
+            alreadyrunflag = 1;
+            VanillaRunOnDomReady();
+        }
+    }
+}
+
+window.onload = function () {
+    setTimeout("if (!alreadyrunflag){VanillaRunOnDomReady}", 0);
+}
+
 //]]>  
 
 </script>
@@ -123,7 +149,10 @@ function onYouTubePlayerAPIReady() {
     {% for video in playlist %}
     <li>
     <span class="deleter"><img src="style/close.png" width="20px" /></span>
-    <a class="fancybox fancybox.iframe" href="{{ video["link"]}}">{{ video["title"] }}</a>
+    <a class="fancybox fancybox.iframe" href="{{ video["link"]}}">{{ video["title"] }}
+	    <br />
+	    <img src="{{ video["preview"] }}" />
+    </a>
 	    <p>{{ video["desc"] }}
 	    </p>
 	    <p id="compartir">Compartir
@@ -131,7 +160,6 @@ function onYouTubePlayerAPIReady() {
 		    <span class="soc_net">en tuter</span>
 		    <span class="soc_net">y otras mierdas</span>
 	    </p>
-	    <img src="{{ video["preview"] }}" />
     </li>
     {%endfor%}
 {% endif %}

@@ -160,7 +160,6 @@ def get_video_listing(user = None):
             "youtu") >= 0 LIMIT 10000"""
     graph = facebook.GraphAPI(user['access_token'])
     result = graph.fql(query)
-    #log.debug(u"result"+repr( dir(result)))
     log.debug( u"result"+ repr(result))
     # TODO error handling
     # GraphAPIError , and if there is expired, means that we need to relogin
@@ -171,33 +170,26 @@ def get_video_listing(user = None):
 class ListHandler(BaseHandler):
     def get(self):
         template = jinja_environment.get_template('templates/player.html')
-#        try:
-#            listing = get_video_listing(self.current_user)
-#        except:
-#            listing = [] # TODO this is intentional for DEBUG
-
         try:    
             listing = get_video_listing(self.current_user)
                 
             self.response.out.write(template.render(dict(
                 facebook_app_id=FACEBOOK_APP_ID,
                 current_user=self.current_user,
-                #thing = repr(get_raw_listing(self.current_user)),
                 playlist = listing
             )))
         except Exception as e:
-            #TODO: get all the exception data
-            log.debug(repr(e))
+            log.exception(e)
             try:
                 # try to guess if we run out of time
                 if e.message.find(u"Session has expired") > 0 or e.message.find(u"the user logged out") > 0:
                     thing = u"Please go to <a href=\"/\">home</a>, logout, and come back in"
                 else:
                     thing = u""
-            except:
+            except Exception as e:
                 # nasty trick to at least give output
                 import sys
-                thing = repr(sys.exc_info)
+                thing = rparse.nice_exception(e)
 
             self.response.out.write(template.render(dict(
                 facebook_app_id=FACEBOOK_APP_ID,
@@ -214,6 +206,36 @@ class HomeHandler(BaseHandler):
             facebook_app_id=FACEBOOK_APP_ID,
             current_user=self.current_user
         )))
+
+    def post(self):
+        """just to see what is POST ed """
+        template = jinja_environment.get_template('templates/home.html')
+        log.debug(self.request.get("signed_request"))
+        try:
+            # we use the facebook lib to parse the signed request
+            fbdata = facebook.parse_signed_request(self.request.get("signed_request"),
+                                                   FACEBOOK_APP_SECRET)
+            log.debug( fbdata )
+            # and we try to get the data of the user from our database
+            current_user = User.get_by_key_name(fbdata["user_id"])
+            if not current_user:
+                # Not an existing user so say not implemented yet and failback 
+                # to the normal page
+                raise NotImplementedError, u"""This feature is in beta stage, login
+                      first using the standalone app in <a
+                      href="simpleapp-test.appspot.com>simpleapp-test.appspot.com</a>"""
+            
+            self.response.out.write(template.render(dict(
+                facebook_app_id=FACEBOOK_APP_ID,
+                current_user=current_user
+            )))
+        except Exception as e:
+            extra_info = rparse.nice_exception(e)
+            self.response.out.write(template.render(data  = """Sorry, we are
+                                    still working on this, so there are some
+                                                    errors like: <br />
+                                                    {0}""".format(extra_info)))
+
 
 
 class LogoutHandler(BaseHandler):
