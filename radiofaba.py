@@ -128,12 +128,25 @@ def get_video_listing(user = None):
     #query = """SELECT message, attachment.href  FROM stream WHERE source_id in
     #(SELECT uid2 from friend WHERE uid1 == me())  and strpos(attachment.href,
     #"youtu") >= 0 LIMIT 100"""
-    query = """SELECT message, attachment.href, attachment.name,
-    attachment.description, message, attachment.media.src FROM stream
-    WHERE source_id in
-        (SELECT uid2 from friend WHERE uid1 == me())  and
-        strpos(attachment.href,
-            "youtu") >= 0 LIMIT 10000"""
+    query = """
+        SELECT
+            message,
+            actor_id,
+            created_time,
+            attachment.href,
+            attachment.name,
+            attachment.description,
+            attachment.media.src
+        FROM stream
+        WHERE source_id in
+            (SELECT uid2
+                FROM friend
+                WHERE uid1 == me()
+            ) 
+            and
+            strpos(attachment.href, "youtu") >= 0
+        LIMIT 10000
+        """
     graph = facebook.GraphAPI(user['access_token'])
     result = graph.fql(query)
     log.debug( u"result"+ repr(result))
@@ -167,10 +180,13 @@ class ListHandler(BaseHandler):
                 import sys
                 thing = rparse.nice_exception(e)
 
+            # then load the sample results
+            import rfbtools.sampleresult as smpl
+            listing = rparse.parse_json_video_listing(smpl.result)
             self.response.out.write(template.render(dict(
                 facebook_app_id=FACEBOOK_APP_ID,
                 current_user=self.current_user,
-                playlist = listing
+                playlist = listing,
                 error = e,
                 thing = thing
             )))

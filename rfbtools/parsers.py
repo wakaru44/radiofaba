@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import logging as log
+import datetime
 
 def parse_json_video_listing(fb_result = None):
     """ converts the result of a fb query to the expected dicts
@@ -20,6 +21,13 @@ def parse_json_video_listing(fb_result = None):
     for element in fb_result["data"]:
         current = {}
         current["link"] = get_embed(element["attachment"]["href"])
+        try:
+            current["actor"] = element["actor_id"]
+            current["created"] = parse_time(element["created_time"])
+        except:
+            #TODO: Update the sample data to remove this catch-all
+            current["actor"] = "Disabled"
+            current["created"] = "Disabled"
         current["title"] = element["attachment"]["name"]
         current["desc"] = u"{0}\n<br />\n ---------------------<br /> {1}".format(
                             shorten_comment(element["attachment"]["description"]),
@@ -30,6 +38,10 @@ def parse_json_video_listing(fb_result = None):
         plist.append(current)
     return plist 
 
+def parse_time( u_time = None):
+    """wrap to easily convert from unix to the format the user will see."""
+    assert(u_time != None)
+    return datetime.datetime.fromtimestamp(int(u_time)).strftime('%Y-%m-%d %H:%M')
 
 def get_embed_youtube(link = None):
     """Returns the embed link to the video provided.
