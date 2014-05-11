@@ -32,7 +32,6 @@ def parse_json_video_listing(fb_result = None):
         current["preview"] = element["attachment"]["media"][0]["src"]
 
         plist.append(current)
-    #return [fb_result]  # TODO: by now, for debug, we provide the full list
     return plist  # TODO: by now, for debug, we provide the full list
 
 
@@ -41,19 +40,30 @@ def get_embed_youtube(link = None):
     This is the new method, thinking only in youtube"""
     assert(link != None)
     assert(link != "")
+    rlink = ""
+    if link.find("youtu.be") > 0:
+        ## Parse short link, as it is a little bit special,use only last piece
+        rlink = link.split("/")[-1]
+    elif link.find("attribution_link") > 0 :
+        ## Its an attribution link, so im not sure how to handle it yet
+        #TODO: research this kind of link and how to parse it better.
+        rlink = link.split("://")[1][64:].split("%")[0]
+    else:
+        rlink = link.split("/")[-1].split("&")[0].split("?")[1][2:]
+    # and then we compose our embed link
     flink = "http://www.youtube.com/embed/{0}?enablejsapi=1&wmode=opaque".format(
-        link.split("/")[-1].split("&")[0].split("?")[1][2:]
+            rlink
     )
-    log.debug( "compound link"+ flink)
     return flink
 
 
 def get_embed(link = None):
     """returns the embed link to the video provided
     """
-    rlink = "" # resulting link
+    flink = "" # resulting link
     assert(link != None)
     assert(link != "")
+    log.debug( "preparsed link: " + link)
     # OBSOLETE: (I'll keep it for a couple of commits for hysterical reasons
     ## if link.startswith("http://youtu.be/"):
     ##     ## Parse short link
@@ -69,15 +79,16 @@ def get_embed(link = None):
     ##     #raise ValueError("crap. new kind of link")
     ## flink = "http://www.youtube.com/embed/{0}?enablejsapi=1&wmode=opaque".format(
     ##               trim_youtube_video(rlink))
-
     if link.find("youtu") > 0:
         # it is probably a youtube video
         flink = get_embed_youtube(link)
     elif link.find("vimeo") > 0:
         # Its probably a vimeo Video
         raise NotImplementedError, "We are still working on new video providers"
+    else:
+        raise NotImplementedError, "We are still working on " + link.__str__()
 
-    log.debug( "compound link: "+ flink)
+    log.debug( "compound link: " + flink)
     return flink
 
 # OBSOLETE: i will keep it here for a couple of commits for Hysterical (not

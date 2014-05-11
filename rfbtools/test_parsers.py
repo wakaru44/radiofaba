@@ -25,12 +25,6 @@ class test_get_embed_youtube():
         res = pr.get_embed_youtube(tst)
         eq_(res, exp)
 
-    def test_normal_link(self):
-        exp = 'http://www.youtube.com/embed/dBwMQAaLUoY?enablejsapi=1&wmode=opaque'
-        tst = 'http://www.youtube.com/watch?v=dBwMQAaLUoY&feature=player_embedded'
-        res = pr.get_embed_youtube(tst)
-        eq_(res, exp)
-
 
 
 class test_get_embed_regular():
@@ -62,5 +56,28 @@ class test_get_embed_regular():
         res = pr.get_embed(tst)
         eq_(res, exp)
 
+    def test_short_unsafe_link(self):
+        exp = 'http://www.youtube.com/embed/_gWc17vhSAE?enablejsapi=1&wmode=opaque'
+        tst = 'http://youtu.be/_gWc17vhSAE'
+        res = pr.get_embed_youtube(tst)
+        eq_(res, exp)
+
+    def test_short_safe_link(self):
+        exp = 'http://www.youtube.com/embed/_gWc17vhSAE?enablejsapi=1&wmode=opaque'
+        tst = 'https://youtu.be/_gWc17vhSAE'
+        res = pr.get_embed_youtube(tst)
+        eq_(res, exp)
+
+    def test_attribution_unsafe_link(self):
+        exp = 'http://www.youtube.com/embed/rSxIk9Qzmmw?enablejsapi=1&wmode=opaque'
+        tst = 'http://www.youtube.com/attribution_link?a=gvouc-iy_pw&u=%2Fwatch%3Fv%3DrSxIk9Qzmmw%26feature%3Dshare'
+        res = pr.get_embed_youtube(tst)
+        eq_(res, exp)
+
+    def test_attribution_safe_link(self):
+        exp = 'http://www.youtube.com/embed/rSxIk9Qzmmw?enablejsapi=1&wmode=opaque'
+        tst = 'https://www.youtube.com/attribution_link?a=gvouc-iy_pw&u=%2Fwatch%3Fv%3DrSxIk9Qzmmw%26feature%3Dshare'
+        res = pr.get_embed_youtube(tst)
+        eq_(res, exp)
 
 
