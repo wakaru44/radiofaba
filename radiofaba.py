@@ -34,6 +34,7 @@ from webapp2_extras import sessions
 import logging as log
 
 import rfbtools.parsers as rparse
+import rfbtools.querys as querys
 
 config = {}
 config['webapp2_extras.sessions'] = dict(secret_key='')
@@ -128,25 +129,8 @@ def get_video_listing(user = None):
     #query = """SELECT message, attachment.href  FROM stream WHERE source_id in
     #(SELECT uid2 from friend WHERE uid1 == me())  and strpos(attachment.href,
     #"youtu") >= 0 LIMIT 100"""
-    query = """
-        SELECT
-            message,
-            actor_id,
-            created_time,
-            attachment.href,
-            attachment.name,
-            attachment.description,
-            attachment.media.src
-        FROM stream
-        WHERE source_id in
-            (SELECT uid2
-                FROM friend
-                WHERE uid1 == me()
-            ) 
-            and
-            strpos(attachment.href, "youtu") >= 0
-        LIMIT 10000
-        """
+    #query = querys.friends_based
+    query = querys.filters_newsfeed
     graph = facebook.GraphAPI(user['access_token'])
     result = graph.fql(query)
     log.debug( u"result"+ repr(result))
