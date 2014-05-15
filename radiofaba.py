@@ -120,6 +120,14 @@ class BaseHandler(webapp2.RequestHandler):
         """
         return self.session_store.get_session()
 
+    def render(self, values, template = "home.html"):
+        """render the values in the template.
+        by default it goes to the index page"""
+        values["facebook_app_id"]=FACEBOOK_APP_ID
+        values["current_user"]=self.current_user
+        template = jinja_environment.get_template(template)
+        self.response.out.write(template.render(values))
+
 def get_video_listing(user = None):
     """ gets a list of videos and returns it as a list of thingis.
     To take a look at what kind of list and dicts we expect, take a 
@@ -140,17 +148,45 @@ def get_video_listing(user = None):
     return rparse.parse_json_video_listing(result)
 
 
-class ListHandler(BaseHandler):
+class AdvancedListHandler(BaseHandler):
     def get(self):
-        template = jinja_environment.get_template('templates/player.html')
         try:    
             listing = get_video_listing(self.current_user)
-                
-            self.response.out.write(template.render(dict(
-                facebook_app_id=FACEBOOK_APP_ID,
-                current_user=self.current_user,
+            self.render(dict( playlist = listing),
+                        "adv_player.html"
+                )
+        except Exception as e:
+            log.exception(e)
+            try:
+                # try to guess if we run out of time
+                if e.message.find(u"Session has expired") > 0 or e.message.find(u"the user logged out") > 0:
+                    thing = u"Please go to <a href=\"/\">home</a>, logout, and come back in"
+                else:
+                    thing = e.message
+            except Exception as e:
+                # nasty trick to at least give output
+                import sys
+                thing = rparse.nice_exception(e)
+            # then load the sample results
+            import rfbtools.sampleresult as smpl
+            listing = rparse.parse_json_video_listing(smpl.result)
+            self.render(dict(
+                            playlist = listing,
+                            error = e,
+                            thing = thing
+                        ),
+                        "adv_player.html"
+                        )
+
+
+class ListHandler(BaseHandler):
+    def get(self):
+        try:    
+            listing = get_video_listing(self.current_user)
+            self.render(dict(
                 playlist = listing
-            )))
+                ),
+                "player.html")
         except Exception as e:
             log.exception(e)
             try:
@@ -167,26 +203,22 @@ class ListHandler(BaseHandler):
             # then load the sample results
             import rfbtools.sampleresult as smpl
             listing = rparse.parse_json_video_listing(smpl.result)
-            self.response.out.write(template.render(dict(
-                facebook_app_id=FACEBOOK_APP_ID,
-                current_user=self.current_user,
-                playlist = listing,
-                error = e,
-                thing = thing
-            )))
+            self.render(dict(
+                            playlist = listing,
+                            error = e,
+                            thing = thing
+                        ),
+                        "adv_player.html"
+                        )
 
 
 class HomeHandler(BaseHandler):
     def get(self):
         template = jinja_environment.get_template('templates/home.html')
-        self.response.out.write(template.render(dict(
-            facebook_app_id=FACEBOOK_APP_ID,
-            current_user=self.current_user
-        )))
+        self.render()
 
     def post(self):
         """just to see what is POST ed """
-        template = jinja_environment.get_template('templates/home.html')
         log.debug(self.request.get("signed_request"))
         try:
             # we use the facebook lib to parse the signed request
@@ -202,10 +234,7 @@ class HomeHandler(BaseHandler):
                       first using the standalone app in <a
                       href="simpleapp-test.appspot.com>simpleapp-test.appspot.com</a>"""
             
-            self.response.out.write(template.render(dict(
-                facebook_app_id=FACEBOOK_APP_ID,
-                current_user=current_user
-            )))
+            self.render()
         except Exception as e:
             extra_info = rparse.nice_exception(e)
             self.response.out.write(template.render(data  = """Sorry, we are
@@ -222,12 +251,16 @@ class LogoutHandler(BaseHandler):
         self.redirect('/')
 
 jinja_environment = jinja2.Environment(
-    loader=jinja2.FileSystemLoader(os.path.dirname(__file__))
-)
+        loader=jinja2.FileSystemLoader(
+            os.path.dirname(__file__) + "/templates"))
+log.debug("The path for templates is" +
+              os.path.dirname(__file__) + "/templates")
+
 
 app = webapp2.WSGIApplication(
     [('/', HomeHandler),
      ('/list', ListHandler),
+     ('/advlist', AdvancedListHandler),
      ('/logout', LogoutHandler)],
     debug=True,
     config=config
