@@ -66,6 +66,31 @@ def get_embed_youtube(link = None):
     )
     return flink
 
+def get_embed_youtube2(link = None):
+    """Improved version. 
+    Returns the embed link to the video provided.
+    This is the new method, thinking only in youtube"""
+    assert(link != None)
+    assert(link != "")
+    rlink = ""
+    # break the link
+    blink = link.split("/")
+    if blink[2].find("youtu.be") > 0:
+        # Parse short link getting only last piece
+        rlink = blink[-1]
+    elif blink[3].find("attribution_link") > 0 :
+        # Its an attribution link, a bit special
+        rlink = blink[3][blink[3].find("watch"):][12:].split("%")[1]
+    else:
+        rlink = blink[3].split("&")[0].split("?")[1][2:]
+    # and dont forget those links with # params
+    rlink = rlink.split("#")[0]
+    # and finally compose the embed link
+    flink = "http://www.youtube.com/embed/{0}?enablejsapi=1&wmode=opaque".format(
+            rlink
+            )
+    return flink
+
 
 def get_embed(link = None):
     """returns the embed link to the video provided
@@ -81,7 +106,7 @@ def get_embed(link = None):
         # Its probably a vimeo Video
         raise NotImplementedError, "We are still working on new video providers"
     else:
-        raise NotImplementedError, "We are still working on " + link.__str__()
+        raise NotImplementedError( "We are still working on " + link.__str__() )
 
     log.debug( "compound link: " + flink)
     return flink

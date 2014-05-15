@@ -34,9 +34,13 @@ class test_get_embed_regular():
     def test_emptystr_raises_exception(self):
         assert_raises(AssertionError,pr.get_embed,"")
 
+    @raises(NotImplementedError)
     def test_malformed_link(self):
-        res = pr.get_embed("youtu.be/caca?bar")
-        ok_(res)
+        pr.get_embed("youtu.be/caca?bar")
+
+    @raises(NotImplementedError)
+    def test_provider_NI(self):
+        pr.get_embed("http://vimeo.com/caca?bar")
 
 # Disabled. Im not sure this is really relevant test.
 #    def test_embebed_link(self):
@@ -83,6 +87,12 @@ class test_get_embed_regular():
     def test_ampersand_link(self):
         exp = 'http://www.youtube.com/embed/Zf-YtUuYCDE?enablejsapi=1&wmode=opaque'
         tst = 'https://www.youtube.com/watch?v=Zf-YtUuYCDE#t=289'
+        res = pr.get_embed_youtube(tst)
+        eq_(res, exp)
+
+    def test_featured_youtube_short(self):
+        exp = 'http://www.youtube.com/embed/WtnD8VNEk6c?enablejsapi=1&wmode=opaque'
+        tst = 'http://www.youtube.com/watch?v=WtnD8VNEk6c&feature=youtu.be'
         res = pr.get_embed_youtube(tst)
         eq_(res, exp)
 
