@@ -1,0 +1,193 @@
+<html>
+
+<head>
+  
+  <!-- Updating ui
+  <script id="www-widgetapi-script" src="style/www-widgetapi.js" async=""> </script>
+  <script type="text/javascript" src="style/jquery-1.8.3.js"> </script>
+  <script type="text/javascript" src="style/jquery-ui.js"> </script>
+  -->
+
+	<script src="style/jquery-1.10.2.js"></script>
+	<script src="style/jquery-ui.js"></script>
+	<!--	<script type="text/javascript" src="style/custom.js"></script> -->
+
+
+  <!-- making it local
+	<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+	<script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+  -->
+
+  <!--
+  <link rel="stylesheet" type="text/css" href="/css/normalize.css">
+  <link rel="stylesheet" type="text/css" href="/css/result-light.css">
+  -->
+      <script type="text/javascript" src="style/jquery.fancybox.js"></script>
+      <link rel="stylesheet" type="text/css" href="style/jquery.fancybox.css">
+<script type="text/javascript">//<![CDATA[ 
+
+// Fires whenever a player has finished loading
+function onPlayerReady(event) {
+    event.target.playVideo();
+}
+
+// Fires when the player's state changes.
+function onPlayerStateChange(event) {
+    // Go to the next video after the current one is finished playing
+    if (event.data === 0) {
+        $.fancybox.next();
+    }
+}
+
+// The API will call this function when the page has finished downloading the JavaScript for the player API
+function onYouTubePlayerAPIReady() {
+    
+    // Initialise the fancyBox after the DOM is loaded
+    $(document).ready(function() {
+        $(".fancybox")
+            .attr('rel', 'gallery')
+            .fancybox({
+                openEffect  : 'none',
+                closeEffect : 'none',
+                nextEffect  : 'none',
+                prevEffect  : 'none',
+                padding     : 0,
+                margin      : 50,
+                beforeShow  : function() {
+                    // Find the iframe ID
+                    var id = $.fancybox.inner.find('iframe').attr('id');
+                    
+                    // Create video player object and add event listeners
+                    var player = new YT.Player(id, {
+                        events: {
+                            'onReady': onPlayerReady,
+                            'onStateChange': onPlayerStateChange
+                        }
+                    });
+                }
+            });
+    });
+    
+}
+
+
+var VanillaRunOnDomReady = function () {
+	$(function() {
+		$( "#sortable" ).sortable();
+		$( "#sortable" ).disableSelection();
+	});
+
+	$(".deleter").click(function () {
+	/*$(".deleter").live("click", function() {
+	 * */
+
+	    $(this).parent("li").hide("slider", function () {
+		$(this).remove();
+				      });
+	});
+}
+
+var alreadyrunflag = 0;
+
+if (document.addEventListener)
+    document.addEventListener("DOMContentLoaded", function () {
+        alreadyrunflag = 1;
+        VanillaRunOnDomReady();
+    }, false);
+else if (document.all && !window.opera) {
+    document.write('<script type="text/javascript" id="contentloadtag" defer="defer" src="javascript:void(0)"><\/script>');
+    var contentloadtag = document.getElementById("contentloadtag")
+    contentloadtag.onreadystatechange = function () {
+        if (this.readyState == "complete") {
+            alreadyrunflag = 1;
+            VanillaRunOnDomReady();
+        }
+    }
+}
+
+window.onload = function () {
+    setTimeout("if (!alreadyrunflag){VanillaRunOnDomReady}", 0);
+}
+
+//]]>  
+
+</script>
+
+
+<style id="holderjs-style" type="text/css"></style></head>
+<link rel="stylesheet" type="text/css" href="style/player.css">
+<!--
+<link rel="stylesheet" type="text/css" href="style/player.css">
+<link rel="stylesheet" type="text/css" href="http://fancyapps.com/fancybox/source/jquery.fancybox.css">
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.3.js"></script>
+<script id="www-widgetapi-script" src="http://s.ytimg.com/yts/jsbin/www-widgetapi-vflJYItO-.js" async=""></script>
+<script language="javascript" type="text/javascript" src="http://fancyapps.com/fancybox/source/jquery.fancybox.js"></script>
+<script language="javascript" type="text/javascript" src="style/player.js"></script>
+
+</head>
+-->
+
+<body class=" __plain_text_READY__">
+
+<!-- This loads the YouTube IFrame Player API code -->
+<script src="http://www.youtube.com/player_api"></script>
+
+<h2>RadioFB</h2>
+<h4>Start playing one video and the rest will follow automaticlly</h4>
+<div id="user">
+	here comes the user info....
+</div>
+<div id="content">
+{% include "error.html" %}
+<div id="video-list">
+
+<ul id="sortable">
+{% if playlist %}
+    {% for video in playlist %}
+    <li>
+    <span class="deleter"><img src="style/close.png" width="20px" /></span>
+    <a class="fancybox fancybox.iframe" href="{{ video["link"]}}">{{ video["title"] }}
+	    <br />
+	    <img src="{{ video["preview"] }}" />
+    </a>
+	    <p>Shared by <span class="actor">{{ video["actor"] }}</span></p>
+	    <p>{{ video["created"] }}</p>
+	    <p>{{ video["desc"] }}
+	    </p>
+	    <p id="compartir">Compartir
+		    <span class="soc_net">en fb</span>
+		    <span class="soc_net">en tuter</span>
+		    <span class="soc_net">y otras mierdas</span>
+	    </p>
+    </li>
+    {%endfor%}
+{% endif %}
+    </ul>
+</div>
+    
+<div> <!-- content -->
+
+<script>
+//My functions to get user names
+function httpGet(theUrl)
+{
+    var xmlHttp = null;
+
+    xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "GET", theUrl, false );
+    xmlHttp.send( null );
+    return xmlHttp.responseText;
+}
+
+function getActorName(uid)
+{
+    url = "https://graph.facebook.com/"
+    data = httpGet(url + uid)
+    return JSON.parse(data)["name"]
+}
+	function actor_name(index,oldText){ return '' + getActorName(oldText) }
+	//As per the testing done, this only works if its inside the body http://jsfiddle.net/wakaru44/rLLff/
+	$( ".actor" ).text(actor_name)
+</script>
+</body>
+</html>
