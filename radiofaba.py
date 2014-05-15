@@ -95,6 +95,8 @@ class BaseHandler(webapp2.RequestHandler):
                     access_token=user.access_token
                 )
                 return self.session.get("user")
+            else:
+                raise Exception("what is going on?")
         return None
 
     def dispatch(self):
@@ -128,30 +130,54 @@ class BaseHandler(webapp2.RequestHandler):
         template = jinja_environment.get_template(template)
         self.response.out.write(template.render(values))
 
-def get_video_listing(user = None):
-    """ gets a list of videos and returns it as a list of thingis.
-    To take a look at what kind of list and dicts we expect, take a 
-    look at the parsers.py module in radiofaba
-    """
-    assert(user != None)
-    #query = """SELECT message, attachment.href  FROM stream WHERE source_id in
-    #(SELECT uid2 from friend WHERE uid1 == me())  and strpos(attachment.href,
-    #"youtu") >= 0 LIMIT 100"""
-    #query = querys.friends_based
-    query = querys.filters_newsfeed
-    graph = facebook.GraphAPI(user['access_token'])
-    result = graph.fql(query)
-    log.debug( u"result"+ repr(result))
-    # TODO error handling
-    # GraphAPIError , and if there is expired, means that we need to relogin
-    # GraphAPIError 606, and if there is "permission" means we have no rights
-    return rparse.parse_json_video_listing(result)
+    def get_video_listing(self, query = querys.filters_newsfeed):
+        """ gets a list of videos and returns it as a list of thingis.
+        To take a look at what kind of list and dicts we expect, take a 
+        look at the parsers.py module in radiofaba
+        """
+        query = querys.filters_newsfeed
+        graph = facebook.GraphAPI(self.current_user['access_token'])
+        try:
+            result = graph.fql(query)
+            log.debug( u"result"+ repr(result))
+            # GraphAPIError , and if there is expired, means that we need to relogin
+            # GraphAPIError 606, and if there is "permission" means we have no rights
+        except Exception as e:
+            log.exception(e)
+            try:
+                # try to guess if we run out of time
+                if e.message.find(u"Session has expired") > 0:
+                    #thing = u"Please go to <a href=\"/\">home</a>, logout, and come back in"
+                    log.warning("The user session expired")
+                    extending = facebook.extend_access_token(
+                        FACEBOOK_APP_ID,
+                        FACEBOOK_APP_SECRET)
+                    result = graph.fql(query)
+                    result_parsed = rparse.parse_json_video_listing(result)
+                elif e.message.find(u"the user logged out") > 0:
+                    log.error("the user is logged out")
+                    thing = "Please go to <a href=\"/\">home</a>, logout, and come back in"
+                    result = ""
+                else:
+                    thing = e.message # TODO guess what to do here
+                    log.warning("something bad happened")
+                    result = ""
+            except Exception as e:
+                # nasty trick to at least give output
+                import sys
+                thing = rparse.nice_exception(e)
+                result = ""
+            if result == "":
+                # then load the sample results
+                import rfbtools.sampleresult as smpl
+                result_parsed = rparse.parse_json_video_listing(smpl.result)
+        return result_parsed
 
 
 class AdvancedListHandler(BaseHandler):
     def get(self):
         try:    
-            listing = get_video_listing(self.current_user)
+            listing = self.get_video_listing()
             self.render(dict( playlist = listing),
                         "adv_player.html"
                 )
@@ -182,7 +208,7 @@ class AdvancedListHandler(BaseHandler):
 class ListHandler(BaseHandler):
     def get(self):
         try:    
-            listing = get_video_listing(self.current_user)
+            listing = self.get_video_listing()
             self.render(dict(
                 playlist = listing
                 ),
@@ -208,13 +234,12 @@ class ListHandler(BaseHandler):
                             error = e,
                             thing = thing
                         ),
-                        "adv_player.html"
+                        "player.html"
                         )
 
 
 class HomeHandler(BaseHandler):
     def get(self):
-        template = jinja_environment.get_template('templates/home.html')
         self.render()
 
     def post(self):
