@@ -33,7 +33,14 @@ def parse_json_video_listing(fb_result = None):
                             shorten_comment(element["attachment"]["description"]),
                             shorten_comment(element["message"])
                             )
-        current["preview"] = element["attachment"]["media"][0]["src"]
+        try:
+            current["preview"] = element["attachment"]["media"][0]["src"]
+        except IndexError as e:
+            log.error("A preview image was expected")
+            log.exception(e)
+            log.error("See the provided element:")
+            log.error(repr(element))
+            current["preview"] = u""
 
         plist.append(current)
     return plist 
@@ -43,7 +50,7 @@ def parse_time( u_time = None):
     assert(u_time != None)
     return datetime.datetime.fromtimestamp(int(u_time)).strftime('%Y-%m-%d %H:%M')
 
-def get_embed_youtube(link = None):
+def get_embed_youtube_old(link = None):
     """Returns the embed link to the video provided.
     This is the new method, thinking only in youtube"""
     assert(link != None)
@@ -66,23 +73,30 @@ def get_embed_youtube(link = None):
     )
     return flink
 
-def get_embed_youtube2(link = None):
+def get_embed_youtube(link = None):
     """Improved version. 
     Returns the embed link to the video provided.
     This is the new method, thinking only in youtube"""
     assert(link != None)
     assert(link != "")
+    log.debug( "preparsed link: " + link)
     rlink = ""
-    # break the link
-    blink = link.split("/")
-    if blink[2].find("youtu.be") > 0:
-        # Parse short link getting only last piece
-        rlink = blink[-1]
-    elif blink[3].find("attribution_link") > 0 :
-        # Its an attribution link, a bit special
-        rlink = blink[3][blink[3].find("watch"):][12:].split("%")[1]
-    else:
-        rlink = blink[3].split("&")[0].split("?")[1][2:]
+    try:
+        # break the link
+        blink = link.split("/")
+        if blink[2].find("youtu.be") >= 0:
+            # Parse short link getting only last piece
+            rlink = blink[-1]
+        elif blink[3].find("attribution_link") >= 0 :
+            log.debug("It is an attrib link")
+            # Its an attribution link, a bit special
+            rlink = blink[3][blink[3].find("watch"):][12:].split("%")[0]
+        else:
+            rlink = blink[3].split("&")[0].split("?")[1][2:]
+    except Exception as e:
+        log.exception(e)
+        log.error("Something weird happened when trying to get embed link")
+        raise NotImplementedError( "We are still working on links like " + link)
     # and dont forget those links with # params
     rlink = rlink.split("#")[0]
     # and finally compose the embed link

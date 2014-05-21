@@ -23,7 +23,9 @@ friends_based = """
         """
 
 
-filters_based01 = """
+# This query seems to retrieve a lot of duplicates
+# And doesn't seem to get more results than the plain nf
+filters_based01 = """ 
 SELECT 
             message,
             actor_id,

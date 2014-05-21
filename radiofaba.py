@@ -96,7 +96,8 @@ class BaseHandler(webapp2.RequestHandler):
                 )
                 return self.session.get("user")
             else:
-                raise Exception("what is going on?")
+                # This hits when the user has logged out
+                log.warning("Have we been logged out?")
         return None
 
     def dispatch(self):
@@ -122,11 +123,13 @@ class BaseHandler(webapp2.RequestHandler):
         """
         return self.session_store.get_session()
 
-    def render(self, values, template = "home.html"):
+    def render(self, values = {}, template = "home.html"):
         """render the values in the template.
         by default it goes to the index page"""
+        # There are some default values that we will always use
         values["facebook_app_id"]=FACEBOOK_APP_ID
         values["current_user"]=self.current_user
+        # and then just load and render the template
         template = jinja_environment.get_template(template)
         self.response.out.write(template.render(values))
 
@@ -135,10 +138,13 @@ class BaseHandler(webapp2.RequestHandler):
         To take a look at what kind of list and dicts we expect, take a 
         look at the parsers.py module in radiofaba
         """
-        query = querys.filters_newsfeed
+        #query = querys.filters_newsfeed
         graph = facebook.GraphAPI(self.current_user['access_token'])
         try:
+            log.debug("Query: " + query)
+            # Perform the fql query
             result = graph.fql(query)
+            result_parsed = rparse.parse_json_video_listing(result)
             log.debug( u"result"+ repr(result))
             # GraphAPIError , and if there is expired, means that we need to relogin
             # GraphAPIError 606, and if there is "permission" means we have no rights
@@ -149,35 +155,29 @@ class BaseHandler(webapp2.RequestHandler):
                 if e.message.find(u"Session has expired") > 0:
                     #thing = u"Please go to <a href=\"/\">home</a>, logout, and come back in"
                     log.warning("The user session expired")
-                    extending = facebook.extend_access_token(
+                    # and try to extend the session
+                    graph = facebook.GraphAPI(self.request.cookies)
+                    extending = graph.extend_access_token(
                         FACEBOOK_APP_ID,
                         FACEBOOK_APP_SECRET)
                     result = graph.fql(query)
                     result_parsed = rparse.parse_json_video_listing(result)
-                elif e.message.find(u"the user logged out") > 0:
-                    log.error("the user is logged out")
-                    thing = "Please go to <a href=\"/\">home</a>, logout, and come back in"
-                    result = ""
                 else:
-                    thing = e.message # TODO guess what to do here
                     log.warning("something bad happened")
-                    result = ""
+                    raise
             except Exception as e:
-                # nasty trick to at least give output
-                import sys
-                thing = rparse.nice_exception(e)
-                result = ""
-            if result == "":
-                # then load the sample results
-                import rfbtools.sampleresult as smpl
-                result_parsed = rparse.parse_json_video_listing(smpl.result)
+                raise
+
+            # then load the sample results
+            import rfbtools.sampleresult as smpl
+            result_parsed = rparse.parse_json_video_listing(smpl.result)
         return result_parsed
 
 
 class AdvancedListHandler(BaseHandler):
     def get(self):
         try:    
-            listing = self.get_video_listing()
+            listing = self.get_video_listing( querys.filters_based01 )
             self.render(dict( playlist = listing),
                         "adv_player.html"
                 )
@@ -185,7 +185,7 @@ class AdvancedListHandler(BaseHandler):
             log.exception(e)
             try:
                 # try to guess if we run out of time
-                if e.message.find(u"Session has expired") > 0 or e.message.find(u"the user logged out") > 0:
+                if e.message.find(u"the user logged out") > 0:
                     thing = u"Please go to <a href=\"/\">home</a>, logout, and come back in"
                 else:
                     thing = e.message
