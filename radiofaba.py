@@ -76,6 +76,10 @@ class BaseHandler(webapp2.RequestHandler):
                     # Not an existing user so get user info
                     graph = facebook.GraphAPI(cookie["access_token"])
                     profile = graph.get_object("me")
+                    #extending = graph.extend_access_token(FACEBOOK_APP_ID,
+                    #                                      FACEBOOK_APP_SECRET)
+                    #log.debug("This is the new token: " + repr(extending))
+                    #log.debug("this is the old one: " + cookie["access_token"])
                     user = User(
                         key_name=str(profile["id"]),
                         id=str(profile["id"]),
@@ -144,7 +148,8 @@ class BaseHandler(webapp2.RequestHandler):
             log.debug("Query: " + query)
             # Perform the fql query
             result = graph.fql(query)
-            result_parsed = rparse.parse_json_video_listing(result)
+            video_list = rparse.parse_json_video_listing(result)
+            result_parsed = rparse.clean_list(video_list)
             log.debug( u"result"+ repr(result))
             # GraphAPIError , and if there is expired, means that we need to relogin
             # GraphAPIError 606, and if there is "permission" means we have no rights
@@ -156,6 +161,7 @@ class BaseHandler(webapp2.RequestHandler):
                     #thing = u"Please go to <a href=\"/\">home</a>, logout, and come back in"
                     log.warning("The user session expired")
                     # and try to extend the session
+                    #TODO: it does not work this way. delete this 
                     graph = facebook.GraphAPI(self.request.cookies)
                     extending = graph.extend_access_token(
                         FACEBOOK_APP_ID,

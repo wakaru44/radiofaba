@@ -73,6 +73,12 @@ class test_get_embed_youtube():
         res = pr.get_embed_youtube(tst)
         eq_(res, exp)
 
+    def test_reversed_order_featured(self):
+        exp = 'http://www.youtube.com/embed/xTiF7Hk8NAU?enablejsapi=1&wmode=opaque'
+        tst = 'https://www.youtube.com/watch?feature=player_embedded&v=xTiF7Hk8NAU'
+        res = pr.get_embed_youtube(tst)
+        eq_(res, exp)
+
 
 
 class test_get_embed_generic():
@@ -122,5 +128,100 @@ class test_parse_json_videolisting():
                            u'https://www.youtube.com/watch?v=y6Sxv-sUYtM',
                            u'name': u'www.youtube.com', u'description': u''}}]}
         result = pr.parse_json_video_listing(data)
-        eq_(result[0]["preview"] , "")
+        eq_(result[0]["preview"] , u'/style/preview_default.png') #default picture
 
+class test_parse_created():
+    def test_normal_element(self):
+        elem = {u'created_time': 1400500953,
+                u'message': u'Ha sido una mala semana, con muchas cosas encima, y hoy no he empezado bien el d\xeda, pero me da igual francamente...  https://www.youtube.com/watch?v=y6Sxv-sUYtM :) ',
+                u'actor_id': u'10203087889496668',
+                u'attachment': {u'media': [],
+                                u'href': u'https://www.youtube.com/watch?v=y6Sxv-sUYtM',
+                                u'name': u'www.youtube.com',
+                                u'description': u''}}
+        result = pr.parse_created(elem)
+        eq_(result, "2014-05-19 14:02")
+
+    def test_nonexistant_element(self):
+        elem = { u'message': u'Ha sido una mala semana, con muchas cosas encima, y hoy no he empezado bien el d\xeda, pero me da igual francamente...  https://www.youtube.com/watch?v=y6Sxv-sUYtM :) ',
+                u'actor_id': u'10203087889496668',
+                u'attachment': {u'media': [],
+                                u'href': u'https://www.youtube.com/watch?v=y6Sxv-sUYtM',
+                                u'name': u'www.youtube.com',
+                                u'description': u''}}
+        result = pr.parse_created(elem)
+        eq_(result, "Disabled")
+
+
+
+class test_parse_actor():
+    def test_normal_element(self):
+         elem = {u'created_time': 1400500953,
+                u'message': u'Ha sido una mala semana, con muchas cosas encima, y hoy no he empezado bien el d\xeda, pero me da igual francamente...  https://www.youtube.com/watch?v=y6Sxv-sUYtM :) ',
+                u'actor_id': u'10203087889496668',
+                u'attachment': {u'media': [],
+                                u'href': u'https://www.youtube.com/watch?v=y6Sxv-sUYtM',
+                                u'name': u'www.youtube.com',
+                                u'description': u''}}
+         result = pr.parse_actor(elem)
+         eq_(result, [u'10203087889496668'])
+
+    def test_nonexistant_element(self):
+        pass
+
+
+class test_parse_preview():
+    def test_normal_element(self):
+        pass
+
+    def test_nonexistant_element(self):
+        pass
+
+
+class test_parse_description():
+    def test_normal_element(self):
+        pass
+
+    def test_nonexistant_element(self):
+        pass
+
+
+class test_remove_duplicates():
+    def setUp(self):
+        self.data = [{'actor': [u'786664311344363'],
+                   'created': '2014-05-20 15:59',
+                   'desc': u'\n<br />\n ---------------------<br /> ',
+                   'link': 'http://www.youtube.com/embed/gSCj6vlei8Y?enablejsapi=1&wmode=opaque',
+                   'preview': u'httph=130&url=http%3A%2F%2Fi1.ytimg.com%2Fvi%2FgSCj6vlei8Y%2Fmaxresdefault.jpg',
+                   'title': u'Concuso de Cosplay Expomanga Madrid 2014.  Actuaci\xf3n 25 -- Saint Seya'},
+                {'actor': [u'277680312412688'],
+                   'created': '2014-05-20 12:58',
+                   'desc': u'\n<br />\n ---------------------<br gSCj6vlei8Y',
+                   'link': 'http://www.youtube.com/embed/gSCj6vlei8Y?enablejsapi=1&wmode=opaque',
+                   'preview': u'ht=130&h=130&url=http%3A%2F%2Fi1.ytimg.com%2Fvi%2FgSCj6vlei8Y%2Fmaxresdefault.jpg',
+                   'title': u'Concuso de Cosplay Expomanga Madrid 2014.  Actuaci\xf3n 25 -- Saint Seya'},
+                {'actor': [u'10203220863658071'],
+                   'created': '2014-05-20 14:52',
+                   'desc': u': A los 15 a\xf1os Adele (Ad\xe8le Exarchopoulos) Martes de cine, a las 21:00h.',
+                   'link': 'http://www.youtube.com/embed/XBzEMlRV5WI?enablejsapi=1&wmode=opaque',
+                   'preview': u'https%2F%2Fi1.ytimg.com%2Fvi%2FXBzEMlRV5WI%2Fmaxresdefault.jpg',
+                   'title': u'La vida de Adele - Trailer en espan\u0303ol (HD)'}] 
+
+
+    def test_clean_list(self):
+        things = self.data
+        clean = pr.clean_list(things)
+        eq_(len(clean), 2)
+
+    def test_add_actors(self):
+        things = self.data
+        clean = pr.clean_list(things)
+        print len(clean)
+        print len(clean[0]["actor"])
+        print len(clean[1]["actor"])
+        eq_(len(clean[1]["actor"]) , 2)
+
+    def test_long_list(self):
+        #TODO: try to replicate an index out of range when we delete more than
+        # not the last element but one in the middle
+        pass
