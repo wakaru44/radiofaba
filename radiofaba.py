@@ -76,6 +76,7 @@ class BaseHandler(webapp2.RequestHandler):
                     # Not an existing user so get user info
                     graph = facebook.GraphAPI(cookie["access_token"])
                     profile = graph.get_object("me")
+                    #TODO: extend the token. Test if should be done here.
                     #extending = graph.extend_access_token(FACEBOOK_APP_ID,
                     #                                      FACEBOOK_APP_SECRET)
                     #log.debug("This is the new token: " + repr(extending))
@@ -137,6 +138,51 @@ class BaseHandler(webapp2.RequestHandler):
         template = jinja_environment.get_template(template)
         self.response.out.write(template.render(values))
 
+    def do_query(self, query = None, fql = False):
+        """ Easy querying to facebook. It handles the errors and issues an
+        retrieves just an empty dict with the errors if nothing returned.
+        Returns a dict with the "data" and the "error" if any.
+        """
+        assert(query != None)
+        result = {}
+        error = None
+
+        try:
+            graph = facebook.GraphAPI(self.current_user['access_token'])
+            log.debug("Query: " + query)
+            if fql:
+                # Perform the fql query
+                result = graph.fql(query)
+            else:
+                # Its a graph api query
+                result = graph.get_object(query)
+                log.debug( u"result"+ repr(result))
+        except Exception as e:
+            # GraphAPIError , and if there is expired, means that we need to relogin
+            # GraphAPIError 606, and if there is "permission" means we have no rights
+            log.exception(e)
+            try:
+                # try to guess if we run out of time
+                if e.message.find(u"Session has expired") > 0 or e.message.find(u"the user logged out") > 0:
+                    #thing = u"Please go to <a href=\"/\">home</a>, logout, and come back in"
+                    log.warning("The user session expired. {name} by id {id}".format(
+                        name = self.session["user"]["name"],
+                        id = self.session["user"]["id"]))
+                    error = e.message
+                    # and we should try to relogin again or something
+                else:
+                    log.warning("something bad happened or we are logged out")
+                    raise
+            except:
+                #reraise
+                raise
+
+            # TODO: test here if we should return sample results or what. by
+            # now, just empty
+        return {"data":result["data"],"error":error}
+
+
+
     def get_video_listing(self, query = querys.filters_newsfeed):
         """ gets a list of videos and returns it as a list of thingis.
         To take a look at what kind of list and dicts we expect, take a 
@@ -157,7 +203,7 @@ class BaseHandler(webapp2.RequestHandler):
             log.exception(e)
             try:
                 # try to guess if we run out of time
-                if e.message.find(u"Session has expired") > 0:
+                if e.message.find(u"Session has expired") > 0 or e.message.find(u"the user logged out") > 0:
                     #thing = u"Please go to <a href=\"/\">home</a>, logout, and come back in"
                     log.warning("The user session expired")
                     # and try to extend the session
@@ -181,34 +227,30 @@ class BaseHandler(webapp2.RequestHandler):
 
 
 class AdvancedListHandler(BaseHandler):
-    def get(self):
-        try:    
-            listing = self.get_video_listing( querys.filters_based01 )
-            self.render(dict( playlist = listing),
-                        "adv_player.html"
-                )
-        except Exception as e:
-            log.exception(e)
-            try:
-                # try to guess if we run out of time
-                if e.message.find(u"the user logged out") > 0:
-                    thing = u"Please go to <a href=\"/\">home</a>, logout, and come back in"
-                else:
-                    thing = e.message
-            except Exception as e:
-                # nasty trick to at least give output
-                import sys
-                thing = rparse.nice_exception(e)
+    def get(self, query = None, fql = False):
+        if query == None:
+            #Use the default query
+            fblist = self.do_query(querys.filters_newsfeed, fql=True)
+        else:
+            fblist = self.do_query(query, fql)
+        if fblist["data"] == {}:
             # then load the sample results
             import rfbtools.sampleresult as smpl
-            listing = rparse.parse_json_video_listing(smpl.result)
-            self.render(dict(
-                            playlist = listing,
-                            error = e,
-                            thing = thing
-                        ),
-                        "adv_player.html"
-                        )
+            listing = smpl.result
+        else:
+            listing = rparse.parse_json_video_listing(fblist)
+        # And render
+        self.render(dict(
+                        playlist = listing,
+                        error = fblist["error"]
+                    ),
+                    "adv_player.html"
+                    )
+
+class OwnListHandler(AdvancedListHandler):
+    def get(self):
+        # we call the parent with other query.
+        super(OwnListHandler, self).get(querys.fql_ownvideos , fql = True)
 
 
 class ListHandler(BaseHandler):
@@ -246,7 +288,20 @@ class ListHandler(BaseHandler):
 
 class HomeHandler(BaseHandler):
     def get(self):
-        self.render()
+        # We are going to get the list of friends and show it.
+        friends = self.retrieve_friends()
+        self.render({"friends" : friends["data"], "error":friends["error"] })
+
+    def retrieve_friends(self):
+        friend_list = {"data": {}, "error":None}
+        try:
+            #Its common to fail getting friends if the user is logged out, so
+            #ignore all exceptions
+            friend_list = self.do_query(querys.graph_friends)
+        except:
+            pass # expected, as is normal to fail getting friends.
+
+        return friend_list
 
     def post(self):
         """just to see what is POST ed """
@@ -292,6 +347,7 @@ app = webapp2.WSGIApplication(
     [('/', HomeHandler),
      ('/list', ListHandler),
      ('/advlist', AdvancedListHandler),
+     ('/ownlist', OwnListHandler),
      ('/logout', LogoutHandler)],
     debug=True,
     config=config

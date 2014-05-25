@@ -148,9 +148,16 @@ window.onload = function () {
     <span class="deleter"><img src="style/close.png" width="20px" /></span>
     <a class="fancybox fancybox.iframe" href="{{ video["link"]}}">{{ video["title"] }}
 	    <br />
-	    <img src="{{ video["preview"] }}" />
+	    <img class="videopreview" src="{{ video["preview"] }}" />
     </a>
-	    <p>Shared by <span class="actor">{{ video["actor"] }}</span></p>
+	    <p>Shared by 
+			<span class="actor">{{ video["actor"].pop() }}</span>
+	    {% if video["actor"].__len__() > 1 %}
+	    	{% for friend in video["actor"] %}
+			and <span class="actor">{{ friend }}</span>
+		{% endfor %}
+	    {% endif %}
+	    </p>
 	    <p>{{ video["created"] }}</p>
 	    <p>{{ video["desc"] }}
 	    </p>

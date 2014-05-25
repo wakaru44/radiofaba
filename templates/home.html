@@ -19,7 +19,9 @@
 		    <!-- TODO: include some info for the user -->
 	    </div>
             <div>
-		    <p>Now you can listen to <a href="/list"> your personal radio</a>
+		    <p>Now you can view <a href="/list">The videos that your friends shared</a></p>
+		    <p>Or review <a href="/ownlist">your own videos shared by you</a></p>
+		    <p>or  <a href="/advlist">the inestable version of the application.</a></p>
     {% endif %}
 
     {% include "error.html" %}
@@ -44,6 +46,19 @@
         document.getElementById('fb-root').appendChild(e);
       }());
     </script>
+    {% if friends %}
+    <div id=friend_list>
+	    <p> This is the list of your friends that are already using the app.</p>
+	    <ul>
+		    {% for friend in friends %}
+		    <li>
+		    <img src="{{ friend["picture"]["data"]["url"] }}" alt="picture of {{ friend["name"] }}" />
+		    <span><a href="http://www.facebook.com/{{friend["id"]}}" target="_blank">{{ friend["name"] }}</a></span>
+		    </li>
+		    {% endfor %}
+	    </ul>
+    </div>
+    {% endif %}
     {% if data %}
     <div>
 	    {{ data }}

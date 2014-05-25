@@ -55,12 +55,15 @@ def parse_preview(element = None):
     preview = u"/style/preview_default.png" # It will always fail back to empty.
     # TODO: find default image
     try:
-        preview = element["attachment"]["media"][0]["src"]
+        get_preview = element["attachment"]["media"][0]["src"]
+        if get_preview == "":
+            raise IndexError
+        preview = get_preview
     except IndexError as e:
-        log.error("A preview image was expected")
+        log.warning("A preview image was expected")
         log.exception(e)
-        log.error("See the provided element:")
-        log.error(repr(element))
+        log.warning("See the provided element:")
+        log.warning(repr(element))
     return preview
 
 def parse_description(element = None):
@@ -101,7 +104,6 @@ def get_embed_youtube(link = None):
     This is the new method, thinking only in youtube"""
     assert(link != None)
     assert(link != "")
-    log.debug( "preparsed link: " + link)
     rlink = ""
     try:
         # break the link
@@ -110,7 +112,6 @@ def get_embed_youtube(link = None):
             # Parse short link getting only last piece
             rlink = blink[-1]
         elif blink[3].find("attribution_link") >= 0 :
-            log.debug("It is an attrib link")
             # Its an attribution link, a bit special
             rlink = blink[3][blink[3].find("watch"):][12:].split("%")[0]
         else:
@@ -175,26 +176,26 @@ def clean_list(posts):
     while len(posts) > 0 :
         elem = posts.pop()
         found = []
-        print "lookihng for: " + elem["link"]
-        print "with actor: " + repr(elem["actor"])
+        #print "lookihng for: " + elem["link"]
+        #print "with actor: " + repr(elem["actor"])
         indexes = range(0,len(posts))
         #for i in range(0,len(posts)):
         while len(indexes) > 0:
             i = indexes.pop()
             other = posts[i]
-            print "compared with " + other["link"]
+            #print "compared with " + other["link"]
             if elem["link"] in other["link"]:
-                print "found: " + repr(other["link"])
-                print "with actor: " + repr(other["actor"])
+                #print "found: " + repr(other["link"])
+                #print "with actor: " + repr(other["actor"])
                 found.extend(other["actor"])
                 posts.pop(i)
         if len(found) == 0:
-            print "is not dupe"
+            #print "is not dupe"
             cleaned.append(elem)
         else:
             # is duplicated so add the actors
             elem["actor"].extend(found)
-            print "all: " + repr(elem["actor"])
+            #print "all: " + repr(elem["actor"])
             cleaned.append(elem)
 
     return cleaned
