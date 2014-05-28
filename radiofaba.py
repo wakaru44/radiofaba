@@ -144,8 +144,8 @@ class BaseHandler(webapp2.RequestHandler):
         Returns a dict with the "data" and the "error" if any.
         """
         assert(query != None)
-        result = {}
-        error = None
+        result = { "data": []}
+        error = ""
 
         try:
             graph = facebook.GraphAPI(self.current_user['access_token'])
@@ -165,11 +165,12 @@ class BaseHandler(webapp2.RequestHandler):
                 # try to guess if we run out of time
                 if e.message.find(u"Session has expired") > 0 or e.message.find(u"the user logged out") > 0:
                     #thing = u"Please go to <a href=\"/\">home</a>, logout, and come back in"
+                    log.warning(e.message)
                     log.warning("The user session expired. {name} by id {id}".format(
                         name = self.session["user"]["name"],
                         id = self.session["user"]["id"]))
-                    error = e.message
                     # and we should try to relogin again or something
+                    error = "Please relogin again"
                 else:
                     log.warning("something bad happened or we are logged out")
                     raise
@@ -233,10 +234,14 @@ class AdvancedListHandler(BaseHandler):
             fblist = self.do_query(querys.filters_newsfeed, fql=True)
         else:
             fblist = self.do_query(query, fql)
-        if fblist["data"] == {}:
+        #TODO: Decide the final flow of the app. By now i keep both here.
+        if fblist["error"] == "Please relogin again":
+            error = self.redirect("/logout")  # If we detect logged out here, go home
+        if fblist["data"] == []:
             # then load the sample results
+            log.warning("Loading sample results")
             import rfbtools.sampleresult as smpl
-            listing = smpl.result
+            listing = rparse.parse_json_video_listing(smpl.result)
         else:
             listing = rparse.parse_json_video_listing(fblist)
         # And render
@@ -290,10 +295,12 @@ class HomeHandler(BaseHandler):
     def get(self):
         # We are going to get the list of friends and show it.
         friends = self.retrieve_friends()
+        if friends["error"].find("relogin") >= 0:
+            error = self.redirect("/logout")  # If we detect logged out here, go home
         self.render({"friends" : friends["data"], "error":friends["error"] })
 
     def retrieve_friends(self):
-        friend_list = {"data": {}, "error":None}
+        friend_list = {"data": {}, "error":""}
         try:
             #Its common to fail getting friends if the user is logged out, so
             #ignore all exceptions

@@ -119,7 +119,7 @@ class test_parse_json_videolisting():
         data = { "data":[{u'created_time': 1400532456, u'message': u'https://www.youtube.com/watch?v=MkYyG1GOETc', u'actor_id': u'10152038751900976', u'attachment': {u'media': [{u'src': u''}], u'href': u'https://www.youtube.com/watch?v=MkYyG1GOETc', u'name': u'The Riptides - 77 Sunset Strip (1979)', u'description': u"Music from Australia and New Zealand in the year 1979: The Riptides' promo-video for the single 'Sunset Strip' (July, 1979). Band Location: Brisbane, QLD, Au..."}}]}
         result = pr.parse_json_video_listing(data)
         eq_("" , data["data"][0]["attachment"]["media"][0]["src"])
-        eq_(result[0]["preview"] , "")
+        eq_(result[0]["preview"] , "/style/preview_default.png")
 
     def test_empty_at_all_media(self):
         data = { "data":[{u'created_time': 1400500953, u'message': u'Ha sido una mala semana, con muchas cosas encima, y hoy no he empezado bien el d\xeda, pero me da igual francamente...  https://www.youtube.com/watch?v=y6Sxv-sUYtM :) ',
@@ -167,20 +167,54 @@ class test_parse_actor():
          eq_(result, [u'10203087889496668'])
 
     def test_nonexistant_element(self):
-        pass
+        elem = {u'created_time': 1400500953,
+                u'message': u'Ha sido una mala semana, con muchas cosas encima, y hoy no he empezado bien el d\xeda, pero me da igual francamente...  https://www.youtube.com/watch?v=y6Sxv-sUYtM :) ',
+                u'attachment': {u'media': [],
+                                u'href': u'https://www.youtube.com/watch?v=y6Sxv-sUYtM',
+                                u'name': u'www.youtube.com',
+                                u'description': u''}}
+        result = pr.parse_actor(elem)
+        eq_(result, [u'Disabled'])
+
 
 
 class test_parse_preview():
-    def test_normal_element(self):
-        pass
+    def test_gets_the_preview_picture(self):
+        elem = {u'created_time': 1400579416, u'message': u'Independientemente de si estamos de acuerdo con la cultura arabe o no... \xa1Que preciosos cantos devocionales tienen! \n', u'actor_id': u'642011599209080', u'attachment': {u'media': [{u'src': u'existant_preview.jpg'}], u'href': u'https://www.youtube.com/watch?v=WaomfpL7gIU&index=4&list=LL-P6qSxOejC1KtbnEQuNtuA', u'name': u'From Srat Al-Kahf by Abo Bakr Shatri', u'description': u'From Srat Al-Kahf by Abo Bakr Shatri'}}
+        result = pr.parse_preview(elem)
+        eq_(result, u'existant_preview.jpg')
 
-    def test_nonexistant_element(self):
-        pass
+    def test_if_no_preview_use_default_picture(self):
+        elem = {u'created_time': 1400500953,
+                u'message': u'Ha sido una mala semana, con muchas cosas encima, y hoy no he empezado bien el d\xeda, pero me da igual francamente...  https://www.youtube.com/watch?v=y6Sxv-sUYtM :) ',
+                u'actor_id': u'10203087889496668',
+                u'attachment': {u'media': [],
+                                u'href': u'https://www.youtube.com/watch?v=y6Sxv-sUYtM',
+                                u'name': u'www.youtube.com',
+                                u'description': u''}}
+        result = pr.parse_preview(elem)
+        eq_(result, u'/style/preview_default.png')
 
 
 class test_parse_description():
-    def test_normal_element(self):
-        pass
+    def test_it_get_the_description_from_message_and_description(self):
+        elem = {u'created_time': 1400579416, u'message': u'the message', u'actor_id': u'642011599209080', u'attachment': {u'media': [{u'src': u'https://fbexternal-a.akamaihd.net/safe_image.php?d=AQAIeVp8w3tE46_Y&w=130&h=130&url=http%3A%2F%2Fi1.ytimg.com%2Fvi%2FWaomfpL7gIU%2Fhqdefault.jpg'}], u'href': u'https://www.youtube.com/watch?v=WaomfpL7gIU&index=4&list=LL-P6qSxOejC1KtbnEQuNtuA', u'name': u'From Srat Al-Kahf by Abo Bakr Shatri', u'description': u'the description'}}
+        result = pr.parse_description(elem)
+        eq_(result, u'the description\n<br />\n ---------------------<br /> the message')
+
+    def test_long_messages_must_be_trimmed(self):
+        elem = {u'created_time': 1400579416, u'message': u'very very very very very very very very very very very very very very very very very very very long message, more than 100 chars long', u'actor_id': u'642011599209080', u'attachment': {u'media': [{u'src': u'https://fbexternal-a.akamaihd.net/safe_image.php?d=AQAIeVp8w3tE46_Y&w=130&h=130&url=http%3A%2F%2Fi1.ytimg.com%2Fvi%2FWaomfpL7gIU%2Fhqdefault.jpg'}], u'href': u'https://www.youtube.com/watch?v=WaomfpL7gIU&index=4&list=LL-P6qSxOejC1KtbnEQuNtuA', u'name': u'From Srat Al-Kahf by Abo Bakr Shatri', u'description': u'the description'}}
+        result = pr.parse_description(elem)
+        eq_(result, u'the description\n<br />\n ---------------------<br /> very very very very very very very very very very very very very very very very very very very long <span class=\"greyed\">... For more check your timeline</span>')
+
+    def test_long_descriptions_must_be_trimmed(self):
+        elem = {u'created_time': 1400579416, u'message': u'the message', u'actor_id': u'642011599209080', u'attachment': {u'media': [{u'src': u'preview_picture.jpg'}], u'href': u'http://youtube/link', u'name': u'lorem ipsum', u'description': u'the description'}}
+        import mock
+        foo = mock.Mock()
+        
+
+        result = pr.parse_description(elem)
+        eq_(result, u'the description\n<br />\n ---------------------<br /> the message')
 
     def test_nonexistant_element(self):
         pass

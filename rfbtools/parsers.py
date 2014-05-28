@@ -16,11 +16,15 @@ def parse_json_video_listing(fb_result = None):
          }
          ]
      """
+    #assert(type(fb_result) == type({}))
     plist = []  # list of videos
     #return plist
     for element in fb_result["data"]:
         current = {}
-        current["link"] = get_embed(element["attachment"]["href"])
+        try:
+            current["link"] = get_embed(element["attachment"]["href"])
+        except NotImplementedError:
+            current["link"] = element["attachment"]["href"]
         current["actor"] = parse_actor(element)
         current["created"] = parse_created(element)
         current["title"] = element["attachment"]["name"]
@@ -35,6 +39,8 @@ def parse_created(element = None):
     created = "Disabled"
     try:
         created = datetime.datetime.fromtimestamp(int(element["created_time"])).strftime('%Y-%m-%d %H:%M')
+    except KeyError as e:
+        log.warning("Missing created time. we might be parsing sample data")
     except Exception as e:
         log.exception(e)
     return created
@@ -45,6 +51,8 @@ def parse_actor(element = None):
     actor = "Disabled"
     try:
         actor = element["actor_id"]
+    except KeyError as e:
+        log.warning("Missing actor_id. we might be parsing sample data")
     except Exception as e:
         log.exception(e)
     return [actor]
