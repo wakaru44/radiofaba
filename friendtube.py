@@ -33,8 +33,8 @@ from google.appengine.ext import db
 from webapp2_extras import sessions
 import logging as log
 
-import rfbtools.parsers as rparse
-import rfbtools.querys as querys
+import friendtube.parsers as rparse
+import friendtube.querys as querys
 
 config = {}
 config['webapp2_extras.sessions'] = dict(secret_key='')
@@ -222,7 +222,7 @@ class BaseHandler(webapp2.RequestHandler):
                 raise
 
             # then load the sample results
-            import rfbtools.sampleresult as smpl
+            import friendtube.sampleresult as smpl
             result_parsed = rparse.parse_json_video_listing(smpl.result)
         return result_parsed
 
@@ -240,7 +240,7 @@ class AdvancedListHandler(BaseHandler):
         if fblist["data"] == []:
             # then load the sample results
             log.warning("Loading sample results")
-            import rfbtools.sampleresult as smpl
+            import friendtube.sampleresult as smpl
             listing = rparse.parse_json_video_listing(smpl.result)
         else:
             listing = rparse.parse_json_video_listing(fblist)
@@ -280,7 +280,7 @@ class ListHandler(BaseHandler):
                 thing = rparse.nice_exception(e)
 
             # then load the sample results
-            import rfbtools.sampleresult as smpl
+            import friendtube.sampleresult as smpl
             listing = rparse.parse_json_video_listing(smpl.result)
             self.render(dict(
                             playlist = listing,

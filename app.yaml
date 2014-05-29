@@ -1,4 +1,4 @@
-application: simpleapp-test
+application: friend-tube
 version: 1
 runtime: python27
 api_version: 1
@@ -16,10 +16,10 @@ handlers:
   static_dir: staticfiles
 
 - url: /list
-  script: radiofaba.app
+  script: friendtube.app
 
 - url: /.*
-  script: radiofaba.app
+  script: friendtube.app
 
 libraries:
 - name: jinja2
