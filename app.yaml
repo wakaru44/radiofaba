@@ -9,17 +9,22 @@ handlers:
   static_files: stylesheets/favicon.ico
   upload: stylesheets/favicon\.ico
 
+- url: /static
+  static_dir: staticfiles
+
 - url: /style
   static_dir: stylesheets
 
-- url: /staticfiles
-  static_dir: staticfiles
+- url: /terms
+  mime_type : text
+  static_files: staticfiles/terms
+  upload: staticfiles/terms
 
 - url: /list
-  script: friendtube.app
+  script: main.app
 
 - url: /.*
-  script: friendtube.app
+  script: main.app
 
 libraries:
 - name: jinja2

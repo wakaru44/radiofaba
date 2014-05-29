@@ -187,7 +187,7 @@ class BaseHandler(webapp2.RequestHandler):
     def get_video_listing(self, query = querys.filters_newsfeed):
         """ gets a list of videos and returns it as a list of thingis.
         To take a look at what kind of list and dicts we expect, take a 
-        look at the parsers.py module in radiofaba
+        look at the parsers.py module in friendtube
         """
         #query = querys.filters_newsfeed
         graph = facebook.GraphAPI(self.current_user['access_token'])

@@ -1,0 +1,124 @@
+  
+  <!-- Updating ui
+  <script id="www-widgetapi-script" src="static/www-widgetapi.js" async=""> </script>
+  <script type="text/javascript" src="static/jquery-1.8.3.js"> </script>
+  <script type="text/javascript" src="static/jquery-ui.js"> </script>
+  -->
+
+	<script src="static/jquery-1.10.2.js"></script>
+	<script src="static/jquery-ui.js"></script>
+	<!--	<script type="text/javascript" src="static/custom.js"></script> -->
+
+
+  <!-- making it local
+	<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+	<script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+  -->
+
+  <!--
+  <link rel="stylesheet" type="text/css" href="/css/normalize.css">
+  <link rel="stylesheet" type="text/css" href="/css/result-light.css">
+  -->
+      <script type="text/javascript" src="static/jquery.fancybox.js"></script>
+      <link rel="stylesheet" type="text/css" href="style/jquery.fancybox.css">
+<script type="text/javascript">//<![CDATA[ 
+
+// Fires whenever a player has finished loading
+function onPlayerReady(event) {
+    event.target.playVideo();
+}
+
+// Fires when the player's state changes.
+function onPlayerStateChange(event) {
+    // Go to the next video after the current one is finished playing
+    if (event.data === 0) {
+        $.fancybox.next();
+    }
+}
+
+// The API will call this function when the page has finished downloading the JavaScript for the player API
+function onYouTubePlayerAPIReady() {
+    
+    // Initialise the fancyBox after the DOM is loaded
+    $(document).ready(function() {
+        $(".fancybox")
+            .attr('rel', 'gallery')
+            .fancybox({
+                openEffect  : 'none',
+                closeEffect : 'none',
+                nextEffect  : 'none',
+                prevEffect  : 'none',
+                padding     : 0,
+                margin      : 50,
+                beforeShow  : function() {
+                    // Find the iframe ID
+                    var id = $.fancybox.inner.find('iframe').attr('id');
+                    
+                    // Create video player object and add event listeners
+                    var player = new YT.Player(id, {
+                        events: {
+                            'onReady': onPlayerReady,
+                            'onStateChange': onPlayerStateChange
+                        }
+                    });
+                }
+            });
+    });
+    
+}
+
+
+var VanillaRunOnDomReady = function () {
+	$(function() {
+		$( "#sortable" ).sortable();
+		$( "#sortable" ).disableSelection();
+	});
+
+	$(".deleter").click(function () {
+	/*$(".deleter").live("click", function() {
+	 * */
+
+	    $(this).parent("li").hide("slider", function () {
+		$(this).remove();
+				      });
+	});
+}
+
+var alreadyrunflag = 0;
+
+if (document.addEventListener)
+    document.addEventListener("DOMContentLoaded", function () {
+        alreadyrunflag = 1;
+        VanillaRunOnDomReady();
+    }, false);
+else if (document.all && !window.opera) {
+    document.write('<script type="text/javascript" id="contentloadtag" defer="defer" src="javascript:void(0)"><\/script>');
+    var contentloadtag = document.getElementById("contentloadtag")
+    contentloadtag.onreadystatechange = function () {
+        if (this.readyState == "complete") {
+            alreadyrunflag = 1;
+            VanillaRunOnDomReady();
+        }
+    }
+}
+
+window.onload = function () {
+    setTimeout("if (!alreadyrunflag){VanillaRunOnDomReady}", 0);
+}
+
+//]]>  
+
+</script>
+
+
+<style id="holderjs-style" type="text/css"></style>
+<link rel="stylesheet" type="text/css" href="style/player.css">
+<!--
+<link rel="stylesheet" type="text/css" href="style/player.css">
+<link rel="stylesheet" type="text/css" href="http://fancyapps.com/fancybox/source/jquery.fancybox.css">
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.3.js"></script>
+<script id="www-widgetapi-script" src="http://s.ytimg.com/yts/jsbin/www-widgetapi-vflJYItO-.js" async=""></script>
+<script language="javascript" type="text/javascript" src="http://fancyapps.com/fancybox/source/jquery.fancybox.js"></script>
+<script language="javascript" type="text/javascript" src="static/player.js"></script>
+
+-->
