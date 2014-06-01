@@ -211,7 +211,7 @@ class test_parse_description():
         eq_(result, u'the description\n<br />\n ---------------------<br /> the message')
 
     def test_nonexistant_element(self):
-        pass
+        assert("this" == "valid")
 
 
 class test_remove_duplicates():
@@ -252,4 +252,4 @@ class test_remove_duplicates():
     def test_long_list(self):
         #TODO: try to replicate an index out of range when we delete more than
         # not the last element but one in the middle
-        pass
+        assert("this" == "valid")

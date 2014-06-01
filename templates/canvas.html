@@ -3,6 +3,7 @@
   <head>
 	{% include "meta.html" %}
 	<link rel="stylesheet" type="text/css" href="style/home.css">
+	<script src="static/social.js"></script>
   </head>
   <body>
     <fb:login-button autologoutlink="true" scope="read_stream"></fb:login-button>
@@ -17,7 +18,7 @@
 
     <div id="fb-root"></div> <!-- fb button -->
     
-    <h2>Enjoy the videos you and your friends share on facebook like a TV</h2>
+    <h2>Canvas style. Enjoy the videos you and your friends share on facebook like a TV</h2>
 
     {% if current_user %}
 	    <div>
@@ -40,9 +41,10 @@
 		cookie: true,
                 xfbml: true
 		});
-        FB.Event.subscribe('{% if current_user %}auth.logout{% else %}auth.login{% endif %}', function(response) {
-          {% if current_user %} window.location = "/logout" {% else %} window.location.reload(); {% endif %}
-        });
+	
+	FB.Event.subscribe('auth.authResponseChange', onAuthResponseChange);
+	FB.Event.subscribe('auth.statusChange', onStatusChange);
+
       };
       (function() {
         var e = document.createElement('script');
