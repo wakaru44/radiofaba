@@ -40,7 +40,6 @@ app = webapp2.WSGIApplication(
      ('/canvas', CanvasHandler),
      ('/canvas/', CanvasHandler),
      ('/list', ListHandler),
-     ('/advlist', AdvancedListHandler),
      ('/ownlist', OwnListHandler),
      ('/test', TestHandler),
      ('/logout', LogoutHandler)],
