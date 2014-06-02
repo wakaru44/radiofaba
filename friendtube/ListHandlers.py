@@ -34,7 +34,7 @@ class ListHandler(BS.BaseHandler):
                     "adv_player.html"
                     )
 
-class OwnListHandler(AdvancedListHandler):
+class OwnListHandler(ListHandler):
     def get(self):
         # we call the parent with other query.
         super(OwnListHandler, self).get(querys.fql_ownvideos , fql = True)

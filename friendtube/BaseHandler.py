@@ -85,7 +85,7 @@ class BaseHandler(webapp2.RequestHandler):
                 return self.session.get("user")
             else:
                 # This hits when the user has logged out
-                log.warning("Have we been logged out?")
+                log.warning("user logged out")
         return None
 
     def dispatch(self):
@@ -156,6 +156,7 @@ class BaseHandler(webapp2.RequestHandler):
                     error = "Please relogin again"
                 else:
                     log.warning("something bad happened or we are logged out")
+                    log.warning(e.message)
                     log.warning("Silencing exception")
                     #TODO: We should redirect to logout, just to check.
                     # Somehow, it seems to be a bad idea.

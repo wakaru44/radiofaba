@@ -10,7 +10,7 @@ from os.path import isfile,join
 
 import friendtube.HomeHandlers as HH
 
-class test_TestHandler():
+class test_HomeHandler_AddOns():
     @nottest
     def test_environment(self):
         print "sys.path"

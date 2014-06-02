@@ -59,10 +59,17 @@ class HomeHandler(BS.BaseHandler):
 
 
 class CanvasHandler(HomeHandler):
+    def get(self):
+        self.render({"data" : repr(self.request.params), "error":"errorerror" }, "canvas.html")
+
+
     def post(self):
         """handles the login process differently than HomeHandler, triggering it async"""
         log.debug("PARSING POST")
-        self.render = super(HomeHandler,post,"canvas.html")
+        #self.render = super(HomeHandler,post,"canvas.html")
+        log.debug(dir(super(HomeHandler)))
+        log.debug(super(HomeHandler))
+        self.render({"data":self.request.params}, "canvas.html")
         #super(HomeHandler,post)
 
 class LogoutHandler(BS.BaseHandler):

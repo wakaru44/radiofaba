@@ -203,10 +203,6 @@ class test_parse_description():
 
     def test_long_descriptions_must_be_trimmed(self):
         elem = {u'created_time': 1400579416, u'message': u'the message', u'actor_id': u'642011599209080', u'attachment': {u'media': [{u'src': u'preview_picture.jpg'}], u'href': u'http://youtube/link', u'name': u'lorem ipsum', u'description': u'the description'}}
-        import mock
-        foo = mock.Mock()
-        
-
         result = pr.parse_description(elem)
         eq_(result, u'the description\n<br />\n ---------------------<br /> the message')
 

@@ -3,7 +3,7 @@
 
 <div id="error">
 	<p style="color:red">
-	{{ error }}
+	{{ error |e }}
 	</p>
 </div><!-- error -->
 
@@ -12,7 +12,7 @@
 {% if thing %}
 <div id="debug">
 	<pre>
-	{{ thing }}
+	{{ thing |e }}
 	</pre>
 </div><!-- Error -->
 {% endif %}

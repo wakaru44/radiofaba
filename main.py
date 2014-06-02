@@ -29,7 +29,7 @@ import logging as log
 
 from friendtube.HomeHandlers import HomeHandler, CanvasHandler, LogoutHandler
 from friendtube.HomeHandlers import TestHandler
-from friendtube.ListHandlers import AdvancedListHandler, ListHandler, OwnListHandler
+from friendtube.ListHandlers import ListHandler, OwnListHandler
 
 config = {}
 config['webapp2_extras.sessions'] = dict(secret_key='')
