@@ -337,6 +337,15 @@ class HomeHandler(BaseHandler):
 
 
 
+class CanvasHandler(HomeHandler):
+    def post(self):
+        """handles the login process differently than HomeHandler, triggering it async"""
+        log.debug("PARSING POST")
+        self.render = super(HomeHandler,post,"canvas.html")
+        #super(HomeHandler,post)
+
+
+
 class LogoutHandler(BaseHandler):
     def get(self):
         if self.current_user is not None:
