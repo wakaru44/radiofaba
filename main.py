@@ -28,6 +28,7 @@ import jinja2
 import logging as log
 
 from friendtube.HomeHandlers import HomeHandler, CanvasHandler, LogoutHandler
+from friendtube.HomeHandlers import TestHandler
 from friendtube.ListHandlers import AdvancedListHandler, ListHandler, OwnListHandler
 
 config = {}
@@ -41,6 +42,7 @@ app = webapp2.WSGIApplication(
      ('/list', ListHandler),
      ('/advlist', AdvancedListHandler),
      ('/ownlist', OwnListHandler),
+     ('/test', TestHandler),
      ('/logout', LogoutHandler)],
     debug=True,
     config=config

@@ -7,6 +7,7 @@ import webapp2
 from webapp2_extras import sessions
 import jinja2
 from google.appengine.ext import db
+from google.appengine.api.app_identity import get_application_id
 import friendtube.querys as querys #TODO: try to remove this import 
 import friendtube.parsers as rparse
 
@@ -39,6 +40,8 @@ class BaseHandler(webapp2.RequestHandler):
     """
     @property
     def current_user(self):
+        log.warning("The instance was called from: " + self.app.active_instance.request.application_url)
+        log.warning("The instance was called from: " + get_application_id())
         if self.session.get("user"):
             # User is logged in
             return self.session.get("user")

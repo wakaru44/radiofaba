@@ -72,3 +72,49 @@ class LogoutHandler(BS.BaseHandler):
         self.redirect('/')
 
 
+class TestHandler(BS.BaseHandler):
+    def get(self):
+        data = ""
+        data += "<h2>{0}</h2>".format("dir(self.app)")
+        data += self.list2html(dir(self.app))
+        data += "<h2>{0}</h2>".format("active instance request application_url") 
+        data += self.thing2html(self.app.active_instance.request.application_url)
+        data += "<h2>{0}</h2>".format("app config")
+        data += self.thing2html(self.app.config)
+        data += "<h2>{0}</h2>".format("app config")
+        data += self.thing2html(self.app.config)
+        self.render(values = {"data": data}, template = "home.html" )
+
+    def list2html(self, things = None, htmlid = None, htmlclass = None):
+        """takes a list and returns an html string"""
+        html = u""
+        if things == None:
+            return html
+        else:
+            idout = u" id=\"{0}\" ".format(htmlid) if htmlid else ""
+            classout = u" class=\"{0}\" ".format(htmlclass) if htmlclass else ""
+            html += u"<ul{0}{1}>\n".format(idout, classout)
+            for thing in things:
+                element = u"<li>{0}</li>\n".format(thing)
+                html += element
+            html += u"</ul>\n"
+            return html
+
+    def thing2html(self, thing):
+        """creates a p  element from something"""
+        html_escape_table = {
+                    "&": "&amp;",
+                    '"': "&quot;",
+                    "'": "&apos;",
+                    ">": "&gt;",
+                    "<": "&lt;",
+                    }
+        what = repr((thing)).__str__()
+        flatting = "".join(c for c in what) # things works somehow fucki
+        html_escaped = "".join(html_escape_table.get(c,c) for c in flatting)
+        return "<pre>{0}</pre>\n".format(html_escaped)
+
+
+        
+
+
