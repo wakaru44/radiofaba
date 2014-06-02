@@ -16,10 +16,10 @@ handlers:
   static_dir: staticfiles
 
 - url: /list
-  script: friendtube.app
+  script: main.app
 
 - url: /.*
-  script: friendtube.app
+  script: main.app
 
 libraries:
 - name: jinja2
