@@ -352,6 +352,15 @@ class LogoutHandler(BaseHandler):
             self.session['user'] = None
         self.redirect('/')
 
+
+class CanvasHandler(HomeHandler):
+    def post(self):
+        """handles the login process differently than HomeHandler, triggering it async"""
+        log.debug("PARSING POST")
+        self.render = super(HomeHandler,post,"canvas.html")
+        #super(HomeHandler,post)
+
+
 jinja_environment = jinja2.Environment(
         loader=jinja2.FileSystemLoader(
             os.path.dirname(__file__) + "/templates"))
@@ -361,6 +370,8 @@ log.debug("The path for templates is" +
 
 app = webapp2.WSGIApplication(
     [('/', HomeHandler),
+     ('/canvas', CanvasHandler),
+     ('/canvas/', CanvasHandler),
      ('/list', ListHandler),
      ('/advlist', AdvancedListHandler),
      ('/ownlist', OwnListHandler),
