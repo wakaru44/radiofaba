@@ -49,6 +49,13 @@ class test_get_embed_youtube():
         res = pr.get_embed_youtube(tst)
         eq_(res, exp)
 
+    @raises(NotImplementedError)
+    def test_attribution_another_link(self):
+        exp = 'http://www.youtube.com/embed/?enablejsapi=1&wmode=opaque'
+        tst = 'http://www.youtube.com/attribution_link?a=xQgZSJGi75Q&u=%2Fplaylist%3Flist%3DPLF72C3E0A45E3093C'
+        res = pr.get_embed_youtube(tst)
+        eq_(res, exp)
+
     def test_attribution_safe_link(self):
         exp = 'http://www.youtube.com/embed/rSxIk9Qzmmw?enablejsapi=1&wmode=opaque'
         tst = 'https://www.youtube.com/attribution_link?a=gvouc-iy_pw&u=%2Fwatch%3Fv%3DrSxIk9Qzmmw%26feature%3Dshare'
@@ -210,7 +217,7 @@ class test_parse_description():
         assert("this" == "valid")
 
 
-class test_remove_duplicates():
+class test_clean_list_removes_duplicates():
     def setUp(self):
         self.data = [{'actor': [u'786664311344363'],
                    'created': '2014-05-20 15:59',
@@ -232,20 +239,22 @@ class test_remove_duplicates():
                    'title': u'La vida de Adele - Trailer en espan\u0303ol (HD)'}] 
 
 
-    def test_clean_list(self):
+    def test_long_list(self):
+        #TODO: try to replicate an index out of range when we delete more than
+        # not the last element but one in the middle
+        assert("this" == "valid")
+
+
+
+    def test_clean_list_reduces_a_list_with_duplicates(self):
         things = self.data
         clean = pr.clean_list(things)
         eq_(len(clean), 2)
 
     def test_add_actors(self):
+        #TODO: write this test
         things = self.data
         clean = pr.clean_list(things)
         print len(clean)
-        print len(clean[0]["actor"])
-        print len(clean[1]["actor"])
-        eq_(len(clean[1]["actor"]) , 2)
-
-    def test_long_list(self):
-        #TODO: try to replicate an index out of range when we delete more than
-        # not the last element but one in the middle
         assert("this" == "valid")
+

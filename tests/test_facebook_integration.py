@@ -166,7 +166,6 @@ class test_passmock(BaseTest):
         friendtube.BaseHandler.facebook.GraphAPI.fql = mock.MagicMock( return_value = fake_content)
         friendtube.BaseHandler.rparse = mock.MagicMock( return_value = fake_content)
         friendtube.BaseHandler.current_user = mock.MagicMock( return_value = fake_user )
-        friendtube.BaseHandler.rparse.clean_list = mock.MagicMock( return_value = fake_result)
 
         result = app.get_video_listing()
         eq_(friendtube.BaseHandler.rparse.called, True)

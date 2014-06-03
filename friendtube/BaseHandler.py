@@ -8,8 +8,6 @@ from webapp2_extras import sessions
 import jinja2
 from google.appengine.ext import db
 from google.appengine.api.app_identity import get_application_id
-import friendtube.querys as querys #TODO: try to remove this import 
-import friendtube.parsers as rparse
 
 FACEBOOK_APP_ID = "522368114539124"
 FACEBOOK_APP_SECRET = "e75e283da7fc04b8e752e25a9459ed7e"
@@ -64,11 +62,6 @@ class BaseHandler(webapp2.RequestHandler):
                     # Not an existing user so get user info
                     graph = facebook.GraphAPI(cookie["access_token"])
                     profile = graph.get_object("me")
-                    #TODO: extend the token. Test if should be done here.
-                    #extending = graph.extend_access_token(FACEBOOK_APP_ID,
-                    #                                      FACEBOOK_APP_SECRET)
-                    #log.debug("This is the new token: " + repr(extending))
-                    #log.debug("this is the old one: " + cookie["access_token"])
                     user = User(
                         key_name=str(profile["id"]),
                         id=str(profile["id"]),
@@ -91,7 +84,7 @@ class BaseHandler(webapp2.RequestHandler):
             else:
                 # This hits when the user has logged out
                 log.warning("user logged out")
-                raise LogoutException("me logged out tusa")
+                raise LogoutException("mesa logged out tusa")
         return None
 
     def dispatch(self):
@@ -122,12 +115,13 @@ class BaseHandler(webapp2.RequestHandler):
         by default it goes to the index page"""
         # There are some default values that we will always use
         values["facebook_app_id"]=FACEBOOK_APP_ID
+        # But the user has to be injected
         values["current_user"]=user
         # and then just load and render the template
         template = jinja_environment.get_template(template)
         self.response.out.write(template.render(values))
 
-    def do_query(self, query = None, fql = False):
+    def do_query(self, query = None, fql = False, user = None):
         """ Easy querying to facebook. It handles the errors and issues an
         retrieves just an empty dict with the errors if nothing returned.
         Returns a dict with the "data" and the "error" if any.
@@ -137,20 +131,24 @@ class BaseHandler(webapp2.RequestHandler):
         error = ""
 
         try:
-            if self.current_user  == None:
+            if user  == None:
+                # then try with the self property
+                user = self.current_user
+            if user == None:
+                # then its definetly logout
                 raise LogoutException("doing query") # send logout upstream
                                                        # and catch it up
             else:
-                cu = self.current_user
+                cu = user
             graph = facebook.GraphAPI(cu["access_token"])
-            log.debug("do Query: " + query)
+            log.debug("doing Query: " + query)
             if fql:
                 # Perform the fql query
                 result = graph.fql(query)
             else:
                 # Its a graph api query
                 result = graph.get_object(query)
-                log.debug( u"result"+ repr(result))
+                ##log.debug( u"result"+ repr(result))
         except LogoutException as e:
             log.exception(e)
             raise # this should be catched the later the better, on the caller
@@ -166,26 +164,11 @@ class BaseHandler(webapp2.RequestHandler):
                     #thing = u"Please go to <a href=\"/\">home</a>, logout, and come back in"
                     log.warning(e.message)
                     raise LogoutException("the query resulted in finished session")
-                    ## deactivating the following code.
-                    ##try:
-                    ##    # try to log the user
-                    ##    log.warning("The user session expired. {name} by id {id}".format(
-                    ##        name = self.session["user"]["name"],
-                    ##        id = self.session["user"]["id"]))
-                    ##except:
-                    ##    pass #expected and dont care if it fails to log
-                    ### and we should try to relogin again or something
-                    ##error = "Please relogin again"
                 else:
                     log.warning("something bad happened")
                     log.warning(e.message)
                     log.warning("Silencing exception")
                     error = e.message
-                    #TODO: We should redirect to logout, just to check.
-                    # Somehow, it seems to be a bad idea.
-                    #error = "Please relogin again"
-                    #But raising is also harmful.
-                    #raise
             except:
                 #reraise
                 raise
