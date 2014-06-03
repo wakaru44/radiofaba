@@ -18,7 +18,10 @@ class HomeHandler(BS.BaseHandler):
         friends = self.retrieve_friends()
         if friends["error"].find("relogin") >= 0:
             error = self.redirect("/logout")  # If we detect logged out here, go home
-        self.render({"friends" : friends["data"], "error":friends["error"] }, "home-0.2.html")
+        self.render({"friends" : friends["data"], "error":friends["error"] },
+                    "home-0.2.html",
+                    user = self.current_user
+                   )
 
     def retrieve_friends(self):
         friend_list = {"data": {}, "error":""}
@@ -49,7 +52,7 @@ class HomeHandler(BS.BaseHandler):
                       first using the standalone app in <a
                       href="simpleapp-test.appspot.com>simpleapp-test.appspot.com</a>"""
             
-            self.render()
+            self.render(user = current_user)
         except Exception as e:
             extra_info = rparse.nice_exception(e)
             self.response.out.write(template.render(data  = """Sorry, we are
@@ -60,7 +63,9 @@ class HomeHandler(BS.BaseHandler):
 
 class CanvasHandler(HomeHandler):
     def get(self):
-        self.render({"data" : repr(self.request.params), "error":"errorerror" }, "canvas.html")
+        self.render({"data" : repr(self.request.params), "error":"errorerror" },
+                    "canvas.html",
+                    user = self.current_user)
 
 
     def post(self):
@@ -69,7 +74,7 @@ class CanvasHandler(HomeHandler):
         #self.render = super(HomeHandler,post,"canvas.html")
         log.debug(dir(super(HomeHandler)))
         log.debug(super(HomeHandler))
-        self.render({"data":self.request.params}, "canvas.html")
+        self.render({"data":self.request.params}, "canvas.html", user = self.current_user)
         #super(HomeHandler,post)
 
 class LogoutHandler(BS.BaseHandler):
@@ -90,7 +95,9 @@ class TestHandler(BS.BaseHandler):
         data += self.thing2html(self.app.config)
         data += "<h2>{0}</h2>".format("app config")
         data += self.thing2html(self.app.config)
-        self.render(values = {"data": data}, template = "home-2.0.html" )
+        self.render(values = {"data": data},
+                    template = "home-2.0.html",
+                    user = self.current_user)
 
     def list2html(self, things = None, htmlid = None, htmlclass = None):
         """takes a list and returns an html string"""

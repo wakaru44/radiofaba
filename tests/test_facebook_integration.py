@@ -13,6 +13,8 @@ from nose.tools import assert_raises,eq_,raises,assert_true,ok_, nottest
 import facebook
 import friendtube
 from friendtube.BaseHandler import BaseHandler as BH
+from friendtube.ListHandlers import ListHandler as LH
+import friendtube.sampleresult as stored_sample
 
 class BaseTest(unittest.TestCase):
     pass
@@ -175,3 +177,50 @@ class test_passmock(BaseTest):
         eq_(result, "fake_result") 
         ## AssertionError: <MagicMock name='current_user.MagicMock()()' id='139788364583376'> != 'fake_result'
         #TODO: write something that works...
+
+
+class test_List_Handler(BaseTest):
+    @mock.patch('friendtube.ListHandlers.ListHandler.do_query')
+    def test_mock_do_query(self, mock = None):
+        """test pass if we can change do_query method on get list"""
+        lh = LH()
+        sample = {"data":[{"name":"aname"}]}
+        mock.return_value = sample
+        result = lh.do_query("/me")
+        eq_(result,sample)
+
+
+    @mock.patch('friendtube.ListHandlers.ListHandler.do_query')
+    @raises(AssertionError)  # TODO: find a better way to assert the redirect
+    def test_call_to_get_with_relogin_do_query_results_returns_redirect(self, mock = None):
+        """Verify that get sends us to the logout page if we are logged out"""
+        lh = LH()
+        sample = {"data":[{"bar":"foo"}],"error":"Please relogin again"}
+        mock.return_value = sample
+        friendtube.ListHandlers.ListHandler.render = mock.MagicMock()
+        result = lh.get()
+        eq_(result,sample)
+
+    @mock.patch('friendtube.ListHandlers.ListHandler.do_query')
+    def test_call_to_get_with_relogin_do_query_results_returns_redirect2(self, mock = None):
+        """Verify that get sends us to the logout page if we are logged out"""
+        lh = LH()
+        sample = {"data":[{"bar":"foo"}],"error":"Please relogin again"}
+        mock.return_value = sample
+        friendtube.ListHandlers.ListHandler.render = mock.MagicMock()
+        friendtube.ListHandlers.ListHandler.redirect = mock.MagicMock(return_value = None)
+        result = lh.get()
+        eq_(friendtube.ListHandlers.ListHandler.redirect.called, True)
+
+    @mock.patch('friendtube.ListHandlers.ListHandler.do_query')
+    def test_givin_good_sample_data_WAT(self, local_mock = None):
+        """Verify that we can test a correct page load"""
+        lh = LH()
+        stored_data = stored_sample.result
+        local_mock.return_value = { "data":stored_data, "error":""}
+        friendtube.ListHandlers.ListHandler.render = mock.MagicMock()
+        result = lh.get()
+        eq_(result, stored_sample.result)
+
+
+
