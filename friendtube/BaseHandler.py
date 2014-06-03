@@ -132,7 +132,7 @@ class BaseHandler(webapp2.RequestHandler):
 
         try:
             graph = facebook.GraphAPI(self.current_user['access_token'])
-            log.debug("Query: " + query)
+            log.debug("do Query: " + query)
             if fql:
                 # Perform the fql query
                 result = graph.fql(query)
@@ -182,12 +182,13 @@ class BaseHandler(webapp2.RequestHandler):
         #query = querys.filters_newsfeed
         graph = facebook.GraphAPI(self.current_user['access_token'])
         try:
-            log.debug("Query: " + query)
+            log.debug("get video listing Query: " + query)
             # Perform the fql query
             result = graph.fql(query)
+            log.debug( u"result from get_video_listing: "+ repr(result.called))
             video_list = rparse.parse_json_video_listing(result)
             result_parsed = rparse.clean_list(video_list)
-            log.debug( u"result"+ repr(result))
+            log.debug( u"result from get_video_listing: "+ repr(result))
             # GraphAPIError , and if there is expired, means that we need to relogin
             # GraphAPIError 606, and if there is "permission" means we have no rights
         except Exception as e:
