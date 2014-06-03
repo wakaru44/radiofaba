@@ -18,7 +18,7 @@ class HomeHandler(BS.BaseHandler):
         friends = self.retrieve_friends()
         if friends["error"].find("relogin") >= 0:
             error = self.redirect("/logout")  # If we detect logged out here, go home
-        self.render({"friends" : friends["data"], "error":friends["error"] })
+        self.render({"friends" : friends["data"], "error":friends["error"] }, "home-0.2.html")
 
     def retrieve_friends(self):
         friend_list = {"data": {}, "error":""}
@@ -90,7 +90,7 @@ class TestHandler(BS.BaseHandler):
         data += self.thing2html(self.app.config)
         data += "<h2>{0}</h2>".format("app config")
         data += self.thing2html(self.app.config)
-        self.render(values = {"data": data}, template = "home.html" )
+        self.render(values = {"data": data}, template = "home-2.0.html" )
 
     def list2html(self, things = None, htmlid = None, htmlclass = None):
         """takes a list and returns an html string"""

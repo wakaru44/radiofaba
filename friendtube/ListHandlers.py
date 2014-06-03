@@ -31,7 +31,8 @@ class ListHandler(BS.BaseHandler):
                         playlist = listing,
                         error = fblist["error"]
                     ),
-                    "player.html"
+                    #"player.html"
+                    "player-0.2.html"
                     )
 
 class OwnListHandler(ListHandler):

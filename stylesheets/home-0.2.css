@@ -1,5 +1,6 @@
 
-		* {
+	
+	* {
 		margin:0;
 		padding:0;
 	}
@@ -38,7 +39,7 @@
         margin-right:10%;
     }
 	 
-	.video{
+	#text-corpse{
         width:100%;
         height:280px;
 		background-color:rgba(216,219,219,0.8);
@@ -164,4 +165,11 @@
 		a:hover{
 		text-decoration:none;
 		color:rgba(255,255,255,0.7);
+		}
+
+
+		@font-face {
+		font-family: 'Bellota';
+		src: url('fonts/Bellota-Regular.otf');
+		src: local('Bellota-Regular'), local('Bellota-Regular'),
 		}
