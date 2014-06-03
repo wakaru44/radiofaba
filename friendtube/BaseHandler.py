@@ -137,7 +137,6 @@ class BaseHandler(webapp2.RequestHandler):
         error = ""
 
         try:
-            log.debug("SELFIE")
             if self.current_user  == None:
                 raise LogoutException("doing query") # send logout upstream
                                                        # and catch it up
@@ -165,17 +164,18 @@ class BaseHandler(webapp2.RequestHandler):
                 # try to guess if we run out of time
                 if e.message.find(u"Session has expired") > 0 or e.message.find(u"user logged out") > 0:
                     #thing = u"Please go to <a href=\"/\">home</a>, logout, and come back in"
-                    raise LogoutException("the query resulted in finished session")
                     log.warning(e.message)
-                    try:
-                        # try to log the user
-                        log.warning("The user session expired. {name} by id {id}".format(
-                            name = self.session["user"]["name"],
-                            id = self.session["user"]["id"]))
-                    except:
-                        pass #expected and dont care if it fails to log
-                    # and we should try to relogin again or something
-                    error = "Please relogin again"
+                    raise LogoutException("the query resulted in finished session")
+                    ## deactivating the following code.
+                    ##try:
+                    ##    # try to log the user
+                    ##    log.warning("The user session expired. {name} by id {id}".format(
+                    ##        name = self.session["user"]["name"],
+                    ##        id = self.session["user"]["id"]))
+                    ##except:
+                    ##    pass #expected and dont care if it fails to log
+                    ### and we should try to relogin again or something
+                    ##error = "Please relogin again"
                 else:
                     log.warning("something bad happened")
                     log.warning(e.message)
@@ -190,8 +190,6 @@ class BaseHandler(webapp2.RequestHandler):
                 #reraise
                 raise
 
-            # TODO: test here if we should return sample results or what. by
-            # now, just empty
         return {"data":result["data"],"error":error}
 
 
