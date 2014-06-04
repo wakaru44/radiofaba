@@ -51,14 +51,16 @@ class ListHandler(BS.BaseHandler):
             query = querys.filters_newsfeed  # This is the default query
             fql = True
         fblist = self.do_query(query, fql, user)
-        # sample data failover
         if fblist["data"] == []:
-            # then load the sample results
+            # sample data failover flow
+            # load the sample results
             log.warning("Loading sample results")
             import friendtube.sampleresult as smpl
             listing = rparse.parse_json_video_listing(smpl.result_works)
         else:
-            listing = rparse.parse_json_video_listing(fblist)
+            # we clean the data received.
+            raw_listing = rparse.parse_json_video_listing(fblist)
+            listing = rparse.clean_list(raw_listing)
         return { "data":listing, "error":fblist["error"] }
 
 
