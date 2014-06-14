@@ -89,6 +89,7 @@ def get_embed_youtube(link = None):
     This is the new method, thinking only in youtube"""
     assert(link != None)
     assert(link != "")
+    log.debug( "preparsed link: " + link)
     rlink = ""
     try:
         # break the link
@@ -100,17 +101,38 @@ def get_embed_youtube(link = None):
             # Its an attribution link, a bit special
             rlink = blink[3][blink[3].find("watch"):][12:].split("%")[0]
         else:
-            rlink = blink[3].split("&")[0].split("?")[1][2:]
+            # This should be a regular link
+            #rlink = blink[3].split("&")[0].split("?")[1][2:]
+            rlink = blink[3].split("&")
+            log.debug("HERE: " + repr(rlink))
+            # But regular links can be inverted too.
+            ######################
+            # fancy (and not very readable) way to clean a list of youtube
+            # videos
+            # l = list_of_youtube_videos
+            # miregex = '(.*)v=(.*)&?(.*)'
+            # map(lambda x: x.split("&")[0] if x != None and (len(x) > 12) else x ,
+            #     map(lambda x:  x.group(2) if x else None, 
+            #         map(lambda x: re.search(miregex, x), l)
+            #        )
+            #    )
     except Exception as e:
-        log.exception(e)
         log.error("Something weird happened when trying to get embed link")
+        log.exception(e)
         raise NotImplementedError( "We are still working on links like " + link)
     # and dont forget those links with # params
-    rlink = rlink.split("#")[0]
-    # and finally compose the embed link
-    flink = "http://www.youtube.com/embed/{0}?enablejsapi=1&wmode=opaque".format(
-            rlink
-            )
+    try: 
+        #TODO: this part causes many issues and false positives. improve.
+        rlink = rlink.split("#")[0]
+        # and finally compose the embed link
+        flink = "http://www.youtube.com/embed/{0}?enablejsapi=1&wmode=opaque".format(
+                rlink
+                )
+        log.debug( "compound link: " + flink)
+    except Exception as e:
+        log.error("Something weird happened when ending getting embed youtube")
+        log.exception(e)
+        raise NotImplementedError( "We are still working on links like " + link)
     return flink
 
 
@@ -120,7 +142,6 @@ def get_embed(link = None):
     flink = "" # resulting link
     assert(link != None)
     assert(link != "")
-    log.debug( "preparsed link: " + link)
     if link.find("youtu") > 0:
         # it is probably a youtube video
         flink = get_embed_youtube(link)
@@ -130,7 +151,6 @@ def get_embed(link = None):
     else:
         raise NotImplementedError( "We are still working on " + link.__str__() )
 
-    log.debug( "compound link: " + flink)
     return flink
 
 

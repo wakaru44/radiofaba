@@ -25,7 +25,7 @@ class HomeHandler(BS.BaseHandler):
             current_user = None
             # we should show the demo page anyway
         self.render({"friends" : friends["data"], "error":friends["error"] },
-                    "home-0.2.html",
+                    "home-0.4.html",
                     user = current_user
                    )
 

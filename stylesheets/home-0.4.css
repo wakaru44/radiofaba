@@ -1,0 +1,130 @@
+/* elementos comunes */
+
+	* {
+		margin:0;
+		padding:0;
+		}
+	
+	body{
+		background-image: url("background.jpg");
+		font-family: Helvetica,Century Gothic,sans-serif;
+		color:black;
+		font-size:15px;
+		line-height:1.8em;
+		}
+	
+	#header{
+		width:60%;
+		height:300px;
+		margin:0 auto 0 auto;
+		background-image: url("square.png");
+		background-repeat: no-repeat;
+		position: absolute;
+		}
+		
+	#content{
+		width:80%;
+		background-color:rgba(255,255,255,1);
+		box-shadow:10px 10px 10px 5px rgba(72,72,72,0.2);	
+		margin-top: 0px;
+		margin-left: 10%;
+		margin-right: 10%;
+		padding-bottom:50px;
+		}
+		
+		
+/* etiquetas creadas por ti (y derivadas de éstas) que he modificado */
+		
+	#user{
+		width:27%;
+		height:90px;
+		background-color:rgba(216,219,219,1);
+		border-bottom-right-radius:15px;
+		-moz-border-bottomright-radius:25px;
+		border-bottom-left-radius:15px;
+		-moz-border-bottomleftt-radius:25px;
+		box-shadow:2px 2px 8px #574D4B;	
+		margin-left:75%;
+		}
+	#user img{
+		margin:5% 5% 0 10%;
+		float:left;
+		}
+	
+	#text-corpse{
+        width:90%;
+		background-color:rgba(216,219,219,0.8);
+		border-top-right-radius:15px;
+		-moz-border-topright-radius:25px;
+		border-top-left-radius:15px;
+		-moz-border-topleftt-radius:25px;
+		border-bottom-right-radius:15px;
+		-moz-border-bottomright-radius:25px;
+		border-bottom-left-radius:15px;
+		-moz-border-bottomleftt-radius:25px;
+		margin-top: 25px;
+		margin-left:5%;
+    	}
+
+     .text-box{
+		text-align: left;
+		margin-left:50px;
+		padding-top:50px;
+    	}
+    
+	#friend_list{
+    	text-align: left;
+    	padding:0 0 2em;
+		}
+
+	ul {
+		list-style:none;
+		}
+
+ 	 #friend_list img{
+    	margin-left:50px;
+    	}
+
+
+/* textos a mayores */
+		
+		h1{
+		font-family: Bellota,Century Gothic,sans-serif;
+		color:white;
+		text-shadow: 3px 3px #574D4B;
+		font-size:50px;
+        font-weight: bold;
+        margin-top:45px;
+        margin-left:159px;
+		}
+		
+		#subtitle{
+		width:94%;
+        font-family: Bellota,Century Gothic,sans-serif;
+		color:grey;
+		font-size:16px;
+		text-align: right;
+		margin-top:120px;
+		}
+		
+		.text-user{
+		text-align:justify;
+		font-family:Century Gothic,sans-serif;
+		color:black;
+		font-size:13px;
+		line-height:2,5em;
+		padding-top:11px;		
+		}
+		
+		a:link{
+		text-decoration:none;
+		color:#678891;
+		}
+		a:visited{
+		text-decoration:none;
+		color:white;
+		}
+		a:hover{
+		text-decoration:none;
+		color:rgba(255,255,255,0.7);
+		}

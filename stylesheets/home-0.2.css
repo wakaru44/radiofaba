@@ -1,4 +1,4 @@
-
+@import url("fonts-0.2.css");
 	
 	* {
 		margin:0;
@@ -167,9 +167,3 @@
 		color:rgba(255,255,255,0.7);
 		}
 
-
-		@font-face {
-		font-family: 'Bellota';
-		src: url('fonts/Bellota-Regular.otf');
-		src: local('Bellota-Regular'), local('Bellota-Regular'),
-		}
