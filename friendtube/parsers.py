@@ -4,6 +4,7 @@ import logging as log
 import datetime
 import re
 
+import friendtube.parse_youtube as p_y
 
 def parse_json_video_listing(fb_result = None):
     """ converts the result of a fb query to the expected dicts
@@ -85,14 +86,6 @@ def parse_description(element = None):
                             )
 
 
-def get_embed_youtube(link = None):
-    """
-    TODO: Implement this right
-    Writting this. getting it out of it in the meantime.
-    """
-    import friendtube.parse_youtube as py
-    py.old_get_embed_youtube(link)
-
 def get_embed(link = None):
     """returns the embed link to the video provided
     """
@@ -101,7 +94,7 @@ def get_embed(link = None):
     assert(link != "")
     if link.find("youtu") > 0:
         # it is probably a youtube video
-        flink = get_embed_youtube(link)
+        flink = p_y.get_embed_youtube(link)
     elif link.find("vimeo") > 0:
         # Its probably a vimeo Video
         raise NotImplementedError, "We are still working on new video providers"

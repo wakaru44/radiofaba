@@ -4,43 +4,6 @@ import logging as log
 import datetime
 import re
 
-def get_embed_youtube(link = None):
-    """
-    Returns the embed link to the video provided.
-    This is thinking only in youtube"""
-    assert(link != None)
-    assert(link != "")
-    log.debug( "preparsed link: " + link)
-    video_id = ""
-    try:
-        # break the link
-        choppedLink = link.split("/")
-        if choppedLink[2].find("youtu.be") >= 0:
-            # Parse short link getting only last piece
-            video_id = get_id_shortlink(choppedLink)
-        elif choppedLink[3].find("attribution_link") >= 0 :
-            # Its an attribution link, a bit special
-            video_id = get_id_attribution(choppedLink)
-            log.debug("attrr:::::: " + repr(video_id))
-        else:
-            # This should be a regular link
-            video_id = get_id_regular_link(choppedLink)
-    except Exception as e:
-        log.error("Something weird happened when trying to get embed link")
-        log.exception(e)
-        raise NotImplementedError( "We are still working on links like " + link)
-    # and dont forget those links with # params
-    try: 
-        # and finally compose the embed link
-        flink = "http://www.youtube.com/embed/{0}?enablejsapi=1&wmode=opaque".format(
-                video_id
-                )
-        log.debug( "compound link: " + flink)
-    except Exception as e:
-        log.error("Something weird happened when ending getting embed youtube")
-        log.exception(e)
-        raise NotImplementedError( "We are still working on links like " + link)
-    return flink
 
 def legacy_check(link = None):
     """returns a chopped link if given a string.
@@ -58,16 +21,17 @@ def regex_video_id(param):
     """
     miregex = '(.*)v=(.*)&?(.*)'
     vid = None
-    log.debug("get video id: " + repr(param))
+    #log.debug("get video id: " + repr(param))
     try:
         rs = re.search(miregex, param)
         params = rs.group(2)
-        log.debug("params " + params)
+        #log.debug("params " + params)
         vid = params
         #id = params.split("&")[0] if params != None and len(params)>12 else params
     except Exception as e:
-        log.debug("HURU")
+        #log.debug("HURU")
         #log.exception(e)
+        pass # yes, we pass
     return vid
 
 def search_video_id(broken_link):
@@ -136,8 +100,42 @@ def get_id_shortlink(link = None):
     return id
 
 
+def compose_embed_youtube(video_id = None):
+    """return a link to youtube"""
+    assert(video_id != None)
+    return "http://www.youtube.com/embed/{0}?enablejsapi=1&wmode=opaque".format(
+                video_id
+                )
 
-def new_get_embed_youtube(link = None):
-    return get_embed_youtube(link)
 
+def get_embed_youtube(link = None):
+    """
+    Returns the embed link to the video provided.
+    This is thinking only in youtube"""
+    assert(link != None)
+    assert(link != "")
+    log.debug( "preparsed link: " + link)
+    video_id = ""
+    try:
+        # break the link
+        choppedLink = link.split("/")
+        if choppedLink[2].find("youtu.be") >= 0:
+            # Parse short link getting only last piece
+            video_id = get_id_shortlink(choppedLink)
+        elif choppedLink[3].find("attribution_link") >= 0 :
+            # Its an attribution link, a bit special
+            video_id = get_id_attribution(choppedLink)
+        else:
+            # This should be a regular link
+            video_id = get_id_regular_link(choppedLink)
+
+        # and finally compose the embed link
+        flink = compose_embed_youtube(video_id)
+        log.debug( "compound link: " + flink)
+    except Exception as e:
+        log.error("Something weird happened when ending getting embed youtube")
+        log.exception(e)
+        raise NotImplementedError( "We are still working on links like " + link)
+
+    return flink
 
