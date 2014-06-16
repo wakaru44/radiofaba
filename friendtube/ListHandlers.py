@@ -61,6 +61,9 @@ class ListHandler(BS.BaseHandler):
             # we clean the data received.
             raw_listing = rparse.parse_json_video_listing(fblist)
             listing = rparse.clean_list(raw_listing)
+            # In the next version, we will use 
+            # new_translate_fbresult_to_listing(fb_result)
+            # with no ordering required
         return { "data":listing, "error":fblist["error"] }
 
 
