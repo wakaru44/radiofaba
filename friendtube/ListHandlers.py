@@ -27,7 +27,7 @@ class ListHandler(BS.BaseHandler):
                             error = parsed_list["error"]
                         ),
                         #"player.html"
-                        "player-0.2.html",
+                        "player-0.2b.html",
                         user = self.current_user
                         )
         except LogoutException as e:
