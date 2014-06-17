@@ -10,4 +10,4 @@ before_script:
 - wget https://googleappengine.googlecode.com/files/google_appengine_1.8.9.zip -nv
 - unzip -q google_appengine_1.8.9.zip
 # command to run tests, e.g. python setup.py test
-script:  nosetests test/
+script:  nosetests tests/
