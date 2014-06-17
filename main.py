@@ -102,7 +102,7 @@ class BaseHandler(webapp2.RequestHandler):
                 return self.session.get("user")
             else:
                 # This hits when the user has logged out
-                log.warning("Have we been logged out?")
+                log.warning("user logged out")
         return None
 
     def dispatch(self):
@@ -173,6 +173,7 @@ class BaseHandler(webapp2.RequestHandler):
                     error = "Please relogin again"
                 else:
                     log.warning("something bad happened or we are logged out")
+                    log.warning(e.message)
                     raise
             except:
                 #reraise
@@ -338,10 +339,39 @@ class HomeHandler(BaseHandler):
 
 
 class CanvasHandler(HomeHandler):
+    def get(self):
+        """Just print hi"""
+        appurl = self.app.active_instance.request.application_url
+        from google.appengine.api.app_identity import get_application_id
+        appid = get_application_id()
+        msg ="""
+                              Hi dear user. This feature is not yet
+                              implemented.
+                              Please, submit a request using the question mark
+                              on the corner of this page.""" 
+        content = """
+        Message:
+            {0}
+
+        appid:
+            {1}
+
+        appurl:
+            {2}
+
+        request params:
+            {3}
+            """.format(msg,appid, appurl,self.request.params.items()  )
+
+        
+        self.render(values = {"data":content}, template = "canvas.html")
+
+
     def post(self):
         """handles the login process differently than HomeHandler, triggering it async"""
         log.debug("PARSING POST")
-        self.render = super(HomeHandler,post,"canvas.html")
+        log.debug(self.request.POST)
+        self.get()
         #super(HomeHandler,post)
 
 
@@ -351,14 +381,6 @@ class LogoutHandler(BaseHandler):
         if self.current_user is not None:
             self.session['user'] = None
         self.redirect('/')
-
-
-class CanvasHandler(HomeHandler):
-    def post(self):
-        """handles the login process differently than HomeHandler, triggering it async"""
-        log.debug("PARSING POST")
-        self.render = super(HomeHandler,post,"canvas.html")
-        #super(HomeHandler,post)
 
 
 jinja_environment = jinja2.Environment(
