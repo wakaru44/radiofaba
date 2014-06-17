@@ -63,7 +63,7 @@ ul {
 }
 
 #video-list>ul>li>a>img{
-    width:129px;/*For some reason, this selector does not work.trying to fix it*/
+    width:129px;
 }
 
 .videopreview{

@@ -1,8 +1,8 @@
 <html>
 
 <head>
-	{% include "meta.html" %}
-	{% include "headScripts.html" %}
+{% include "meta.html" %}
+{% include "headScripts.html" %}
 </head>
 
 <body class=" __plain_text_READY__">
@@ -13,7 +13,14 @@
 <h2>RadioFB</h2>
 <h4>Start playing one video and the rest will follow automaticlly</h4>
 <div id="user">
-	here comes the user info....
+    {% if current_user %}
+      <p>
+	<a href="{{ current_user.profile_url }}">
+	<img src="http://graph.facebook.com/v2.0/{{ current_user.id }}/picture?type=square"/></a>
+      </p>
+      <p>Hello, {{ current_user.name|escape }}</p>
+    {% endif %}
+
 </div>
 <div id="content">
 {% include "error.html" %}
@@ -74,5 +81,8 @@ function getActorName(uid)
 	//As per the testing done, this only works if its inside the body http://jsfiddle.net/wakaru44/rLLff/
 	$( ".actor" ).text(actor_name)
 </script>
+    <div id=uservoice>
+	{% include "uservoice.html" %}
+    </div>
 </body>
 </html>

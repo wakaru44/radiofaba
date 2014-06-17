@@ -7,8 +7,7 @@ import webapp2
 from webapp2_extras import sessions
 import jinja2
 from google.appengine.ext import db
-import friendtube.querys as querys #TODO: try to remove this import 
-import friendtube.parsers as rparse
+from google.appengine.api.app_identity import get_application_id
 
 FACEBOOK_APP_ID = "522368114539124"
 FACEBOOK_APP_SECRET = "e75e283da7fc04b8e752e25a9459ed7e"
@@ -29,6 +28,11 @@ class User(db.Model):
     access_token = db.StringProperty(required=True)
 
 
+class LogoutException(Exception):
+    def __init__(self,*vars,**kwds):
+        super(Exception,self).__init__(*vars,**kwds)
+
+
 class BaseHandler(webapp2.RequestHandler):
     """Provides access to the active Facebook user in self.current_user
 
@@ -39,6 +43,8 @@ class BaseHandler(webapp2.RequestHandler):
     """
     @property
     def current_user(self):
+        log.warning("The instance was called from: " + self.app.active_instance.request.application_url)
+        log.warning("The instance was called from: " + get_application_id())
         if self.session.get("user"):
             # User is logged in
             return self.session.get("user")
@@ -56,11 +62,6 @@ class BaseHandler(webapp2.RequestHandler):
                     # Not an existing user so get user info
                     graph = facebook.GraphAPI(cookie["access_token"])
                     profile = graph.get_object("me")
-                    #TODO: extend the token. Test if should be done here.
-                    #extending = graph.extend_access_token(FACEBOOK_APP_ID,
-                    #                                      FACEBOOK_APP_SECRET)
-                    #log.debug("This is the new token: " + repr(extending))
-                    #log.debug("this is the old one: " + cookie["access_token"])
                     user = User(
                         key_name=str(profile["id"]),
                         id=str(profile["id"]),
@@ -82,7 +83,8 @@ class BaseHandler(webapp2.RequestHandler):
                 return self.session.get("user")
             else:
                 # This hits when the user has logged out
-                log.warning("Have we been logged out?")
+                log.warning("user logged out")
+                raise LogoutException("mesa logged out tusa")
         return None
 
     def dispatch(self):
@@ -108,17 +110,18 @@ class BaseHandler(webapp2.RequestHandler):
         """
         return self.session_store.get_session()
 
-    def render(self, values = {}, template = "home.html"):
+    def render(self, values = {}, template = "home.html", user = None):
         """render the values in the template.
         by default it goes to the index page"""
         # There are some default values that we will always use
         values["facebook_app_id"]=FACEBOOK_APP_ID
-        values["current_user"]=self.current_user
+        # But the user has to be injected
+        values["current_user"]=user
         # and then just load and render the template
         template = jinja_environment.get_template(template)
         self.response.out.write(template.render(values))
 
-    def do_query(self, query = None, fql = False):
+    def do_query(self, query = None, fql = False, user = None):
         """ Easy querying to facebook. It handles the errors and issues an
         retrieves just an empty dict with the errors if nothing returned.
         Returns a dict with the "data" and the "error" if any.
@@ -128,88 +131,49 @@ class BaseHandler(webapp2.RequestHandler):
         error = ""
 
         try:
-            graph = facebook.GraphAPI(self.current_user['access_token'])
-            log.debug("Query: " + query)
+            if user  == None:
+                # then try with the self property
+                user = self.current_user
+            if user == None:
+                # then its definetly logout
+                raise LogoutException("doing query") # send logout upstream
+                                                       # and catch it up
+            else:
+                cu = user
+            graph = facebook.GraphAPI(cu["access_token"])
+            log.debug("doing Query: " + query)
             if fql:
                 # Perform the fql query
                 result = graph.fql(query)
             else:
                 # Its a graph api query
                 result = graph.get_object(query)
-                log.debug( u"result"+ repr(result))
+                ##log.debug( u"result"+ repr(result))
+        except LogoutException as e:
+            log.exception(e)
+            raise # this should be catched the later the better, on the caller
+                  # that decides the flow ofthe application
         except Exception as e:
             # GraphAPIError , and if there is expired, means that we need to relogin
             # GraphAPIError 606, and if there is "permission" means we have no rights
+            log.debug("pokemon exception")
             log.exception(e)
             try:
                 # try to guess if we run out of time
-                if e.message.find(u"Session has expired") > 0 or e.message.find(u"the user logged out") > 0:
+                if e.message.find(u"Session has expired") > 0 or e.message.find(u"user logged out") > 0:
                     #thing = u"Please go to <a href=\"/\">home</a>, logout, and come back in"
                     log.warning(e.message)
-                    log.warning("The user session expired. {name} by id {id}".format(
-                        name = self.session["user"]["name"],
-                        id = self.session["user"]["id"]))
-                    # and we should try to relogin again or something
-                    error = "Please relogin again"
+                    raise LogoutException("the query resulted in finished session")
                 else:
-                    log.warning("something bad happened or we are logged out")
+                    log.warning("something bad happened")
+                    log.warning(e.message)
                     log.warning("Silencing exception")
-                    #TODO: We should redirect to logout, just to check.
-                    # Somehow, it seems to be a bad idea.
-                    #error = "Please relogin again"
-                    #But raising is also harmful.
-                    #raise
+                    error = e.message
             except:
                 #reraise
                 raise
 
-            # TODO: test here if we should return sample results or what. by
-            # now, just empty
         return {"data":result["data"],"error":error}
 
-
-
-    def get_video_listing(self, query = querys.filters_newsfeed):
-        """ gets a list of videos and returns it as a list of thingis.
-        To take a look at what kind of list and dicts we expect, take a 
-        look at the parsers.py module in friendtube
-        DEPRECATED. now we prefer do_query
-        """
-        #query = querys.filters_newsfeed
-        graph = facebook.GraphAPI(self.current_user['access_token'])
-        try:
-            log.debug("Query: " + query)
-            # Perform the fql query
-            result = graph.fql(query)
-            video_list = rparse.parse_json_video_listing(result)
-            result_parsed = rparse.clean_list(video_list)
-            log.debug( u"result"+ repr(result))
-            # GraphAPIError , and if there is expired, means that we need to relogin
-            # GraphAPIError 606, and if there is "permission" means we have no rights
-        except Exception as e:
-            log.exception(e)
-            try:
-                # try to guess if we run out of time
-                if e.message.find(u"Session has expired") > 0 or e.message.find(u"the user logged out") > 0:
-                    #thing = u"Please go to <a href=\"/\">home</a>, logout, and come back in"
-                    log.warning("The user session expired")
-                    # and try to extend the session
-                    #TODO: it does not work this way. delete this 
-                    graph = facebook.GraphAPI(self.request.cookies)
-                    extending = graph.extend_access_token(
-                        FACEBOOK_APP_ID,
-                        FACEBOOK_APP_SECRET)
-                    result = graph.fql(query)
-                    result_parsed = rparse.parse_json_video_listing(result)
-                else:
-                    log.warning("something bad happened")
-                    raise
-            except Exception as e:
-                raise
-
-            # then load the sample results
-            import friendtube.sampleresult as smpl
-            result_parsed = rparse.parse_json_video_listing(smpl.result)
-        return result_parsed
 
 

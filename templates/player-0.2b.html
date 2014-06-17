@@ -1,0 +1,109 @@
+<!DOCTYPE HTML>
+<html lang="es">
+<head>
+{% include "meta.html" %}
+{% include "headScripts.html" %}
+	
+	<link rel="stylesheet" type="text/css" media="screen and (max-width:1900px)" href="style/player-0.2b.css">	
+    
+</head>
+
+<body class=" __plain_text_READY__">
+
+<!-- This loads the YouTube IFrame Player API code -->
+<script src="http://www.youtube.com/player_api"></script>
+
+<div id="fb-root"></div> <!-- fb button -->
+
+<div id="header"><h1>FriendTube</h1></div>
+				    
+<div id="content">
+
+	<div id="user">
+	    {% if current_user %}
+	      <p>
+		<a href="{{ current_user.profile_url }}">
+		<img src="http://graph.facebook.com/v2.0/{{ current_user.id }}/picture?type=square"/></a>
+	      </p>
+	      <p>Hello, {{ current_user.name|escape }}</p>
+	      <fb:login-button autologoutlink="true" scope="read_stream"></fb:login-button>
+	    {% endif %}
+	</div><!-- user -->
+
+	<div id="subtitle"><p class="text-leyend">Start playing one video and the rest will follow automaticlly</p> </div>
+<br>
+<br>
+<br>
+		{% include "error.html" %}
+	<ul id="sortable" id="section" > 
+	{% if playlist %}
+	    {% for video in playlist %}
+	<li class="video">
+	    <span class="deleter"><img src="style/close.png" width="40px" /></span>
+		<div class="video-box">
+		    <a class="fancybox fancybox.iframe text-title" href="{{ video["link"]}}">{{ video["title"] }}
+			    <br />
+			    <img class="videopreview" src="{{ video["preview"] }}" />
+		    </a>
+		    <p>Shared by 
+				<span class="actor">{{ video["actor"].pop() }}</span>
+				    {% if video["actor"].__len__() > 1 %}
+					{% for friend in video["actor"] %}
+						and <span class="actor">{{ friend }}</span>
+					{% endfor %}
+				    {% endif %}
+		    </p>
+		    <p>{{ video["created"] }}</p>
+		    <p id="compartir">Compartir
+			    <span class="soc_net">en fb</span>
+			    <span class="soc_net">en tuter</span>
+			    <span class="soc_net">y otras mierdas</span>
+		    </p>
+		</div><!-- video box -->
+
+    			<div class="text-box"><p class="text-video">
+			    {{ video["desc"] }}
+			    <div class="comment_fb">
+
+			    </div>
+			    <div class="comment_vid">
+
+			    </div>
+    			</p></div>
+	    </li>
+	    {%endfor%}
+	{% endif %}
+	 
+	</ul>
+	</div>
+
+<script>
+//My functions to get user names
+function httpGet(theUrl)
+{
+    var xmlHttp = null;
+
+    xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "GET", theUrl, false );
+    xmlHttp.send( null );
+    return xmlHttp.responseText;
+}
+
+function getActorName(uid)
+{
+    url = "https://graph.facebook.com/"
+    data = httpGet(url + uid)
+    return JSON.parse(data)["name"]
+}
+	function actor_name(index,oldText){ return '' + getActorName(oldText) }
+	//As per the testing done, this only works if its inside the body http://jsfiddle.net/wakaru44/rLLff/
+	$( ".actor" ).text(actor_name)
+</script>
+
+    <div id=uservoice>
+	{% include "uservoice.html" %}
+    </div>
+
+</body>
+</html>
+

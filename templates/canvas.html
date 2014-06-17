@@ -67,9 +67,16 @@
 	    </ul>
     </div>
     {% endif %}
+
+    <form name="tester" action="/canvas" method="post">
+	inputdata:
+	<input type="text" name="inputdata">
+	<input type="submit" value="Submit">
+    </form>
+
     {% if data %}
     <div>
-	    {{ data }}
+	    {{ data|e }}
     </div>
     {% endif %}
     <div id=uservoice>

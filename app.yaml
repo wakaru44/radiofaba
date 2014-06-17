@@ -9,6 +9,9 @@ handlers:
   static_files: stylesheets/favicon.ico
   upload: stylesheets/favicon\.ico
 
+- url: /fonts
+  static_dir: stylesheets/fonts
+
 - url: /static
   static_dir: staticfiles
 
