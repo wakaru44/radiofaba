@@ -17,6 +17,8 @@ import facebook
 import os
 import unittest
 
+from nose.tools import nottest
+
 
 class FacebookTestCase(unittest.TestCase):
     """Sets up application ID and secret from environment."""
@@ -37,6 +39,7 @@ class TestGetAppAccessToken(FacebookTestCase):
     whether it is valid.
 
     """
+    @nottest
     def test_get_app_access_token(self):
         token = facebook.get_app_access_token(self.app_id, self.secret)
         assert(isinstance(token, str) or isinstance(token, unicode))

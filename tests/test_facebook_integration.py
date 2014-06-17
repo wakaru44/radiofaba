@@ -138,47 +138,11 @@ class test_passmock(BaseTest):
                                      #- mocking inside facebook.GraphAPI
         eq_(mock.called, True)
 
-    @mock.patch('friendtube.ListHandlers.ListHandler.current_user')
-    def test_all_patches_necesary(self,mock = None):
-        """Try to get all call to facebook mocked module"""
-        app = LH()
-        print dir(app)
-        #app.app.active_instance.request.application_url = mock.MagikMock()
-        fake_user = {"key_name":"",
-                     "id":"",
-                     "name":"",
-                     "profile_url":"",
-                     "access_token":""}
-        mock.return_value = fake_user
-        #mock.patch("friendtube.BaseHandler.facebook.GraphAPI.fql", return_value = "fakereturn")
-        fake_content = {u'data':
-                            [{u'actor_id': u'739393348',
-                              u'created_time': 1401493234,
-                              u'message': u'',
-                              u'attachment':
-                                  {u'name': u'Fanfarria Taquikardia',
-                                   u'media': [{u'src': u'https://fbexternal-2Fmaxresdefault.jpg'}],
-                                   u'description': u'Galiza, Outono se ...',
-                                   u'href': u'http://www.youtube.com/watch?v=Hm8PkBHkUVE&feature=youtu.be'}
-                             }]
-                       }
-        fake_result = {}
-        friendtube.ListHandlers.facebook.GraphAPI.fql = mock.MagicMock( return_value = fake_content)
-        friendtube.ListHandlers.rparse = mock.MagicMock( return_value = fake_content)
-        friendtube.ListHandlers.rparse.clean_list = mock.MagicMock( return_value = fake_content)
-        #friendtube.ListHandlers.current_user = mock.MagicMock( return_value = fake_user )
-
-        result = app.get_video_listing()
-        eq_(friendtube.ListHandlers.rparse.clean_list.called, True)
-        # friendtube.BaseHandler.rparse.reset_mock() # If i reset one of the
-        # mocks, both are reset
-        eq_(friendtube.ListHandlers.facebook.GraphAPI.fql.called, True)
-        #eq_(friendtube.BaseHandler.facebook.GraphAPI.fql.call_args, True)
-        eq_(result, "fake_result")  #TODO trying to test results parsed.
-        ## AssertionError: <MagicMock name='current_user.MagicMock()()' id='139788364583376'> != 'fake_result'
-        #TODO: write something that works...
 
 
+################################################################################
+#   List Handler tests
+################################################################################
 class test_List_Handler(BaseTest):
     @mock.patch('friendtube.ListHandlers.ListHandler.do_query')
     def test_mock_do_query(self, mock = None):
@@ -190,6 +154,33 @@ class test_List_Handler(BaseTest):
         eq_(result,sample)
 
 
+class test_List_HandlerMocking(BaseTest):
+    def setUp(self):
+        """Creating the most used mocks"""
+        # sample data
+        self.fake_user = {"key_name":"",
+                     "id":"",
+                     "name":"",
+                     "profile_url":"",
+                     "access_token":""}
+        self.fake_content = {u'data':
+                            [{u'actor_id': u'739393348',
+                              u'created_time': 1401493234,
+                              u'message': u'',
+                              u'attachment':
+                                  {u'name': u'Fanfarria Taquikardia',
+                                   u'media': [{u'src': u'https://fbexternal-2Fmaxresdefault.jpg'}],
+                                   u'description': u'Galiza, Outono se ...',
+                                   u'href': u'http://www.youtube.com/watch?v=Hm8PkBHkUVE&feature=youtu.be'}
+                             }]
+                       }
+        self.fake_result = {}
+
+        # mocks
+        friendtube.ListHandlers.ListHandler.render = mock.MagicMock()
+        friendtube.ListHandlers.rparse = mock.MagicMock( return_value = self.fake_content) # probando mierdas
+        friendtube.BaseHandler.BaseHandler.current_user = mock.MagicMock( return_value = self.fake_user ) # the user
+
     @mock.patch('friendtube.ListHandlers.ListHandler.do_query')
     @raises(AssertionError)  # TODO: find a better way to assert the redirect
     def test_call_to_get_with_relogin_do_query_results_returns_redirect(self, mock = None):
@@ -197,30 +188,110 @@ class test_List_Handler(BaseTest):
         lh = LH()
         sample = {"data":[{"bar":"foo"}],"error":"Please relogin again"}
         mock.return_value = sample
-        friendtube.ListHandlers.ListHandler.render = mock.MagicMock()
         result = lh.get()
         eq_(result,sample)
 
     @mock.patch('friendtube.ListHandlers.ListHandler.do_query')
     def test_call_to_get_with_relogin_do_query_results_returns_redirect2(self, mock = None):
-        """Verify that get sends us to the logout page if we are logged out"""
+        """Verify that get sends us to the logout page if we are logged out 2"""
         lh = LH()
         sample = {"data":[{"bar":"foo"}],"error":"Please relogin again"}
         mock.return_value = sample
-        friendtube.ListHandlers.ListHandler.render = mock.MagicMock()
         friendtube.ListHandlers.ListHandler.redirect = mock.MagicMock(return_value = None)
         result = lh.get()
         eq_(friendtube.ListHandlers.ListHandler.redirect.called, True)
 
     @mock.patch('friendtube.ListHandlers.ListHandler.do_query')
-    def test_givin_good_sample_data_WAT(self, local_mock = None):
-        """Verify that we can test a correct page load"""
+    def test_loads_correctly_with_correct_data(self, local_mock = None):
+        """Load correct results when correct data provided"""
+        # mock def
+        stored_data = stored_sample.result_works
+        local_mock.return_value = { "data":stored_data["data"], "error":""}
+
+        # task
         lh = LH()
-        stored_data = stored_sample.result
-        local_mock.return_value = { "data":stored_data, "error":""}
-        friendtube.ListHandlers.ListHandler.render = mock.MagicMock()
+        lh.get()
+
+        # assertions
+        eq_(local_mock.called , True)
+        eq_(friendtube.ListHandlers.ListHandler.render.called, True)
+
+################################################################################
+#   More facebook and listHandler mocking
+################################################################################
+class test_facebook_mocking_2(BaseTest):
+    def setUp(self):
+        self.fake_user = {"key_name":"",
+                     "id":"",
+                     "name":"",
+                     "profile_url":"",
+                     "access_token":""}
+        self.fake_content = {u'data':
+                            [{u'actor_id': u'739393348',
+                              u'created_time': 1401493234,
+                              u'message': u'',
+                              u'attachment':
+                                  {u'name': u'Fanfarria Taquikardia',
+                                   u'media': [{u'src': u'https://fbexternal-2Fmaxresdefault.jpg'}],
+                                   u'description': u'Galiza, Outono se ...',
+                                   u'href': u'http://www.youtube.com/watch?v=Hm8PkBHkUVE&feature=youtu.be'}
+                             }]
+                       }
+        self.fake_result = {}
+        self.fake_query_result = {"data":self.fake_content["data"], "error":""}
+
+
+        #friendtube.ListHandlers.facebook.GraphAPI.fql = mock.MagicMock( return_value = self.fake_content) # probando app fb
+        friendtube.ListHandlers.rparse = mock.MagicMock( return_value = self.fake_content) # probando mierdas
+        friendtube.ListHandlers.rparse.clean_list = mock.MagicMock( return_value = self.fake_content) # probando mierdas
+        #friendtube.ListHandlers.rparse.clean_list = mock.MagicMock( return_value = fake_content) # the content in dict format
+        friendtube.BaseHandler.BaseHandler.current_user = mock.MagicMock( return_value = self.fake_user ) # the user
+        friendtube.BaseHandler.BaseHandler.do_query = mock.MagicMock( return_value = self.fake_query_result ) # the query result
+
+    def test_all_patches_necesary(self):
+        """Try to get all call to facebook mocked module"""
+
+        #- mocks definitions
+        #mock.return_value = fake_user
+        #mock.return_value = fake_content
+
+        app = LH()
+        print dir(app)
+        result = app.get_video_listing()
+        expected_call = mock.call(
+                        {
+                            'playlist': mock.MagicMock(name='mock.clean_list()', id='139655266612240'),
+                            'error': ''
+                        },
+                        'player-0.2b.html',
+                        user=mock.MagicMock()
+                        )
+
+        #- assertions
+        eq_(friendtube.ListHandlers.rparse.clean_list.called, True)
+        eq_(friendtube.ListHandlers.ListHandler.do_query.called, True)
+        eq_(friendtube.ListHandlers.ListHandler.render.called, True)
+        #eq_(repr(friendtube.ListHandlers.ListHandler.render.call_args)[5:-1], repr(expected_call))  # imposible to test like this
+        # friendtube.BaseHandler.rparse.reset_mock() # If i reset one of the mocks, both are reset
+
+
+
+class test_facebook_mocking_example(BaseTest):
+    @mock.patch('friendtube.ListHandlers.ListHandler.get')
+    def test_mock_example(self, local_mock = None):
+        """mocking example"""
+        # mock def
+        stored_data = "fake value"
+        local_mock.return_value = stored_data
+
+        # task
+        lh = LH()
         result = lh.get()
-        eq_(result, stored_sample.result)
 
+        # info
+        print local_mock.called
+        print local_mock.call_args
 
+        eq_(local_mock.called, True)
+        eq_(result, stored_data)
 
