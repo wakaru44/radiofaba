@@ -13,4 +13,5 @@ before_script:
 # command to run tests, e.g. python setup.py test
 script:  
   - nosetests tests/
-  - nosetests tests/test_parsers.py
+  - nosetests --with-color  tests/test_parsers.py
+  # nosetests --with-gae
