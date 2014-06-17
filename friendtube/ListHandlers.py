@@ -15,7 +15,7 @@ class ListHandler(BS.BaseHandler):
         """this get allows us to pass also a query parameter and ease
         overriding"""
         try:
-            parsed_list = self.new_get_video_listing(query, fql) # NOTE we can override the query here.
+            parsed_list = self.get_video_listing(query, fql) # NOTE we can override the query here.
             # automatic flow ENABLED
             if parsed_list["error"] == "Please relogin again":
                 error = self.redirect("/logout")  # If we detect logged out here, go home
@@ -36,7 +36,7 @@ class ListHandler(BS.BaseHandler):
             self.redirect("/logout")
         
 
-    def new_get_video_listing(self, query = None, fql = False, user = None):
+    def get_video_listing(self, query = None, fql = False, user = None):
         """new method.
         Abstracts everything related to populating a list. 
         If it cant get proper results from the outside, gather the error info

@@ -138,10 +138,10 @@ class test_passmock(BaseTest):
                                      #- mocking inside facebook.GraphAPI
         eq_(mock.called, True)
 
-    @mock.patch('friendtube.BaseHandler.BaseHandler.current_user')
+    @mock.patch('friendtube.ListHandlers.ListHandler.current_user')
     def test_all_patches_necesary(self,mock = None):
         """Try to get all call to facebook mocked module"""
-        app = BH()
+        app = LH()
         print dir(app)
         #app.app.active_instance.request.application_url = mock.MagikMock()
         fake_user = {"key_name":"",
@@ -163,17 +163,18 @@ class test_passmock(BaseTest):
                              }]
                        }
         fake_result = {}
-        friendtube.BaseHandler.facebook.GraphAPI.fql = mock.MagicMock( return_value = fake_content)
-        friendtube.BaseHandler.rparse = mock.MagicMock( return_value = fake_content)
-        friendtube.BaseHandler.current_user = mock.MagicMock( return_value = fake_user )
+        friendtube.ListHandlers.facebook.GraphAPI.fql = mock.MagicMock( return_value = fake_content)
+        friendtube.ListHandlers.rparse = mock.MagicMock( return_value = fake_content)
+        friendtube.ListHandlers.rparse.clean_list = mock.MagicMock( return_value = fake_content)
+        #friendtube.ListHandlers.current_user = mock.MagicMock( return_value = fake_user )
 
         result = app.get_video_listing()
-        eq_(friendtube.BaseHandler.rparse.called, True)
+        eq_(friendtube.ListHandlers.rparse.clean_list.called, True)
         # friendtube.BaseHandler.rparse.reset_mock() # If i reset one of the
         # mocks, both are reset
-        eq_(friendtube.BaseHandler.facebook.GraphAPI.fql.called, True)
+        eq_(friendtube.ListHandlers.facebook.GraphAPI.fql.called, True)
         #eq_(friendtube.BaseHandler.facebook.GraphAPI.fql.call_args, True)
-        eq_(result, "fake_result") 
+        eq_(result, "fake_result")  #TODO trying to test results parsed.
         ## AssertionError: <MagicMock name='current_user.MagicMock()()' id='139788364583376'> != 'fake_result'
         #TODO: write something that works...
 
