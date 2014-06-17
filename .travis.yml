@@ -7,7 +7,10 @@ python:
 install: pip install requests
 # to fix the dependencies with appengine
 before_script:
-- wget https://googleappengine.googlecode.com/files/google_appengine_1.8.9.zip -nv
-- unzip -q google_appengine_1.8.9.zip
+- wget https://storage.googleapis.com/appengine-sdks/featured/google_appengine_1.9.6.zip -nv
+# old version: - wget https://googleappengine.googlecode.com/files/google_appengine_1.8.9.zip -nv
+- unzip -q google_appengine_1.9.6.zip
 # command to run tests, e.g. python setup.py test
-script:  nosetests tests/
+script:  
+  - nosetests tests/
+  - nosetests tests/test_parsers.py
