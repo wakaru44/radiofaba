@@ -11,7 +11,11 @@ if [ $(grep "^version:" app.yaml | cut -d " " -f 2) -eq 2 ]
 then
 	echo "Dev version"
 	cd google_appengine
+	echo " google_appengine"
 	ls -lart
+	echo "hostname"
+	hostname
+	ifconfig
 	# oauth code:
 	token="4/9JwInYmiQAdaLh9xqDSHDavVyYfL.kqeQpM1lKmofOl05ti8ZT3a3FIpajQI"
 	python appcfg.py update --oauth2 --noauth_local_webserver --oauth2_access_token=$token ..
