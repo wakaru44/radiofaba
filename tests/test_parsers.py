@@ -143,7 +143,8 @@ class test_parse_created():
                                 u'name': u'www.youtube.com',
                                 u'description': u''}}
         result = pr.parse_created(elem)
-        eq_(result, "2014-05-19 14:02")
+        #eq_(result, "2014-05-19 14:02")  # this is not timezone sensible. GMT + 2
+        eq_(result, "2014-05-19 12:02")  # this is not timezone sensible. GMT + 2
 
     def test_nonexistant_element(self):
         elem = { u'message': u'Ha sido una mala semana, con muchas cosas encima, y hoy no he empezado bien el d\xeda, pero me da igual francamente...  https://www.youtube.com/watch?v=y6Sxv-sUYtM :) ',
