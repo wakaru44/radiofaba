@@ -12,7 +12,7 @@ then
 	echo "Dev version"
 	cd google_appengine
 	ls -lart
-	appcfg.py update --oauth2 --noauth_local_webserver ..
+	python appcfg.py update --oauth2 --noauth_local_webserver ..
 else
 	echo "Non dev version"
 fi
