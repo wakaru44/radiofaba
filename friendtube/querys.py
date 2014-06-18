@@ -70,6 +70,7 @@ LIMIT 5000
 """
 
 # This one gets the newsfeed only from fql.
+# By not this is the DEFAULT
 filters_newsfeed = """
 SELECT 
     message,

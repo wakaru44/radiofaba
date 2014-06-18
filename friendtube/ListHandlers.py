@@ -20,10 +20,12 @@ class ListHandler(BS.BaseHandler):
             parsed_list = self.get_video_listing(query, fql) # NOTE we can override the query here.
             # automatic flow ENABLED
             if parsed_list["error"] == "Please relogin again":
+                log.warning("Self redirecting to logout")
                 error = self.redirect("/logout")  # If we detect logged out here, go home
             else:
             # with the old, show sample data, this should be activated
             ### And render
+                log.debug("Rendering List")
                 self.render(dict(
                             playlist = parsed_list["data"],
                             error = parsed_list["error"]
@@ -61,8 +63,10 @@ class ListHandler(BS.BaseHandler):
             listing = rparse.parse_json_video_listing(smpl.result_works)
         else:
             # we clean the data received.
+            log.debug("cleaning the data received from fb")
             raw_listing = rparse.parse_json_video_listing(fblist)
             listing = rparse.clean_list(raw_listing)
+            log.debug("clean res: " + repr(listing))
             # In the next version, we will use 
             # new_translate_fbresult_to_listing(fb_result)
             # with no ordering required
@@ -71,6 +75,12 @@ class ListHandler(BS.BaseHandler):
 
 class OwnListHandler(ListHandler):
     def get(self):
-        # we call the parent with other query.
+        # we call the parent with a query about our own shared videos.
         super(OwnListHandler, self).get(querys.fql_ownvideos , fql = True)
 
+
+class OtherListHandler(ListHandler):
+    def get(self):
+        # we call the parent with other query.
+        #super(OtherListHandler, self).get(querys.fql_ownvideos , fql = True) #fql style
+        super(OtherListHandler, self).get(querys.filter_based01 , fql = True)
