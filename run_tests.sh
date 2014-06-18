@@ -4,6 +4,10 @@ echo "Testing bash execution on travis"
 
 nosetests tests/test_parsers.py
 
+echo "testing environment"
+
+ls -lart
+
 if [ $(grep "^version:" app.yaml | cut -d " " -f 2) -eq 2 ]
 then
 	echo "Dev version"
