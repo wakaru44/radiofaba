@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import sys
-print sys.path
+print "CURRENT PATH: " + repr(sys.path)
 sys.path.append("./lib")
 sys.path.append("../../google_appengine")
 

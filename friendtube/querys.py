@@ -6,6 +6,9 @@
 ################################################################################
 #   Get friends querys
 ################################################################################
+# with the v1 it returned all your friends
+# with the v2 only returns your friends that are also using this same app, and
+# have signed dunno how (but my uncle is using it and does not appear as friend)
 fql_friends = """
             SELECT uid2
                 FROM friend
@@ -16,6 +19,7 @@ fql_friends = """
 graph_friends = "me/friends?fields=name,id,picture"
 
 # Get the list of friends (not only the ones that use the app)
+# With the api v2, it only gets aliases, not real uid
 graph_friends_nonapp = "me/taggable_friends"
 
 # get the pic of a friend. REQUIRES a parameter

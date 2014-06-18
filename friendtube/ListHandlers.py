@@ -83,4 +83,4 @@ class OtherListHandler(ListHandler):
     def get(self):
         # we call the parent with other query.
         #super(OtherListHandler, self).get(querys.fql_ownvideos , fql = True) #fql style
-        super(OtherListHandler, self).get(querys.filter_based01 , fql = True)
+        super(OtherListHandler, self).get(querys.filters_based01 , fql = True)
