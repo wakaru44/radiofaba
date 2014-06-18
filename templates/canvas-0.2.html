@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+
+{% include "meta.html" %}
+	
+	<link rel="stylesheet" type="text/css" media="screen and (max-width:1900px)" href="style/home-0.4.css">	
+    
+</style>
+</head>
+
+<body>
+
+	<div id="fb-root"></div> <!-- fb button -->
+ 
+	<div id="header"><h1>FriendTube</h1></div>
+				    
+	<div id="content">      
+
+		<div id="user">
+		    {% if current_user %}
+		      <p>
+			<a href="{{ current_user.profile_url }}">
+			<img src="http://graph.facebook.com/v2.0/{{ current_user.id }}/picture?type=square"/></a>
+		      </p>
+		      <p>Hello, {{ current_user.name|escape }}</p>
+		      <fb:login-button autologoutlink="true" scope="read_stream"></fb:login-button>
+		    {% else %}
+		      <p>
+		      <a></a><img/><!-- @YOLI: esto esta aqui como chapuza porque cuando estas deslogueado el boton se descoloca-->
+		      <fb:login-button autologoutlink="true" scope="read_stream"></fb:login-button>
+		      </p>
+		    {% endif %}
+	        </div><!-- user -->
+
+		<div id="subtitle">
+			<p class="text-leyend">
+				Enjoy the videos you and your friends share on facebook like a TV 
+				<br>
+				Start playing one video and the rest will follow automaticlly
+			</p>
+		</div>
+
+	    <div id="text-corpse">
+		    <div>
+			    <!-- TODO: include some info for the user -->
+		    </div>
+		    <div>
+			    <form name="tester" action="/canvas" method="post">
+				inputdata:
+				<input type="text" name="inputdata">
+				<input type="submit" value="Submit">
+			    </form>
+		    </div>
+	    <div><!-- corpse -->
+    
+
+
+
+	    {% include "error.html" %}
+	    {% if data %}
+	    <div>
+		    <pre>
+		    {{ data }}
+		    </pre>
+	    </div>
+	    {% endif %}
+    
+	</div><!-- content -->
+</body>
+</html>
+
