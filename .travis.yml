@@ -12,6 +12,11 @@ before_script:
 - unzip -q google_appengine_1.9.6.zip
 # command to run tests, e.g. python setup.py test
 script:  
-  - nosetests tests/
-  - nosetests --with-color  tests/test_parsers.py
+  #- nosetests tests/
+  #- nosetests tests/test_parsers.py
+  #- nosetests tests/test_parser_youtube.py
+  #- nosetests tests/test_homehandlers.py
+  #- nosetests tests/test_requests.py
+  #- nosetests --with-color  tests/test_parsers.py # no color matey. but the fabric guy does it.
   # nosetests --with-gae
+  ./run_tests.sh
