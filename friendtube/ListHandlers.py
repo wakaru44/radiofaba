@@ -10,6 +10,8 @@ import friendtube.querys as querys
 import BaseHandler as BS
 from BaseHandler import LogoutException
 
+player_template = "player-0.2b.html"
+
 class ListHandler(BS.BaseHandler):
     def get(self, query = None, fql = False):
         """this get allows us to pass also a query parameter and ease
@@ -27,7 +29,7 @@ class ListHandler(BS.BaseHandler):
                             error = parsed_list["error"]
                         ),
                         #"player.html"
-                        "player-0.2b.html",
+                        player_template,
                         user = self.current_user
                         )
         except LogoutException as e:

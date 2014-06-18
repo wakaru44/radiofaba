@@ -10,6 +10,9 @@ import BaseHandler as BS
 from BaseHandler import LogoutException
 
 
+home_template = "home-0.4.html"  # the normal home
+post_template = "home.html"  #used by default in the post for home
+canvas_template = "canvas-0.2.html"  # used for the facebook canvas page
 
 class HomeHandler(BS.BaseHandler):
     def get(self):
@@ -25,7 +28,7 @@ class HomeHandler(BS.BaseHandler):
             current_user = None
             # we should show the demo page anyway
         self.render({"friends" : friends["data"], "error":friends["error"] },
-                    "home-0.4.html",
+                    home_template,
                     user = current_user
                    )
 
@@ -43,7 +46,7 @@ class HomeHandler(BS.BaseHandler):
 
         return friend_list
 
-    def post(self, template = "home.html"):
+    def post(self, template = post_template):
         """just to see what is POST ed """
         #TODO: rewrite this completly
         # NOTE rewriting this in the canvas handler
@@ -75,20 +78,6 @@ class HomeHandler(BS.BaseHandler):
            ))
 
 
-class CanvasHandler(HomeHandler):
-    def get(self):
-        self.render({"data" : repr(self.request.params), "error":"errorerror" },
-                    "canvas.html",
-                    user = self.current_user)
-
-
-    def post(self):
-        """handles the login process differently than HomeHandler, triggering it async"""
-        log.debug("PARSING POST")
-        log.debug(dir(super(HomeHandler)))
-        log.debug(super(HomeHandler))
-        self.render({"data":self.request.params}, "canvas.html", user = self.current_user)
-
 class LogoutHandler(BS.BaseHandler):
     def get(self):
         try:
@@ -99,51 +88,15 @@ class LogoutHandler(BS.BaseHandler):
         self.redirect('/')
 
 
-class TestHandler(BS.BaseHandler):
+class CanvasHandler(HomeHandler):
     def get(self):
-        data = ""
-        data += "<h2>{0}</h2>".format("dir(self.app)")
-        data += self.list2html(dir(self.app))
-        data += "<h2>{0}</h2>".format("active instance request application_url") 
-        data += self.thing2html(self.app.active_instance.request.application_url)
-        data += "<h2>{0}</h2>".format("app config")
-        data += self.thing2html(self.app.config)
-        data += "<h2>{0}</h2>".format("app config")
-        data += self.thing2html(self.app.config)
-        self.render(values = {"data": data},
-                    template = "home-0.2.html",
+        self.render({"data" : repr(self.request.params), "error":"errorerror" },
+                    canvas_template,
                     user = self.current_user)
 
-    def list2html(self, things = None, htmlid = None, htmlclass = None):
-        """takes a list and returns an html string"""
-        html = u""
-        if things == None:
-            return html
-        else:
-            idout = u" id=\"{0}\" ".format(htmlid) if htmlid else ""
-            classout = u" class=\"{0}\" ".format(htmlclass) if htmlclass else ""
-            html += u"<ul{0}{1}>\n".format(idout, classout)
-            for thing in things:
-                element = u"<li>{0}</li>\n".format(thing)
-                html += element
-            html += u"</ul>\n"
-            return html
-
-    def thing2html(self, thing):
-        """creates a p  element from something"""
-        html_escape_table = {
-                    "&": "&amp;",
-                    '"': "&quot;",
-                    "'": "&apos;",
-                    ">": "&gt;",
-                    "<": "&lt;",
-                    }
-        what = repr((thing)).__str__()
-        flatting = "".join(c for c in what) # things works somehow fucki
-        html_escaped = "".join(html_escape_table.get(c,c) for c in flatting)
-        return "<pre>{0}</pre>\n".format(html_escaped)
-
-
-        
-
-
+    def post(self):
+        """handles the login process differently than HomeHandler, triggering it async"""
+        log.debug("PARSING POST")
+        log.debug(dir(super(HomeHandler)))
+        log.debug(super(HomeHandler))
+        self.render({"data":self.request.params}, canvas_template, user = self.current_user)
