@@ -19,4 +19,4 @@ script:
   #- nosetests tests/test_requests.py
   #- nosetests --with-color  tests/test_parsers.py # no color matey. but the fabric guy does it.
   # nosetests --with-gae
-  ./run_tests.sh
+  bash run_tests.sh
