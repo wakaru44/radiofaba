@@ -30,7 +30,8 @@ import logging as log
 from friendtube.HomeHandlers import HomeHandler, CanvasHandler, LogoutHandler
 #from friendtube.HomeHandlers import TestHandler # deprecated, useless
 from friendtube.ListHandlers import ListHandler, OwnListHandler
-from friendtube.ListHandlers import OtherListHandler
+from friendtube.ListHandlers import OtherListHandler, FromAFriendHandler
+from friendtube.ListHandlers import MultiQueryListHandler
 
 config = {}
 config['webapp2_extras.sessions'] = dict(secret_key='')
@@ -43,6 +44,8 @@ app = webapp2.WSGIApplication(
      ('/list', ListHandler),
      ('/ownlist', OwnListHandler),
      ('/otherlist', OtherListHandler),
+     ('/friend', FromAFriendHandler),
+     ('/multi', MultiQueryListHandler),
      #('/test', TestHandler),  # useless. deprecated
      ('/logout', LogoutHandler)],
     debug=True,

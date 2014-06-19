@@ -110,7 +110,7 @@ class BaseHandler(webapp2.RequestHandler):
         """
         return self.session_store.get_session()
 
-    def render(self, values = {}, template = "home.html", user = None):
+    def render(self, values = {}, template = "home-0.0.html", user = None):
         """render the values in the template.
         by default it goes to the index page"""
         # There are some default values that we will always use
@@ -141,7 +141,7 @@ class BaseHandler(webapp2.RequestHandler):
             else:
                 cu = user
             graph = facebook.GraphAPI(cu["access_token"])
-            log.debug("doing Query: " + query)
+            log.debug("doing Query: " + repr(query))
             if fql:
                 # Perform the fql query
                 result = graph.fql(query)

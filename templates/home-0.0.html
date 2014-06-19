@@ -1,0 +1,112 @@
+<!DOCTYPE HTML>
+<html lang="es">
+<head>
+{% include "meta.html" %}
+	
+	<link rel="stylesheet" type="text/css" media="screen and (max-width:1900px)" href="style/home-0.2.css">	
+	<!--
+	<link rel="stylesheet" type="text/css" href="style/home.css">
+	-->
+    
+</head>
+
+<body>
+    <fb:login-button autologoutlink="true" scope="read_stream"></fb:login-button>
+
+    {% if current_user %}
+      <p>
+	<a href="{{ current_user.profile_url }}">
+	<img src="http://graph.facebook.com/v2.0/{{ current_user.id }}/picture?type=square"/></a>
+      </p>
+      <p>Hello, {{ current_user.name|escape }}</p>
+    {% endif %}
+
+    <div id="fb-root"></div> <!-- fb button -->
+ 
+<div id="header"><h1>Friend Tube </h1></div>
+				    
+<div id="content">
+
+<div id="user">
+    {% if current_user %}
+      <p>
+	<a href="{{ current_user.profile_url }}">
+	<img src="http://graph.facebook.com/v2.0/{{ current_user.id }}/picture?type=square"/></a>
+      </p>
+      <p>Hello, {{ current_user.name|escape }}</p>
+    {% endif %}
+</div>
+
+	<div id="subtitle"><p class="text-leyend">
+	Enjoy the videos you and your friends share on facebook like a TV 
+	<br>
+	Start playing one video and the rest will follow automaticlly
+	</p> </div>
+
+    {% if current_user %}
+    <div id=text-corpse>
+	    <div>
+		    <!-- TODO: include some info for the user -->
+	    </div>
+            <div>
+		    <p>Now you can view <a href="/list">The videos that your friends shared</a></p>
+		    <p>Or review <a href="/ownlist">your own videos shared by you</a></p>
+		    <p>or  <a href="/advlist">the inestable version of the application.</a></p>
+    <div><!-- corpse -->
+    {% endif %}
+
+
+    {% include "error.html" %}
+    <script>
+      window.fbAsyncInit = function() {
+        FB.init({
+		appId: '{{ facebook_app_id }}',
+		version: 'v2.0',
+		status: true,
+		cookie: true,
+                xfbml: true
+		});
+        FB.Event.subscribe('{% if current_user %}auth.logout{% else %}auth.login{% endif %}', function(response) {
+          {% if current_user %} window.location = "/logout" {% else %} window.location.reload(); {% endif %}
+        });
+      };
+      (function() {
+        var e = document.createElement('script');
+        e.type = 'text/javascript';
+        e.src = document.location.protocol + '//connect.facebook.net/en_US/sdk.js&version=2.0';
+        e.async = true;
+        document.getElementById('fb-root').appendChild(e);
+      }());
+    </script>
+    {% if friends %}
+    <div id=friend_list>
+	    <p> This is the list of your friends that are already using the app.</p>
+	    <ul>
+		    {% for friend in friends %}
+		    <li>
+		    <img src="{{ friend["picture"]["data"]["url"] }}" alt="picture of {{ friend["name"] }}" />
+		    <span><a href="http://www.facebook.com/{{friend["id"]}}" target="_blank">{{ friend["name"] }}</a></span>
+		    </li>
+		    {% endfor %}
+	    </ul>
+    </div>
+    {% endif %}
+    {% if data %}
+    <div id="data">
+	    <pre>
+	    {{ data }}
+	    </pre>
+    </div>
+    {% endif %}
+
+    <div id=uservoice>
+	{% include "uservoice.html" %}
+    </div>
+</div>
+    <div id="uservoice">
+	{% include "uservoice.html" %}
+    </div>
+
+</body>
+</html>
+

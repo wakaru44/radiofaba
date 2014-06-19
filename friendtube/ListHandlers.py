@@ -55,21 +55,21 @@ class ListHandler(BS.BaseHandler):
             query = querys.filters_newsfeed  # This is the default query
             fql = True
         fblist = self.do_query(query, fql, user)
+        listing = []  # we need at least the default empty listing
         if fblist["data"] == []:
             # sample data failover flow
             # load the sample results
-            log.warning("Loading sample results")
-            import friendtube.sampleresult as smpl
-            listing = rparse.parse_json_video_listing(smpl.result_works)
+            #DEPRECATED but i will keep the code
+            #log.warning("Loading sample results")
+            #import friendtube.sampleresult as smpl
+            #listing = rparse.parse_fb_result_listing(smpl.result_works)
+            pass # read above comments to clarify
         else:
             # we clean the data received.
             log.debug("cleaning the data received from fb")
-            raw_listing = rparse.parse_json_video_listing(fblist)
+            raw_listing = rparse.parse_fb_result_listing(fblist)
             listing = rparse.clean_list(raw_listing)
             log.debug("clean res: " + repr(listing))
-            # In the next version, we will use 
-            # new_translate_fbresult_to_listing(fb_result)
-            # with no ordering required
         return { "data":listing, "error":fblist["error"] }
 
 
@@ -82,5 +82,61 @@ class OwnListHandler(ListHandler):
 class OtherListHandler(ListHandler):
     def get(self):
         # we call the parent with other query.
+        #super(OtherListHandler, self).get(querys.fql_from_specific_list_of_friends , fql = True) #fql style
+        #super(OtherListHandler, self).get(querys.fql_from_dorota_and_list_of_friends , fql = True) #fql style
+        super(OtherListHandler, self).get(querys.fql_from_dorota_and_vetusta , fql = True) #fql style
+        #super(OtherListHandler, self).get(querys.fql_from_good_fellas , fql = True) #fql style
+
+
+class FromAFriendHandler(ListHandler):
+    def get(self):
+        """Shows the list of videos from a specific friend.
+        """
+        #TODO avoid loading sample results
+        #TODO this is quite dangerous in a production app....
+        try:
+            friend = self.request.params["friend"]
+            if friend.isdigit():
+                # then we consider the friend as valid and go to fb
+                friend_query = querys.fql_from_list_of_friends.format('"' + friend + '"')
+                log.debug(friend_query)
+                super(FromAFriendHandler, self).get(friend_query , fql = True) #fql style
+            else:
+                self.render({"data": "What exactly are you looking for?"})
+        except Exception as e:
+            log.warning("pokemon exception")
+            log.exception(e)
+            self.render()
+
+class MultiQueryListHandler(ListHandler):
+    """uses a multifql custom method.
+    the multiquerys are isued as json encoded querys, with the fql flag on.
+    It can me hand made, or can be formed with the querys.compose_multi method.
+    """
+    def get(self):
+        from mock import patch
+        with patch("friendtube.parsers.clean_list", lambda x: x):
+            # we have to patch the clean_list to avoid failures
+            #super(MultiQueryListHandler, self).get(querys.fql_multi_query_fbexample, #hand made
+            #super(MultiQueryListHandler, self).get(querys.fql_multi_query_composed, # auto composed
+            super(MultiQueryListHandler, self).get(querys.fql_multi_query2, # trying an old query
+                                               fql = True)
+
+
+
+class PatchedListHandler(ListHandler):
+    """this class is an example of how to offer modified results with patched
+    methods.
+    """
+    def get(self):
+        # we call the parent with other query.
         #super(OtherListHandler, self).get(querys.fql_ownvideos , fql = True) #fql style
-        super(OtherListHandler, self).get(querys.filters_based01 , fql = True)
+        #super(OtherListHandler, self).get(querys.filters_based01 , fql = True)
+
+        #super(OtherListHandler, self).get(querys.fql_friends_on_newsfeed, fql = True) # fails to clean_list
+        # To avoid the errors cleaning the list, due to the empty pieces in the
+        # result, we patch the clean_list method.
+        from mock import patch
+        with patch("friendtube.parsers.clean_list", lambda x: x):
+            super(OtherListHandler, self).get(querys.fql_friends_on_newsfeed, fql = True)
+
