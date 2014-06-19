@@ -147,6 +147,29 @@ AND
 LIMIT 10000
 """
 
+fql_list_of_good_source_friends = """
+       SELECT
+            actor_id
+        FROM stream
+        WHERE source_id in
+            (
+                SELECT 
+                    actor_id
+                FROM stream
+                WHERE filter_key in ( 
+                    Select filter_key
+                        from stream_filter
+                        where uid = me() 
+                        AND type in ('newsfeed')
+                    )
+                AND
+                    strpos(attachment.href, "youtu") >= 0
+                LIMIT 100
+            ) 
+        AND
+            strpos(attachment.href, "youtu") >= 0
+        LIMIT 1000000
+"""
 fql_from_dorota = fql_from_list_of_friends.format(dorota) # plenty results
 fql_from_other_friend = fql_from_list_of_friends.format(other_friend) # no results
 fql_from_specific_list_of_friends = fql_from_list_of_friends.format(list_of_friends) # few results
@@ -275,19 +298,15 @@ fql_multi_query_composed = compose_multiquery([qm1,qm2])
 
 f_on_nf = "SELECT actor_id FROM stream WHERE filter_key in ( Select filter_key from stream_filter where uid = me() AND type in ('newsfeed')) AND strpos(attachment.href, \"youtu\") >= 0 LIMIT 10000 "
 
+
+
+# this based2 works
+f_based2 = """SELECT message, actor_id, created_time FROM stream WHERE source_id in (SELECT uid2 FROM friend WHERE uid1 == me()) LIMIT 10000"""
+# this based is not working, complains about {
 f_based = """SELECT message, actor_id, created_time, attachment.href, attachment.name, attachment.description, attachment.media.src FROM stream WHERE source_id in (SELECT uid2 FROM friend WHERE uid1 == me()) and strpos(attachment.href, "youtu") >= 0 LIMIT 10000"""
-
-
 
 # trying to do a normal query with multi query instead of nested
 fql_multi_query2 = compose_multiquery([
-                    qm2,
-                    f_based
-##                    """SELECT message, actor_id, created_time, attachment.href, attachment.name,
-##                        attachment.description, attachment.media.src
-##                        FROM stream
-##                        WHERE filter_key in ( select actor_id from #query1 )
-##                        and strpos(attachment.href,"youtu") >= 0
-##                        LIMIT 10000
-##"""
+                    qm2, # example of another query
+                    f_based2 # it works
 ])

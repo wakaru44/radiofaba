@@ -92,8 +92,8 @@ class FromAFriendHandler(ListHandler):
     def get(self):
         """Shows the list of videos from a specific friend.
         """
-        #TODO avoid loading sample results
         #TODO this is quite dangerous in a production app....
+        # but for now, seems useful...
         try:
             friend = self.request.params["friend"]
             if friend.isdigit():
@@ -106,13 +106,14 @@ class FromAFriendHandler(ListHandler):
         except Exception as e:
             log.warning("pokemon exception")
             log.exception(e)
-            self.render()
-
+ 
 class MultiQueryListHandler(ListHandler):
     """uses a multifql custom method.
     the multiquerys are isued as json encoded querys, with the fql flag on.
     It can me hand made, or can be formed with the querys.compose_multi method.
     """
+    #TODO we still need to handle the multiple results to be able to do
+    #something with this.
     def get(self):
         from mock import patch
         with patch("friendtube.parsers.clean_list", lambda x: x):
@@ -120,6 +121,25 @@ class MultiQueryListHandler(ListHandler):
             #super(MultiQueryListHandler, self).get(querys.fql_multi_query_fbexample, #hand made
             #super(MultiQueryListHandler, self).get(querys.fql_multi_query_composed, # auto composed
             super(MultiQueryListHandler, self).get(querys.fql_multi_query2, # trying an old query
+                                               fql = True)
+
+
+        log.debug("HIIIIII are we really hitting this somehow?")
+        self.render()
+
+class ListHandlerWithFriends(ListHandler):
+    """Shows a regular player with a list of clickable friends with more content
+    """
+    #TODO we still need to handle the multiple results to be able to do
+    #something with this.
+    def get(self):
+        from mock import patch
+        with patch("friendtube.parsers.clean_list", lambda x: x):
+            # we have to patch the clean_list to avoid failures
+            myQuery = [querys.fql_list_of_good_source_friends,
+                       querys.filters_newsfeed
+            ]
+            super(ListHandlerWithFriends, self).get(querys.fql_multi_query2, # trying an old query
                                                fql = True)
 
 

@@ -12,6 +12,7 @@ if [ $? -ne 0 ]; then failures="$failures test_parser_youtube";fi
 #if [ $? -ne 0 ]; then failures="$failures test_facebook_integration";fi
 #nosetests tests/test_facebook.py  # nothing done yet
 #nosetests tests/test_requests.py  # unfinished tests
+#nosetests tests/test_querys.py  # unfinished tests
 
 
 ########################################
