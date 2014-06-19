@@ -20,8 +20,9 @@ class ListHandler(BS.BaseHandler):
             parsed_list = self.get_video_listing(query, fql) # NOTE we can override the query here.
             # automatic flow ENABLED
             if parsed_list["error"] == "Please relogin again":
-                log.warning("Self redirecting to logout")
-                error = self.redirect("/logout")  # If we detect logged out here, go home
+                raise LogoutException("The user must login again")
+                #log.warning("Self redirecting to logout")
+                #error = self.redirect("/logout")  # If we detect logged out here, go home
             else:
             # with the old, show sample data, this should be activated
             ### And render
@@ -35,8 +36,8 @@ class ListHandler(BS.BaseHandler):
                         user = self.current_user
                         )
         except LogoutException as e:
-            log.warning("Logout final catch")
-            log.exception(e)
+            log.warning("Logout final catch. Redirecting")
+            log.warning(e)
             self.redirect("/logout")
         
 
