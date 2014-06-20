@@ -27,6 +27,10 @@
 	      </p>
 	      <p>Hello, {{ current_user.name|escape }}</p>
 	      <fb:login-button autologoutlink="true" scope="read_stream"></fb:login-button>
+	    {% else %}
+	      <p>
+	      <fb:login-button autologoutlink="true" scope="read_stream"></fb:login-button>
+	      </p>
 	    {% endif %}
 	</div><!-- user -->
 
