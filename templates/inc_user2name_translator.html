@@ -17,9 +17,32 @@ function getActorName(uid)
     data = httpGet(url + uid)
     return JSON.parse(data)["name"]
 }
-	function actor_name(index,oldText){ return '' + getActorName(oldText) }
-	//As per the testing done, this only works if its inside the body http://jsfiddle.net/wakaru44/rLLff/
-	$( ".actor" ).text(actor_name)
+
+
+function get_actor_from_request(){
+	params = window.location.search.replace( "?", "" );
+	return params.split("=")[1];
+}
+
+function actor_this_profile(index,oldText){
+       	return '' + getActorName(get_actor_from_request())
+}
+
+
+function actor_name(index,oldText){ return '' + getActorName(oldText) }
+function actor_profile_link(index,oldText){ return 'https://graph.facebook.com/' + get_actor_from_request() }
+
+
+$( "#this_friend" ).text(actor_this_profile)
+//Replacing the actor_id by the names
+//As per the testing done, this only works if its inside the body http://jsfiddle.net/wakaru44/rLLff/
+$( ".actor" ).text(actor_name)
+
+
+// Replacing demo text with user name from param (friend player only)
+//$( "#this_friends_profile" ).text( actor_profile_link )
+
+
 </script>
 
 

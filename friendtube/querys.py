@@ -15,7 +15,7 @@ fql_friends = """ SELECT uid2
 """
 
 fql_friends_profiles = """SELECT
-name, id, pic
+name, id, pic_square
 FROM profile
 WHERE id in ({0})
 """
@@ -39,7 +39,7 @@ WHERE filter_key in (
         AND type in ('newsfeed')
     )
 AND
-    strpos(attachment.href, "youtu") >= 0
+    strpos(attachment.href, 'youtu') >= 0
 LIMIT 10000
 """
 
@@ -148,6 +148,28 @@ AND
 LIMIT 10000
 """
 
+fql_list_of_good_source_friends_and_others = """SELECT
+            actor_id
+        FROM stream
+        WHERE source_id in
+            (
+                SELECT 
+                    actor_id
+                FROM stream
+                WHERE filter_key in ( 
+                    Select filter_key
+                        from stream_filter
+                        where uid = me() 
+                    )
+                AND
+                    strpos(attachment.href, 'youtu') >= 0
+                LIMIT 100000
+            ) 
+        AND
+            strpos(attachment.href, 'youtu') >= 0
+        LIMIT 1000000
+"""
+
 fql_list_of_good_source_friends = """SELECT
             actor_id
         FROM stream
@@ -164,7 +186,7 @@ fql_list_of_good_source_friends = """SELECT
                     )
                 AND
                     strpos(attachment.href, 'youtu') >= 0
-                LIMIT 100
+                LIMIT 100000
             ) 
         AND
             strpos(attachment.href, 'youtu') >= 0

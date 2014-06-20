@@ -109,10 +109,10 @@ def parse_preview(element = None):
             raise IndexError
         preview = get_preview
     except (IndexError,KeyError) as e:
-        log.warning("A preview image was expected")
-        log.exception(e)
-        log.warning("See the provided element:")
-        log.warning(repr(element))
+        log.warning("loading video default preview picture")
+        log.debug(e) # might be log.exception(e)
+        log.debug("See the provided element:")
+        log.debug(repr(element))
     return preview
 
 def parse_description(element = None):

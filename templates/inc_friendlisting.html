@@ -1,0 +1,18 @@
+
+        {% if friends %}
+        <div id=friend_list>
+    	    <p> This is the list of your friends that are already using the app.</p>
+	    <p> You can browse by their particular playlist </p>
+    	    <ul id="triple">
+    		    {% for friend in friends %}
+    		    <li class="myfriends">
+    		    <span><a href="/friend?friend={{friend["id"]}}" target="_blank">
+    		    <img src="{{ friend["pic_square"] }}" alt="picture of {{ friend["name"] }}" />
+				    {{ friend["name"] }}</a></span>
+    		    </li>
+    		    {% endfor %}
+    	    </ul>
+        </div>
+	{%endif%}
+
+

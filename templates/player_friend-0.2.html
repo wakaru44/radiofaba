@@ -20,21 +20,19 @@
 <div id="content">
 	{% include "inc_usertab.html" %} 
 
-	<div id="subtitle"><p class="text-leyend">Start playing one video and the rest will follow automaticlly</p> </div>
-<br>
-<br>
-<br>
-		{% include "inc_error.html" %}
+	<div id="subtitle"><p class="text-leyend">Latest videos shared by <span id="this_friend">one of your friends</span></p>
+		<p id="this_friends_profile">:D </p>
+       	</div>
+	<br>
+	<br>
+	<br>
+	{% include "inc_error.html" %}
+	{% include "inc_data.html" %}
 
-	<div id="datadiv">
-		<pre>
-		{{ data }}
-		</pre>
-	</div><!-- data -->
         {% if friends %}
         <div id=friend_list>
-    	    <p> This is the list of your friends that are already using the app.</p>
-	    <p> You can browse by their particular playlist </p>
+    	    <p> Other friends sharing videos.</p>
+	    <p class="advice" > You can browse by their particular playlist </p>
     	    <ul>
     		    {% for friend in friends %}
     		    <li>
@@ -45,13 +43,17 @@
     		    {% endfor %}
     	    </ul>
         </div>
-	<!-- maybe im missing a 
-	</div>
-	 here -->
-	{% include "inc_user2name_translator.html" %}
-	{% include "inc_uservoice.html" %}
+	{% endif %}
+
+
+	{% include "inc_video_listing.html" %}
+
+</div>
+{% include "inc_user2name_translator.html" %}
+{% include "inc_uservoice.html" %}
 
 </body>
 </html>
+
 
 

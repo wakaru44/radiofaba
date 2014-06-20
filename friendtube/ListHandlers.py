@@ -11,10 +11,11 @@ import BaseHandler as BS
 from BaseHandler import LogoutException
 
 player_template = "player-0.2b.html"
-with_friends_template = "player-0.2cWithFriends.html"
+with_friends_template = "player_withfriends-0.2.html"
+friends_template = "player_friend-0.2.html"
 
 class ListHandler(BS.BaseHandler):
-    def get(self, query = None, fql = False):
+    def get(self, query = None, fql = False, template = player_template ):
         """this get allows us to pass also a query parameter and ease
         overriding"""
         try:
@@ -33,7 +34,7 @@ class ListHandler(BS.BaseHandler):
                             error = parsed_list["error"]
                         ),
                         #"player.html"
-                        player_template,
+                        template,
                         user = self.current_user
                         )
         except LogoutException as e:
@@ -71,7 +72,7 @@ class ListHandler(BS.BaseHandler):
             log.debug("cleaning the data received from fb")
             video_list_parsed = rparse.parse_fb_result_listing(fblist)
             video_list_clean = rparse.clean_list(video_list_parsed)
-            log.debug("clean res: " + repr(video_list_clean))
+            # log.debug("clean res: " + repr(video_list_clean)) #noisy
         return { "data":video_list_clean, "error":fblist["error"] }
 
 
@@ -102,7 +103,9 @@ class FromAFriendHandler(ListHandler):
                 # then we consider the friend as valid and go to fb
                 friend_query = querys.fql_from_list_of_friends.format('"' + friend + '"')
                 log.debug(friend_query)
-                super(FromAFriendHandler, self).get(friend_query , fql = True) #fql style
+                super(FromAFriendHandler, self).get(friend_query,
+                                                    fql = True,
+                                                    template = friends_template) #fql style
             else:
                 self.render({"data": "What exactly are you looking for?"})
         except Exception as e:
@@ -143,12 +146,15 @@ class ListHandlerWithFriends(ListHandler):
         #TODO: writting this
         try:
             # Multquery definition
+            log.info("Showing latest videos and panel of friends")
             query = querys.compose_multiquery([
                         querys.filters_newsfeed,
-                        querys.fql_friends_profiles.format(querys.fql_list_of_good_source_friends)
+                        querys.fql_friends_profiles.format(querys.fql_list_of_good_source_friends_and_others) # few but somehow good results
+                        #querys.fql_friends_profiles.format(querys.fql_friends) # too few results
+                        #querys.fql_friends_profiles.format(querys.fql_friends_on_newsfeed)  # too many irrelevant results
             ])
             parsed_results = self.get_video_and_friends_listing(query, fql=True) # NOTE we can override the query here.
-            log.debug("parsed results: " + repr(parsed_results))
+            #log.debug("parsed results: " + repr(parsed_results)) # noisy
 
             # automatic flow ENABLED
             if parsed_results["error"] == "Please relogin again":
@@ -169,7 +175,7 @@ class ListHandlerWithFriends(ListHandler):
                 self.render(dict(
                             playlist = parsed_results["data"][0]["payload"],
                             friends = parsed_results["data"][1]["payload"],
-                            data = parsed_results["data"][1],
+                            #data = parsed_results["data"][1],
                             error = parsed_results["error"]
                         ),
                         #"player.html"
@@ -205,7 +211,7 @@ class ListHandlerWithFriends(ListHandler):
                     #- selecting specific querys through name
                     video_list_parsed = rparse.parse_fb_result_listing({"data": qresult}) # gets the listing in our format and structure
                     #listing = rparse.clean_list(video_list_parsed)  # eliminate duplicates
-                    log.debug("clean res: " + repr(video_list_parsed))
+                    #log.debug("clean res: " + repr(video_list_parsed)) #noisy
                     querys_results.append({ "name": qname,  
                                      "payload": video_list_parsed})
                 else:

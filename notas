@@ -21,3 +21,6 @@ https://github.com/maraujop/requests-oauth2
 # testear una query:
 # http://graph.facebook.com/fql?q=SELECT+message%2C+attachment.href++FROM+stream+WHERE+source_id+in%0A++++%28SELECT+uid2+from+friend+WHERE+uid1+%3D%3D+me%28%29%29++and+strpos%28attachment.href%2C%0A++++%22youtu%22%29+%3E%3D+0+LIMIT+100&access_token=CAAHbF03ounQBAD4BDmYd1V7UrbHiQkOsLymkavbKekjRcXMMtMCpm8ZCAQTSUzMSB8LE4Ehvrpm8ZAvX0mpJmbWkHeLVupStAikCWE0czzW1aapobC1yRZBcgyaNybZAM4DGUBV3R70fiETZC9ZCoWFJqbCnYfz3otmlQMSV3YPiUER7bjMcQlvB2HK8OAdfsZD
 
+
+# FUNC:
+# hacer que tambien podamos explorar eventos, y hacer una radio con la gente que atiende a un evento.

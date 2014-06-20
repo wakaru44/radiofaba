@@ -145,7 +145,7 @@ class BaseHandler(webapp2.RequestHandler):
             if fql:
                 # Perform the fql query
                 result = graph.fql(query)
-                log.debug("fql result: " + repr(result))
+                #log.debug("fql result: " + repr(result)) # noisy
             else:
                 # Its a graph api query
                 result = graph.get_object(query)
