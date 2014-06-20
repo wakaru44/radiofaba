@@ -9,10 +9,15 @@
 # with the v1 it returned all your friends
 # with the v2 only returns your friends that are also using this same app, and
 # have signed dunno how (but my uncle is using it and does not appear as friend)
-fql_friends = """
-            SELECT uid2
+fql_friends = """ SELECT uid2
                 FROM friend
                 WHERE uid1 == me()
+"""
+
+fql_friends_profiles = """SELECT
+name, id, pic
+FROM profile
+WHERE id in ({0})
 """
 
 # Get the friends that also use the app, and its pictures
@@ -24,8 +29,7 @@ graph_friends_nonapp = "me/taggable_friends"
 
 # Get the friends that have shared something in the newsfeed
 # (that is, the friends that are lately active)
-fql_friends_on_newsfeed = """
-SELECT 
+fql_friends_on_newsfeed = """ SELECT 
     actor_id
 FROM stream
 WHERE filter_key in ( 
@@ -47,8 +51,7 @@ graph_pic = "{facebookId}/picture?type=square"
 ################################################################################
 # old query to get the results of your. better results with the 1.0 api. almost
 # nothing with 2.0 api.
-friends_based = """
-        SELECT
+friends_based = """ SELECT
             message,
             actor_id,
             created_time,
@@ -68,8 +71,7 @@ friends_based = """
         """
 
 #Experimental. not working well by now
-fql_videos_from_friends_on_newsfeed = """
-        SELECT
+fql_videos_from_friends_on_newsfeed = """SELECT
             message,
             actor_id,
             created_time,
@@ -128,8 +130,7 @@ friends_with_good_results = """
 "12500217831"
 """
 
-fql_from_list_of_friends = """
-SELECT
+fql_from_list_of_friends = """ SELECT
     message,
     actor_id,
     created_time,
@@ -147,8 +148,7 @@ AND
 LIMIT 10000
 """
 
-fql_list_of_good_source_friends = """
-       SELECT
+fql_list_of_good_source_friends = """SELECT
             actor_id
         FROM stream
         WHERE source_id in
@@ -163,11 +163,11 @@ fql_list_of_good_source_friends = """
                         AND type in ('newsfeed')
                     )
                 AND
-                    strpos(attachment.href, "youtu") >= 0
+                    strpos(attachment.href, 'youtu') >= 0
                 LIMIT 100
             ) 
         AND
-            strpos(attachment.href, "youtu") >= 0
+            strpos(attachment.href, 'youtu') >= 0
         LIMIT 1000000
 """
 fql_from_dorota = fql_from_list_of_friends.format(dorota) # plenty results
@@ -185,8 +185,7 @@ fql_from_good_fellas = fql_from_list_of_friends.format(friends_with_good_results
 
 # This query seems to retrieve a lot of duplicates
 # And doesn't seem to get more results than the plain nf
-filters_based01 = """ 
-SELECT 
+filters_based01 = """ SELECT 
             message,
             actor_id,
             created_time,
@@ -210,8 +209,7 @@ LIMIT 5000
 ########################################
 # This one gets the newsfeed only from fql.
 # By not this is the DEFAULT
-filters_newsfeed = """
-SELECT 
+filters_newsfeed = """SELECT 
     message,
     actor_id,
     created_time,
@@ -226,13 +224,12 @@ Select filter_key
     where uid = me() 
     AND type in ('newsfeed')
 )
-and strpos(attachment.href,"youtu") >= 0
+and strpos(attachment.href,'youtu') >= 0
 LIMIT 10000
 """
 
 # This one gets the videos of the user
-fql_ownvideos = """
-SELECT 
+fql_ownvideos = """SELECT 
     message,
     actor_id,
     created_time,
@@ -247,8 +244,7 @@ LIMIT 1000
 """
 
 # This is a litte bit more restricted, with actor_id also
-fql_ownvideos_rest = """
-SELECT 
+fql_ownvideos_rest = """ SELECT 
     message,
     actor_id,
     created_time,
@@ -273,7 +269,11 @@ def compose_multiquery (querys = None):
     assert(querys != None)
     json_query = "{"
     qnum = 1
-    for query in querys:
+    #- we have to remove newlines to avoid sintax issues.
+    nonuline_querys = map(lambda x: " ".join(x.split("\n")), querys)
+    # and replace multispaces by single spaces
+    nospaced_querys = map(lambda x: " ".join(x.split()), querys)
+    for query in nospaced_querys:
         #json_query = json_query + """query""" + str(qnum) + """":" """ + query + """","""
         json_query = """{prev}"query{qn}":"{q}",""".format(prev = json_query,
                                                            qn = qnum,
