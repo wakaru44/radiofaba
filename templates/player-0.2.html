@@ -1,8 +1,8 @@
 <!DOCTYPE HTML>
 <html lang="es">
 <head>
-{% include "meta.html" %}
-{% include "headScripts.html" %}
+{% include "inc_meta.html" %}
+{% include "inc_headScripts.html" %}
 	
 	<link rel="stylesheet" type="text/css" media="screen and (max-width:1900px)" href="style/player-0.2.css">	
     
@@ -29,7 +29,7 @@
 </div>
 
 <div id="subtitle"><p class="text-leyend">Start playing one video and the rest will follow automaticlly</p> </div>
-	{% include "error.html" %}
+	{% include "inc_error.html" %}
 <ul id="sortable" id="section" > 
 {% if playlist %}
     {% for video in playlist %}
@@ -96,7 +96,7 @@ function getActorName(uid)
 </script>
 
     <div id=uservoice>
-	{% include "uservoice.html" %}
+	{% include "inc_uservoice.html" %}
     </div>
 
 </body>

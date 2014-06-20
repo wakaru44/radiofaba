@@ -1,0 +1,25 @@
+
+<script>
+//My functions to get user names
+function httpGet(theUrl)
+{
+    var xmlHttp = null;
+
+    xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "GET", theUrl, false );
+    xmlHttp.send( null );
+    return xmlHttp.responseText;
+}
+
+function getActorName(uid)
+{
+    url = "https://graph.facebook.com/"
+    data = httpGet(url + uid)
+    return JSON.parse(data)["name"]
+}
+	function actor_name(index,oldText){ return '' + getActorName(oldText) }
+	//As per the testing done, this only works if its inside the body http://jsfiddle.net/wakaru44/rLLff/
+	$( ".actor" ).text(actor_name)
+</script>
+
+
