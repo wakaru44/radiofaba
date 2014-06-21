@@ -13,7 +13,6 @@
 <!-- This loads the YouTube IFrame Player API code -->
 <script src="http://www.youtube.com/player_api"></script>
 
-<div id="fb-root"></div> <!-- fb button -->
 
 <div id="header"><h1>FriendTube</h1></div>
 				    
@@ -27,9 +26,11 @@
 	      </p>
 	      <p>Hello, {{ current_user.name|escape }}</p>
 	      <fb:login-button autologoutlink="true" scope="read_stream"></fb:login-button>
+		<div id="fb-root"></div> <!-- fb button -->
 	    {% else %}
 	      <p>
 	      <fb:login-button autologoutlink="true" scope="read_stream"></fb:login-button>
+		<div id="fb-root"></div> <!-- fb button -->
 	      </p>
 	    {% endif %}
 	</div><!-- user -->
