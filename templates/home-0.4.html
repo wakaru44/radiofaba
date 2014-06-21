@@ -78,27 +78,10 @@
         document.getElementById('fb-root').appendChild(e);
       }());
     </script>
-    {% if friends %}
-    <div id="friend_list">
-	    <p class="text-box">This is the list of your friends that are already using the app.</p>
-	    <ul>
-		    {% for friend in friends %}
-		    <li>
-		    <img src="{{ friend["picture"]["data"]["url"] }}" alt="picture of {{ friend["name"] }}" />
-		    <span><a href="http://www.facebook.com/{{friend["id"]}}" target="_blank">{{ friend["name"] }}</a></span>
-		    </li>
-		    {% endfor %}
-	    </ul>
-    </div>
-    {% endif %}
-    {% if data %}
-    <div>
-	    <pre>
-	    {{ data }}
-	    </pre>
-    </div>
-    {% endif %}
     
+{% include "inc_friendlisting.html" %}
+{% include "inc_data.html" %}
+{% include "inc_uservoice.html" %}
 
 </body>
 </html>
