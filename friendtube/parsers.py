@@ -193,7 +193,7 @@ def clean_list(posts):
             i = indexes.pop()
             other = posts[i]
             #print "compared with " + other["link"]
-            if elem["link"] in other["link"]:
+            if elem != None and elem["link"] in other["link"]:
                 #print "found: " + repr(other["link"])
                 #print "with actor: " + repr(other["actor"])
                 found.extend(other["actor"])

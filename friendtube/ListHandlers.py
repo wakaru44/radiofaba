@@ -13,6 +13,7 @@ from BaseHandler import LogoutException
 player_template = "player-0.2b.html"
 with_friends_template = "player_withfriends-0.2.html"
 friends_template = "player_friend-0.2.html"
+future_template = "player-0.2c.html"
 mobile_template ="player_mobile-0.2a.html"
 
 class ListHandler(BS.BaseHandler):
@@ -75,6 +76,16 @@ class ListHandler(BS.BaseHandler):
             video_list_clean = rparse.clean_list(video_list_parsed)
             # log.debug("clean res: " + repr(video_list_clean)) #noisy
         return { "data":video_list_clean, "error":fblist["error"] }
+
+
+class FutureListHandler(ListHandler):
+    def get(self):
+        from mock import patch
+        #with patch("friendtube.parsers.clean_list", lambda x: x):
+        with patch("friendtube.parsers.shorten_comment", lambda x: x):
+            super(FutureListHandler, self).get(querys.filters_newsfeed,
+                                              fql = True,
+                                              template = future_template)
 
 
 class MobileListHandler(ListHandler):

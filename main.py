@@ -31,6 +31,7 @@ from friendtube.HomeHandlers import HomeHandler, CanvasHandler, LogoutHandler
 #from friendtube.HomeHandlers import TestHandler # deprecated, useless
 from friendtube.ListHandlers import ListHandler, OwnListHandler
 from friendtube.ListHandlers import ListHandlerWithFriends
+from friendtube.ListHandlers import FutureListHandler
 from friendtube.ListHandlers import MobileListHandler
 from friendtube.ListHandlers import OtherListHandler, FromAFriendHandler
 from friendtube.ListHandlers import MultiQueryListHandler
@@ -44,6 +45,7 @@ app = webapp2.WSGIApplication(
      ('/canvas', CanvasHandler),
      ('/canvas/', CanvasHandler),
      ('/list', ListHandler),
+     ('/future', FutureListHandler),
      ('/mobile', MobileListHandler),
      ('/ownlist', OwnListHandler),
      ('/otherlist', OtherListHandler),
