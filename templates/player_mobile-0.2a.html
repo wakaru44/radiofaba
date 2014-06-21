@@ -3,7 +3,11 @@
 <head>
 {% include "inc_meta.html" %}
 {% include "inc_headScripts.html" %}
-	
+<!-- little hack to make jquery ui work on mobile 
+<script src="jquery.ui.touch-punch.min.js"></script>	
+-->
+<script src="static/jquery-ui.touch-punch.min.js"></script>	
+<script src="static/jquery-ui.js"></script>
 	<link rel="stylesheet" type="text/css" media="screen and (max-width:1900px)" href="style/player-0.2b.css">	
     
 </head>
@@ -32,6 +36,7 @@
 		</pre>
 	</div><!-- data -->
 	</div>
+	{% include "inc_video_listing.html" %}
 	{% include "inc_user2name_translator.html" %}
 	{% include "inc_uservoice.html" %}
 
