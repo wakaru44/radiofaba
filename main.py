@@ -43,6 +43,7 @@ app = webapp2.WSGIApplication(
      ('/canvas', CanvasHandler),
      ('/canvas/', CanvasHandler),
      ('/list', ListHandler),
+     ('/mobile', MobileListHandler),
      ('/ownlist', OwnListHandler),
      ('/otherlist', OtherListHandler),
      ('/friend', FromAFriendHandler),

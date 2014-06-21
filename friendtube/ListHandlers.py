@@ -13,6 +13,7 @@ from BaseHandler import LogoutException
 player_template = "player-0.2b.html"
 with_friends_template = "player_withfriends-0.2.html"
 friends_template = "player_friend-0.2.html"
+mobile_template = "player_mobile-0.2.html"
 
 class ListHandler(BS.BaseHandler):
     def get(self, query = None, fql = False, template = player_template ):
@@ -74,6 +75,11 @@ class ListHandler(BS.BaseHandler):
             video_list_clean = rparse.clean_list(video_list_parsed)
             # log.debug("clean res: " + repr(video_list_clean)) #noisy
         return { "data":video_list_clean, "error":fblist["error"] }
+
+
+class MobileListHandler(BS.BaseHandler):
+    def get(self):
+        super(MobileListHandler, self).get(template=mobile_template)
 
 
 class OwnListHandler(ListHandler):
