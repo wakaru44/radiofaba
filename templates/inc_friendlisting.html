@@ -7,7 +7,7 @@
     		    {% for friend in friends %}
     		    <li class="myfriends">
     		    <span><a href="/friend?friend={{friend["id"]}}" target="_blank">
-    		    <img src="{{ friend["pic_square"] }}" alt="picture of {{ friend["name"] }}" />
+				    <img src="{% if friend["pic_square"] %}{{ friend["pic_square"] }} {% else %} {{ friend["picture"]["data"]["url"] }} {%endif %}" alt="picture of {{ friend["name"] }}" />
 				    {{ friend["name"] }}</a></span>
     		    </li>
     		    {% endfor %}

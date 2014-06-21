@@ -43,8 +43,8 @@ class BaseHandler(webapp2.RequestHandler):
     """
     @property
     def current_user(self):
-        log.warning("The instance was called from: " + self.app.active_instance.request.application_url)
-        log.warning("The instance was called from: " + get_application_id())
+        log.info("The instance was called from: " + self.app.active_instance.request.application_url)
+        log.info("The instance was called from: " + get_application_id())
         if self.session.get("user"):
             # User is logged in
             return self.session.get("user")
