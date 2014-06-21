@@ -1,0 +1,40 @@
+<!DOCTYPE HTML>
+<html lang="es">
+<head>
+{% include "inc_meta.html" %}
+{% include "inc_headScripts.html" %}
+	
+	<link rel="stylesheet" type="text/css" media="screen and (max-width:1900px)" href="style/player-0.2b.css">	
+    
+</head>
+
+<body class=" __plain_text_READY__">
+
+<!-- This loads the YouTube IFrame Player API code -->
+<script src="http://www.youtube.com/player_api"></script>
+
+<div id="fb-root"></div> <!-- fb button -->
+
+<div id="header"><h1>FriendTube</h1></div>
+				    
+<div id="content">
+	{% include "inc_usertab.html" %} 
+
+	<div id="subtitle"><p class="text-leyend">Start playing one video and the rest will follow automaticlly</p> </div>
+<br>
+<br>
+<br>
+		{% include "inc_error.html" %}
+
+	<div id="datadiv">
+		<pre>
+		{{ data }}
+		</pre>
+	</div><!-- data -->
+	</div>
+	{% include "inc_user2name_translator.html" %}
+	{% include "inc_uservoice.html" %}
+
+</body>
+</html>
+
