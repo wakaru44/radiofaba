@@ -1,10 +1,11 @@
 <!DOCTYPE HTML>
 <html lang="es">
 <head>
-{% include "inc_meta.html" %}
-{% include "inc_headScripts.html" %}
+	{% include "inc_meta.html" %}
+	{% include "inc_headScripts.html" %}
 	
-	<link rel="stylesheet" type="text/css" media="screen and (max-width:1900px)" href="style/player-0.2b.css">	
+	<!-- specifiq style sheet for future player -->
+	<link rel="stylesheet" type="text/css" media="screen and (max-width:1900px)" href="style/player-0.2c.css">	
     
 	<!-- experiments with readmore -->
 	<script src="static/readmore.min.js"></script>
@@ -32,18 +33,11 @@
 
 
 
-	<script>
-//////// Read More functionality
-	// $('.text-box').readmore({ maxHeight: 500 });
-	$('.collapse').readmore();
-	</script>
-
-
-
 	<ul id="sortable" id="section" > 
 	{% if playlist %}
 	    {% for video in playlist %}
 	<li class="video">
+	<div class="collapse">
 	    <span class="deleter"><img src="style/close.png" width="40px" /></span>
 		<div class="video-box">
 		    <a class="fancybox fancybox.iframe text-title" href="{{ video["link"]}}">{{ video["title"] }}
@@ -104,6 +98,7 @@
 				    <!-- not implemented yet. youtube info about the video-->
 			    </div>
 		</div><!-- text box -->
+	    </div><!-- collapse -->
 	    </li>
 	    {%endfor%}
 	{% endif %}
@@ -112,6 +107,13 @@
 
 
 
+
+
+	<script>
+//////// Read More functionality
+	$('.video').readmore({ maxHeight: 300 });
+	// $('.video').readmore();
+	</script>
 
 
 

@@ -1,14 +1,18 @@
 <!DOCTYPE HTML>
 <html lang="es">
 <head>
-{% include "inc_meta.html" %}
-{% include "inc_headScripts.html" %}
-<!-- little hack to make jquery ui work on mobile 
-<script src="jquery.ui.touch-punch.min.js"></script>	
--->
-<script src="static/jquery-ui.touch-punch.min.js"></script>	
-<script src="static/jquery-ui.js"></script>
-	<link rel="stylesheet" type="text/css" media="screen and (max-width:1900px)" href="style/player-0.2b.css">	
+	{% include "inc_meta.html" %}
+	{% include "inc_headScripts.html" %}
+	<!-- little hack to make jquery ui work on mobile -->
+	<script src="static/jquery-ui.touch-punch.min.js"></script>	
+	<script src="static/jquery-ui.js"></script>
+
+
+	<!-- specifiq style sheet for mobile player -->
+	{% include "inc_headScripts_mobile.html" %}
+	<!--
+	<link rel="stylesheet" type="text/css" media="screen and (max-width:1900px)" href="style/player_mobile-0.2b.css">	
+	-->
     
 </head>
 
@@ -31,10 +35,11 @@
 		{% include "inc_error.html" %}
 		{% include "inc_data.html" %}
 
-	{% include "inc_video_listing.html" %}
+	{% include "inc_video_listing_mobile.html" %}
 	{% include "inc_user2name_translator.html" %}
 	{% include "inc_uservoice.html" %}
 
+</div><!-- content -->
 </body>
 </html>
 

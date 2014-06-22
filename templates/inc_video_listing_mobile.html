@@ -4,11 +4,11 @@
 	<li class="video">
 	    <span class="deleter"><img src="style/close.png" width="40px" /></span>
 		<div class="video-box">
-		    <a class="fancybox fancybox.iframe text-title" href="{{ video["link"]}}">{{ video["title"] }}
+			<a class="fancybox fancybox.iframe " href="{{ video["link"]}}"><span class="text-title">{{ video["title"] }}</span>
 			    <br />
 			    <img class="videopreview" src="{{ video["preview"] }}" />
 		    </a>
-		    <p>Shared by 
+		    <p class="sharedby">Shared by 
 				<span class="actor">{{ video["actor"].pop() }}</span>
 				    {% if video["actor"].__len__() > 1 %}
 					{% for friend in video["actor"] %}
@@ -16,7 +16,7 @@
 					{% endfor %}
 				    {% endif %}
 		    </p>
-		    <p>{{ video["created"] }}</p>
+		    <p class="created" >{{ video["created"] }}</p>
 		    <p class="compartir">Compartir
 			    <span class="soc_net">en fb</span>
 			    <span class="soc_net">en tuter</span>
@@ -38,3 +38,4 @@
 	{% endif %}
 	 
 	</ul>
+
