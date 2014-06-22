@@ -111,7 +111,12 @@
 
 	<script>
 //////// Read More functionality
-	$('.video').readmore({ maxHeight: 300 });
+	function short_comment (jQuery){
+			$('.video').readmore({ maxHeight: 200 });
+	}
+
+	$( document ).ready( short_comment );
+	// $('.video').readmore({ maxHeight: 300 });
 	// $('.video').readmore();
 	</script>
 

@@ -15,6 +15,7 @@ with_friends_template = "player_withfriends-0.2.html"
 friends_template = "player_friend-0.2.html"
 future_template = "player-0.2c.html"
 mobile_template ="player_mobile-0.2a.html"
+fbvideo_template ="player_facebook-0.1.html"
 
 class ListHandler(BS.BaseHandler):
     def get(self, query = None, fql = False, template = player_template ):
@@ -96,6 +97,15 @@ class MobileListHandler(ListHandler):
         geto = padre.get(template=mobile_template)
 
 
+class FbVideoListHandler(ListHandler):
+    def get(self):
+        #super(MobileListHandler, self).get(template=mobile_template)
+        padre = super(FbVideoListHandler, self)
+        geto = padre.get(querys.fql_fbvideos_from_newsfeed,
+                         fql = True,
+                         template=fbvideo_template)
+
+
 class OwnListHandler(ListHandler):
     def get(self):
         # we call the parent with a query about our own shared videos.
@@ -107,7 +117,7 @@ class OtherListHandler(ListHandler):
         # we call the parent with other query.
         #super(OtherListHandler, self).get(querys.fql_from_specific_list_of_friends , fql = True) #fql style
         #super(OtherListHandler, self).get(querys.fql_from_dorota_and_list_of_friends , fql = True) #fql style
-        super(OtherListHandler, self).get(querys.fql_from_dorota_and_vetusta , fql = True) #fql style
+        super(OtherListHandler, self).get(querys.fql_videos_from_friends_on_newsfeed , fql = True) #fql style
         #super(OtherListHandler, self).get(querys.fql_from_good_fellas , fql = True) #fql style
 
 

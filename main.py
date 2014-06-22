@@ -32,6 +32,7 @@ from friendtube.HomeHandlers import HomeHandler, CanvasHandler, LogoutHandler
 from friendtube.ListHandlers import ListHandler, OwnListHandler
 from friendtube.ListHandlers import ListHandlerWithFriends
 from friendtube.ListHandlers import FutureListHandler
+from friendtube.ListHandlers import FbVideoListHandler
 from friendtube.ListHandlers import MobileListHandler
 from friendtube.ListHandlers import OtherListHandler, FromAFriendHandler
 from friendtube.ListHandlers import MultiQueryListHandler
@@ -44,14 +45,15 @@ app = webapp2.WSGIApplication(
     [('/', HomeHandler),
      ('/canvas', CanvasHandler),
      ('/canvas/', CanvasHandler),
-     ('/list', ListHandler),
-     ('/future', FutureListHandler),
-     ('/mobile', MobileListHandler),
-     ('/ownlist', OwnListHandler),
-     ('/otherlist', OtherListHandler),
-     ('/friend', FromAFriendHandler),
-     ('/withfriends', ListHandlerWithFriends),
-     ('/multi', MultiQueryListHandler),
+     ('/list', ListHandler),  # regular player
+     ('/future', FutureListHandler),  # player with next features
+     ('/facebook', FbVideoListHandler), # videos from facebook
+     ('/mobile', MobileListHandler), # player for mobiles
+     ('/ownlist', OwnListHandler),  
+     ('/otherlist', OtherListHandler),  # other querys. experimental for specific querys
+     ('/friend', FromAFriendHandler),  # specific page to get the listing from a friend
+     ('/withfriends', ListHandlerWithFriends),  # player with the list of friends to browse
+     ('/multi', MultiQueryListHandler),  # experiment to test multiquerys
      #('/test', TestHandler),  # useless. deprecated
      ('/logout', LogoutHandler)],
     debug=True,

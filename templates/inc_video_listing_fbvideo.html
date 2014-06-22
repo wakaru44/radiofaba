@@ -1,0 +1,54 @@
+	<ul id="sortable" id="section" > 
+	{% if playlist %}
+	    {% for video in playlist %}
+	<li class="video">
+	    <span class="deleter"><img src="style/close.png" width="40px" /></span>
+		<div class="video-box">
+		    <div class="fb-post" data-href="{{ video["link"] }}" data-width="500">
+		    </div>
+		    <a class="fancybox fancybox.iframe text-title" href="{{ video["link"]}}">{{ video["title"] }}
+			    <br />
+			    <img class="videopreview" src="{{ video["preview"] }}" />
+		    </a>
+		    <p>Shared by 
+				<span class="actor">{{ video["actor"].pop() }}</span>
+				    {% if video["actor"].__len__() > 1 %}
+					{% for friend in video["actor"] %}
+						and <span class="actor">{{ friend }}</span>
+					{% endfor %}
+				    {% endif %}
+		    </p>
+		    <p>{{ video["created"] }}</p>
+		    <p class="compartir">Compartir
+			    <span class="soc_net">en fb</span>
+			    <span class="soc_net">en tuter</span>
+			    <span class="soc_net">y otras mierdas</span>
+		    </p>
+		</div><!-- video box -->
+
+    			<div class="text-box">
+				<p class="text-video">
+				    {{ video["desc"] }}
+				</p>
+			    <div class="comment_fb">
+			    </div>
+			    <div class="comment_vid">
+			    </div>
+			</div>
+
+	    </li>
+	    {%endfor%}
+	{% endif %}
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/es_ES/sdk.js#xfbml=1&appId=522368114539124&version=v2.0";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+	 
+	</ul>
+
