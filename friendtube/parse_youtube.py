@@ -103,7 +103,7 @@ def get_id_shortlink(link = None):
 def compose_embed_youtube(video_id = None):
     """return a link to youtube"""
     assert(video_id != None)
-    return "http://www.youtube.com/embed/{0}?enablejsapi=1&wmode=opaque".format(
+    return "https://www.youtube.com/embed/{0}?enablejsapi=1&wmode=opaque".format(
                 video_id
                 )
 
