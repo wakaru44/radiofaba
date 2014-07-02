@@ -90,13 +90,19 @@ class LogoutHandler(BS.BaseHandler):
 
 class CanvasHandler(HomeHandler):
     def get(self):
-        self.render({"data" : repr(self.request.params), "error":"errorerror" },
+        try:
+            self.render({"data" : repr(self.request.params), "error":"errorerror" },
                     canvas_template,
                     user = self.current_user)
+        except:
+            self.render({}, home_template)
 
     def post(self):
         """handles the login process differently than HomeHandler, triggering it async"""
-        log.debug("PARSING POST")
-        log.debug(dir(super(HomeHandler)))
-        log.debug(super(HomeHandler))
-        self.render({"data":self.request.params}, canvas_template, user = self.current_user)
+        try:
+            log.debug("PARSING POST")
+            log.debug(dir(super(HomeHandler)))
+            log.debug(super(HomeHandler))
+            self.render({"data":self.request.params}, canvas_template, user = self.current_user)
+        except:
+            self.redirect("/list")
