@@ -42,7 +42,8 @@ config['webapp2_extras.sessions'] = dict(secret_key='')
 
 
 app = webapp2.WSGIApplication(
-    [('/', HomeHandler),
+    #[('/', HomeHandler),  # Original workflow
+    [('/', ListHandler),  # new, straight workflow
      ('/canvas', CanvasHandler),  # page to render in the fb canvas page
      ('/canvas/', CanvasHandler),
      ('/list', ListHandler),  # regular player

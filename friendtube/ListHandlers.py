@@ -80,6 +80,8 @@ class ListHandler(BS.BaseHandler):
 
 
 class FutureListHandler(ListHandler):
+    """This is a handler thought to be a test only of future uses. 
+    It should not be published."""
     def get(self):
         from mock import patch
         #with patch("friendtube.parsers.clean_list", lambda x: x):
