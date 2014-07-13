@@ -6,12 +6,12 @@
 	
 	<link rel="stylesheet" type="text/css" media="screen and (max-width:1900px)" href="style/home-0.4.css">	
     
-</style>
 </head>
 
 <body>
 
 	<div id="fb-root"></div> <!-- fb button -->
+    {% include "inc_fbbutton.html" %}
  
 	<div id="header">
 		<h1>FriendTube</h1>
@@ -50,7 +50,6 @@
     {% if current_user %}
     <div id="text-corpse">
 	    <div>
-		    <!-- TODO: include some info for the user -->
 	    </div>
             <div>
 		    	<p class="text-box">Now you can view <a href="/withfriends">The videos and navigate among your friends</a>
@@ -68,28 +67,7 @@
 
 
     {% include "inc_error.html" %}
-    <script>
-      window.fbAsyncInit = function() {
-        FB.init({
-		appId: '{{ facebook_app_id }}',
-		version: 'v2.0',
-		status: true,
-		cookie: true,
-                xfbml: true
-		});
-        FB.Event.subscribe('{% if current_user %}auth.logout{% else %}auth.login{% endif %}', function(response) {
-          {% if current_user %} window.location = "/logout" {% else %} window.location.reload(); {% endif %}
-        });
-      };
-      (function() {
-        var e = document.createElement('script');
-        e.type = 'text/javascript';
-        e.src = document.location.protocol + '//connect.facebook.net/en_US/sdk.js&version=2.0';
-        e.async = true;
-        document.getElementById('fb-root').appendChild(e);
-      }());
-    </script>
-    
+   
 {% include "inc_friendlisting.html" %}
 {% include "inc_data.html" %}
 {% include "inc_uservoice.html" %}
