@@ -14,6 +14,8 @@ home_template = "home-0.4.html"  # the normal home
 post_template = "home.html"  #used by default in the post for home
 canvas_template = "canvas-0.2.html"  # used for the facebook canvas page
 
+
+
 class HomeHandler(BS.BaseHandler):
     def get(self):
         # We are going to get the list of friends and show it.
@@ -76,6 +78,28 @@ class HomeHandler(BS.BaseHandler):
                 errors like: <br /> {0}
                 """.format(repr(sys.exc_info()))
            ))
+
+
+class DirectHomeHandler(HomeHandler):
+    def get(self):
+        """detects if the user is logged out or not. If its logged out, welcome
+        page. If it's logged in, goes to /list or other"""
+        try:
+            friends = self.retrieve_friends()
+            current_user = self.current_user
+            self.redirect("/list")  # it will only redirect if we are logged in
+        except LogoutException as e:
+            log.warning("The user is logged out")
+            friends = {}
+            friends["data"] = None
+            friends["error"] = "Log in with your facebook id"
+            current_user = None
+            # we should show the demo page anyway
+        self.render({"friends" : friends["data"], "error":friends["error"] },
+                    home_template,
+                    user = current_user
+                   )
+
 
 
 class LogoutHandler(BS.BaseHandler):

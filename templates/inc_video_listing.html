@@ -2,7 +2,7 @@
 	{% if playlist %}
 	    {% for video in playlist %}
 	<li class="video">
-	    <span class="deleter"><img src="style/close.png" width="40px" /></span>
+	    <span class="deleter"><img src="style/close.png" width="40px" title="Click here to remove the video from the playlist" /></span>
 		<div class="video-box">
 		    <a class="fancybox fancybox.iframe text-title" href="{{ video["link"]}}">{{ video["title"] }}
 			    <br />

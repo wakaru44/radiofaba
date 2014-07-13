@@ -29,6 +29,7 @@ import logging as log
 
 from friendtube.HomeHandlers import HomeHandler, CanvasHandler, LogoutHandler
 #from friendtube.HomeHandlers import TestHandler # deprecated, useless
+from friendtube.HomeHandlers import DirectHomeHandler
 from friendtube.ListHandlers import ListHandler, OwnListHandler
 from friendtube.ListHandlers import ListHandlerWithFriends
 from friendtube.ListHandlers import FutureListHandler
@@ -43,7 +44,7 @@ config['webapp2_extras.sessions'] = dict(secret_key='')
 
 app = webapp2.WSGIApplication(
     #[('/', HomeHandler),  # Original workflow
-    [('/', ListHandler),  # new, straight workflow
+    [('/', DirectHomeHandler),  # new, straight workflow
      ('/canvas', CanvasHandler),  # page to render in the fb canvas page
      ('/canvas/', CanvasHandler),
      ('/list', ListHandler),  # regular player
