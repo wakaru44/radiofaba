@@ -104,7 +104,7 @@ class test_get_embed_generic():
         pr.get_embed("http://vimeo.com/caca?bar")
 
     def test_normal_link(self):
-        exp = 'http://www.youtube.com/embed/Xatb2rh3EBw?enablejsapi=1&wmode=opaque'
+        exp = 'https://www.youtube.com/embed/Xatb2rh3EBw?enablejsapi=1&wmode=opaque'
         tst = 'https://www.youtube.com/watch?v=Xatb2rh3EBw'
         res = pr.get_embed(tst)
         eq_(res, exp)
