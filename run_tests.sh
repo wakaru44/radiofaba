@@ -5,9 +5,9 @@ echo "Launching regular tests"
 
 failures=""
 nosetests tests/test_parsers.py
-if [ $? -eq 0 ]; then failures="$failures test_parsers";fi
+if [ $? -ne 0 ]; then failures="$failures test_parsers";fi
 nosetests tests/test_parser_youtube.py
-if [ $? -eq 0 ]; then failures="$failures test_parser_youtube";fi
+if [ $? -ne 0 ]; then failures="$failures test_parser_youtube";fi
 #nosetests tests/test_facebook_integration.py # not working in travis
 #if [ $? -ne 0 ]; then failures="$failures test_facebook_integration";fi
 #nosetests tests/test_facebook.py  # nothing done yet
