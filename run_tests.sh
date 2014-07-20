@@ -26,7 +26,7 @@ else
 fi
 
 ########################################
-echo "Uploading to appengine"
+# "Uploading to appengine"
 
 function upload_to_appengine()
 {
@@ -34,13 +34,19 @@ function upload_to_appengine()
 
 	cd google_appengine
 	echo " google_appengine"
-	ls -lart
 	echo "hostname"
 	hostname
 	appdir=".."
 	# oauth code:
 	token="4/9JwInYmiQAdaLh9xqDSHDavVyYfL.kqeQpM1lKmofOl05ti8ZT3a3FIpajQI" #invalid
-	python appcfg.py update --oauth2 --noauth_local_webserver --oauth2_refresh_token=$token $appdir
+	# how to upload with no interaction:
+	#python appcfg.py update --oauth2 --noauth_local_webserver --oauth2_refresh_token=$token $appdir
+	# how to get the link to token:
+	echo "Uploading now"
+	ls -l ../../google_appengine
+	python ../appcfg.py update   --oauth2  --noauth_local_webserver   friendtube.testing  << EOF
+	$token
+EOF
 
 }
 # upload_to_appengine. only in travis
@@ -67,6 +73,9 @@ echo "  $machine Environment"
 
 if [ $machine == "Travis" ]; then
 	echo "upload_to_appengine. only in travis"
+	upload_to_appengine
+else
+	echo "Uploading as exception"
 	upload_to_appengine
 fi
 
