@@ -2,18 +2,25 @@
 <html lang="es">
 <head>
 
-{% include "meta.html" %}
+{% include "inc_meta.html" %}
 	
 	<link rel="stylesheet" type="text/css" media="screen and (max-width:1900px)" href="style/home-0.4.css">	
     
-</style>
 </head>
 
 <body>
 
-    <div id="fb-root"></div> <!-- fb button -->
+<!-- moving to include fbbutton 	<div id="fb-root"></div> -->
+    {% include "inc_fbbutton2.html" %}
  
-	<div id="header"><h1>FriendTube</h1></div>
+	<div id="header">
+		<h1>FriendTube</h1>
+		<div class="fb-like"
+			data-href="http://friendtu.be"
+			data-layout="standard" data-action="like"
+			data-show-faces="true" data-share="true">
+		</div>
+		</div>
 				    
 	<div id="content">      
 
@@ -28,7 +35,8 @@
 		      <fb:login-button autologoutlink="true" scope="read_stream"></fb:login-button>
 		    {% else %}
 		      <p>
-		        <fb:login-button autologoutlink="true" scope="read_stream"></fb:login-button>
+		      <a></a><img/><!-- @YOLI: esto esta aqui como chapuza porque cuando estas deslogueado el boton se descoloca-->
+		      <fb:login-button autologoutlink="true" scope="read_stream"></fb:login-button>
 		      </p>
 		    {% endif %}
 		</div>
@@ -42,12 +50,14 @@
     {% if current_user %}
     <div id="text-corpse">
 	    <div>
-		    <!-- TODO: include some info for the user -->
 	    </div>
             <div>
-		    	<p class="text-box">Now you can view <a href="/list">The videos that your friends shared</a>
-		    	<br>Or review <a href="/ownlist">your own videos shared by you</a>
-		    	<br>or  <a href="/advlist">the inestable version of the application.</a></p>
+		    	<p class="text-box">Now you can view <a href="/withfriends">The videos and navigate among your friends</a>
+		    	Or review <a href="/ownlist">your own videos shared by you</a>
+			</p>
+			<p class="text-box">or <a href="/list">simply the videos</a> like the classic playlist
+			or <a href="/mobile">a Mobile version (still in beta)</a>
+			</p>
 	    </div>
     <div><!-- corpse -->
     {% endif %}
@@ -55,102 +65,12 @@
 
 
 
-    {% include "error.html" %}
-    <script>
-      window.fbAsyncInit = function() {
-        FB.init({
-		appId: '{{ facebook_app_id }}',
-		version: 'v2.0',
-		status: true,
-		cookie: true,
-                xfbml: true
-		});
-        FB.Event.subscribe('{% if current_user %}auth.logout{% else %}auth.login{% endif %}', function(response) {
-          {% if current_user %} window.location = "/logout" {% else %} window.location.reload(); {% endif %}
-        });
-      };
-      (function() {
-        var e = document.createElement('script');
-        e.type = 'text/javascript';
-        e.src = document.location.protocol + '//connect.facebook.net/en_US/sdk.js&version=2.0';
-        e.async = true;
-        document.getElementById('fb-root').appendChild(e);
-      }());
-    </script>
-    {% if friends %}
-    <div id="friend_list">
-	    <p class="text-box">This is the list of your friends that are already using the app.</p>
-	    <ul>
-		    {% for friend in friends %}
-		    <li>
-		    <img src="{{ friend["picture"]["data"]["url"] }}" alt="picture of {{ friend["name"] }}" />
-		    <span><a href="http://www.facebook.com/{{friend["id"]}}" target="_blank">{{ friend["name"] }}</a></span>
-		    </li>
-		    {% endfor %}
-	    </ul>
-    </div>
-    {% endif %}
-    {% if data %}
-    <div>
-	    <pre>
-	    {{ data }}
-	    </pre>
-    </div>
-    {% endif %}
-    
-    <div id="uservoice">
-	<script>
-// Include the UserVoice JavaScript SDK (only needed once on a page)
-UserVoice=window.UserVoice||[];(function(){var uv=document.createElement('script');uv.type='text/javascript';uv.async=true;uv.src='//widget.uservoice.com/9OQ9JFutKcsNH2PsVUqrA.js';var s=document.getElementsByTagName('script')[0];s.parentNode.insertBefore(uv,s)})();
+    {% include "inc_error.html" %}
+   
+{% include "inc_friendlisting.html" %}
+{% include "inc_data.html" %}
+{% include "inc_uservoice.html" %}
+{% include "inc_analytics.html" %}
 
-//
-// UserVoice Javascript SDK developer documentation:
-// https://www.uservoice.com/o/javascript-sdk
-//
-
-// Set colors
-UserVoice.push(['set', {
-		  accent_color: '#808283',
-		    trigger_color: 'white',
-		      trigger_background_color: '#6aba2e'
-		      }]);
-
-// Identify the user and pass traits
-// To enable, replace sample data with actual user traits and uncomment the line
-UserVoice.push(['identify', {
-		  //email:      'john.doe@example.com', // User’s email address
-		  //name:       'John Doe', // User’s real name
-		  //created_at: 1364406966, // Unix timestamp for the date the user signed up
-		  //id:         123, // Optional: Unique id of the user (if set, this should not change)
-		  //type:       'Owner', // Optional: segment your users by type
-		  //account: {
-		  //  id:           123, // Optional: associate multiple users with a single account
-		  //  name:         'Acme, Co.', // Account name
-		  //  created_at:   1364406966, // Unix timestamp for the date the account was created
-		  //  monthly_rate: 9.99, // Decimal; monthly rate of the account
-		  //  ltv:          1495.00, // Decimal; lifetime value of the account
-		  //  plan:         'Enhanced' // Plan name for the account
-		  //}
-		}]);
-
-// Add default trigger to the bottom-right corner of the window:
-UserVoice.push(['addTrigger', { mode: 'contact', trigger_position: 'bottom-right' }]);
-
-// Or, use your own custom trigger:
-//UserVoice.push(['addTrigger', '#id', { mode: 'contact' }]);
-
-// Autoprompt for Satisfaction and SmartVote (only displayed under certain conditions)
-UserVoice.push(['autoprompt', {}]);
-</script>
-    </div>
-</div>
-    <div id="uservoice">
-	{% include "uservoice.html" %}
-    </div>
-
-
-</div></div></div><!-- y estos cierres?? TODO: corregir -->
-
-<!-- esto que es, y como meterlo en includes TODO-->
 </body>
 </html>

@@ -1,0 +1,17 @@
+
+	<div id="user">
+	    {% if current_user %}
+	      <p>
+		<a href="{{ current_user.profile_url }}">
+		<img src="http://graph.facebook.com/v2.0/{{ current_user.id }}/picture?type=square"/></a>
+	      </p>
+	      <p>Hello, {{ current_user.name|escape }}</p>
+	      <fb:login-button autologoutlink="true" scope="read_stream"></fb:login-button>
+	    {% else %}
+	      <p>
+	      <fb:login-button autologoutlink="true" scope="read_stream"></fb:login-button>
+	      </p>
+	    {% endif %}
+	</div><!-- user -->
+
+

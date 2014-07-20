@@ -52,7 +52,7 @@
 		}
 	
 	#text-corpse{
-        width:90%;
+		width:90%;
 		background-color:rgba(216,219,219,0.8);
 		border-top-right-radius:15px;
 		-moz-border-topright-radius:25px;
@@ -72,10 +72,11 @@
 		padding-top:50px;
     	}
     
-	#friend_list{
-    	text-align: left;
-    	padding:0 0 2em;
-		}
+     #friend_list{
+	     margin: 3em auto 0;
+		text-align: left;
+		padding:0 0 2em;
+	}
 
 	ul {
 		list-style:none;

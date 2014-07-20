@@ -1,0 +1,18 @@
+@import url("player-0.2b.css");
+/* 
+ * ################################################################################
+ * custom elements for /future
+ * ################################################################################
+*/
+
+.collapse{
+	z-index: 50; // to avoid getting behind the elements below
+}
+
+
+#content{
+	background-color: #ccc;
+}
+
+.video{
+}

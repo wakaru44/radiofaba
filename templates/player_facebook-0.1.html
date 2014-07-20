@@ -13,6 +13,7 @@
 <!-- This loads the YouTube IFrame Player API code -->
 <script src="http://www.youtube.com/player_api"></script>
 
+<div id="fb-root"></div> <!-- fb button -->
 
 <div id="header"><h1>FriendTube</h1></div>
 				    
@@ -26,7 +27,7 @@
 		{% include "inc_error.html" %}
 		{% include "inc_data.html" %}
 
-	{% include "inc_video_listing.html" %}
+	{% include "inc_video_listing_fbvideo.html" %}
 	{% include "inc_user2name_translator.html" %}
 	{% include "inc_uservoice.html" %}
 	{% include "inc_analytics.html" %}

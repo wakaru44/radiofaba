@@ -1,10 +1,16 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-	{% include "inc_meta.html" %}
+<!DOCTYPE HTML>
+<html lang="es">
+<head>
+{% include "inc_meta.html" %}
+	
+	<link rel="stylesheet" type="text/css" media="screen and (max-width:1900px)" href="style/home-0.2.css">	
+	<!--
 	<link rel="stylesheet" type="text/css" href="style/home.css">
-  </head>
-  <body>
+	-->
+    
+</head>
+
+<body>
     <fb:login-button autologoutlink="true" scope="read_stream"></fb:login-button>
 
     {% if current_user %}
@@ -16,16 +22,36 @@
     {% endif %}
 
     <div id="fb-root"></div> <!-- fb button -->
-    
-    <h2>Enjoy the videos you and your friends share on facebook like a TV</h2>
+ 
+<div id="header"><h1>Friend Tube </h1></div>
+				    
+<div id="content">
+
+<div id="user">
+    {% if current_user %}
+      <p>
+	<a href="{{ current_user.profile_url }}">
+	<img src="http://graph.facebook.com/v2.0/{{ current_user.id }}/picture?type=square"/></a>
+      </p>
+      <p>Hello, {{ current_user.name|escape }}</p>
+    {% endif %}
+</div>
+
+	<div id="subtitle"><p class="text-leyend">
+	Enjoy the videos you and your friends share on facebook like a TV 
+	<br>
+	Start playing one video and the rest will follow automaticlly
+	</p> </div>
 
     {% if current_user %}
+    <div id=text-corpse>
 	    <div>
 	    </div>
             <div>
 		    <p>Now you can view <a href="/list">The videos that your friends shared</a></p>
 		    <p>Or review <a href="/ownlist">your own videos shared by you</a></p>
 		    <p>or  <a href="/advlist">the inestable version of the application.</a></p>
+    <div><!-- corpse -->
     {% endif %}
 
 
@@ -65,15 +91,19 @@
     </div>
     {% endif %}
     {% if data %}
-    <div>
+    <div id="data">
 	    <pre>
 	    {{ data }}
 	    </pre>
     </div>
     {% endif %}
+
     <div id=uservoice>
 	{% include "inc_uservoice.html" %}
     </div>
+</div>
+
 {% include "inc_analytics.html" %}
-  </body>
+</body>
 </html>
+

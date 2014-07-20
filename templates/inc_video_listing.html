@@ -1,0 +1,40 @@
+	<ul id="sortable" id="section" > 
+	{% if playlist %}
+	    {% for video in playlist %}
+	<li class="video">
+	    <span class="deleter"><img src="style/close.png" width="40px" title="Click here to remove the video from the playlist" /></span>
+		<div class="video-box">
+		    <a class="fancybox fancybox.iframe text-title" href="{{ video["link"]}}">{{ video["title"] }}
+			    <br />
+			    <img class="videopreview" src="{{ video["preview"] }}" />
+		    </a>
+		    <p>Shared by 
+				<span class="actor">{{ video["actor"].pop() }}</span>
+				    {% if video["actor"].__len__() > 1 %}
+					{% for friend in video["actor"] %}
+						and <span class="actor">{{ friend }}</span>
+					{% endfor %}
+				    {% endif %}
+		    </p>
+		    <p>{{ video["created"] }}</p>
+		    <p class="compartir">Compartir
+			    <span class="soc_net">en fb</span>
+			    <span class="soc_net">en tuter</span>
+			    <span class="soc_net">y otras mierdas</span>
+		    </p>
+		</div><!-- video box -->
+
+    			<div class="text-box">
+				<p class="text-video">
+				    {{ video["desc"]|e }}
+				</p>
+			    <div class="comment_fb">
+			    </div>
+			    <div class="comment_vid">
+			    </div>
+			</div>
+	    </li>
+	    {%endfor%}
+	{% endif %}
+	 
+	</ul>

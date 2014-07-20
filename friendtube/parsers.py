@@ -6,7 +6,22 @@ import re
 
 import friendtube.parse_youtube as p_y
 
-def parse_json_video_listing(fb_result = None):
+def map_fb_to_custom(element = None):
+    """map facebook's result to our personal format"""
+    current = {}
+    try:
+        #current["link"] = get_embed(element["attachment"]["href"]) # old call
+        current["link"] = get_embed(element)
+    except NotImplementedError:
+        current["link"] = parse_link(element)
+    current["actor"] = parse_actor(element)
+    current["created"] = parse_created(element)
+    current["title"] = parse_title(element)
+    current["desc"] = parse_description(element)
+    current["preview"] = parse_preview(element)
+    return current
+
+def parse_fb_result_listing(fb_result = None):
     """ converts the result of a fb query to the expected dicts
     
     We will expect  a list of dict like this:
@@ -18,24 +33,46 @@ def parse_json_video_listing(fb_result = None):
 	  video["preview"]
          }
          ]
-     """
-    #assert(type(fb_result) == type({}))
-    plist = []  # list of videos
-    #return plist
-    for element in fb_result["data"]:
-        current = {}
-        try:
-            current["link"] = get_embed(element["attachment"]["href"])
-        except NotImplementedError:
-            current["link"] = element["attachment"]["href"]
-        current["actor"] = parse_actor(element)
-        current["created"] = parse_created(element)
-        current["title"] = element["attachment"]["name"]
-        current["desc"] = parse_description(element)
-        current["preview"] = parse_preview(element)
+    """
+    return [ map_fb_to_custom(elem) for elem in fb_result["data"] ]
+#    #assert(type(fb_result) == type({}))
+#    plist = []  # list of videos
+#    #return plist
+#    for element in fb_result["data"]:
+#        #inside this for you could find all the content of map_fb_to_custom.
+#        plist.append(current)
+#    return plist 
 
-        plist.append(current)
-    return plist 
+def parse_title(element = None):
+    """getter method for the href element of the facebook results"""
+    #- fall to None by default
+    if element == None:
+        return None
+
+    #- get the title or none
+    title = ""
+    try:
+        title = element["attachment"]["name"]
+    except KeyError:
+        return None
+
+    return title
+
+
+def parse_link(element = None):
+    """getter method for the href element of the facebook results"""
+    #- fall to None by default
+    if element == None:
+        return None
+
+    #- get the link or none
+    link = ""
+    try:
+        link = element["attachment"]["href"]
+    except KeyError:
+        return None
+
+    return link
 
 def parse_created(element = None):
     assert(element != None)
@@ -62,36 +99,63 @@ def parse_actor(element = None):
 
 def parse_preview(element = None):
     """tries to get a preview image for the video"""
-    assert(element != None)
-    preview = u"/style/preview_default.png" # It will always fail back to empty.
-    # TODO: find default image
+    preview = u"/style/preview_default.png" # It will always fail back to this
+    if element == None:
+        return preview
+
     try:
         get_preview = element["attachment"]["media"][0]["src"]
         if get_preview == "":
             raise IndexError
         preview = get_preview
-    except IndexError as e:
-        log.warning("A preview image was expected")
-        log.exception(e)
-        log.warning("See the provided element:")
-        log.warning(repr(element))
+    except (IndexError,KeyError) as e:
+        log.warning("loading video default preview picture")
+        log.debug(e) # might be log.exception(e)
+        log.debug("See the provided element:")
+        log.debug(repr(element))
     return preview
 
 def parse_description(element = None):
     """Tries to get the description content."""
-    assert(element != None)
+    if element == None:
+        return None
+
+    desc = ""
+    msg = ""
+    try:
+        desc = element["attachment"]["description"]
+        msg = element["message"]
+    except KeyError:
+        return None
+
     return u"{0}\n<br />\n ---------------------<br /> {1}".format(
-                            shorten_comment(element["attachment"]["description"]),
-                            shorten_comment(element["message"])
+                            shorten_comment(desc),
+                            shorten_comment(msg)
                             )
 
 
-def get_embed(link = None):
-    """returns the embed link to the video provided
+def get_embed(fb_elem = None):
     """
+    Receives a facebook result element.
+    returns the embed link to the video provided
+    If no element, or wrong, returns None
+    """
+    #- pre-flight checks
+    link = ""
+    try:
+        if (fb_elem == None) or (fb_elem == ""):
+            raise KeyError("Element not properly provided")
+
+        if type(fb_elem) == type(""):
+            log.warning("get embed falling back to legacy. please update the code")
+            link = fb_elem
+        else:
+            link = fb_elem["attachment"]["href"]
+    except KeyError as e:
+        return None
+
+    #- then proceed
     flink = "" # resulting link
-    assert(link != None)
-    assert(link != "")
     if link.find("youtu") > 0:
         # it is probably a youtube video
         flink = p_y.get_embed_youtube(link)
@@ -129,7 +193,7 @@ def clean_list(posts):
             i = indexes.pop()
             other = posts[i]
             #print "compared with " + other["link"]
-            if elem["link"] in other["link"]:
+            if elem != None and elem["link"] in other["link"]:
                 #print "found: " + repr(other["link"])
                 #print "with actor: " + repr(other["actor"])
                 found.extend(other["actor"])

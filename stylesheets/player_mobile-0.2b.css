@@ -1,0 +1,94 @@
+@import url("player-0.2b.css");
+
+/* Here we can overwrite only what is needed to customize for the mobile version.
+ * In the next release, it can be merged or moved to another style sheet
+ * specific for mobile.
+ */
+
+	#header{
+		width: 100%;
+		height:370px;
+		z-index:-5; /* just for ease, by now keep it behind. TODO: restore it to a proper position. */
+	}
+
+	#header>h1{
+		margin-left:0px;
+	}
+
+	
+	#content{
+		width:100%;
+		background-color:rgba(255,255,255,0.5);
+		box-shadow:10px 10px 10px 5px rgba(72,72,72,0.2);	
+		margin-top: 0px;
+		margin-left: 0px;
+		margin-right: 0px;
+		}
+
+
+	#user{
+		position:absolute;
+	}
+
+
+	.video{
+		overflow:hidden;
+		height:10em;
+	}
+
+	.deleter{
+		float:left; /* keep the button far from the thumb in the screen */
+	}
+
+	.video-box{
+		width: 100%;
+		/*float:right; /* parece que de float ostias */
+		float:none; /* mejor sin el */
+		margin:0px;
+		border-radius:0; /*aqui no es relevante.va en .video */
+	}
+
+	.video-box>p{
+		position:absolute;
+		top:50%;
+		/*
+		 * display:none; 
+		*/
+	}
+
+	.actor{
+		display:inline !important;
+	}
+
+	.created{
+		color:black; /* dummy. only to make it appear in the live editor */
+		display:none; 
+	}
+
+	.sharedby{
+		color:black; /* dummy. only to make it appear in the live editor */
+	}
+	
+	.text-title{
+		font-size:1.4em; /*relative font size */
+		line-height:1.1em;
+		width:50%;
+		margin:0px;
+		position:absolute;
+		left:2.1em;
+	}
+
+	.videopreview{
+		position:absolute; /* Maybe not such a good idea, it hides the title behind */
+		top:0px;
+		right: 0px;
+	}
+
+	.compartir{
+		display:none; /* We hide some features in the mobile version */
+	}
+
+	.text-box{
+		display:none; /* We hide some features in the mobile version */
+	}
+

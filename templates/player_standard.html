@@ -1,8 +1,8 @@
 <html>
 
 <head>
-{% include "meta.html" %}
-{% include "headScripts.html" %}
+{% include "inc_meta.html" %}
+{% include "inc_headScripts.html" %}
 </head>
 
 <body class=" __plain_text_READY__">
@@ -23,7 +23,7 @@
 
 </div>
 <div id="content">
-{% include "error.html" %}
+{% include "inc_error.html" %}
 <div id="video-list">
 
 <ul id="sortable">
@@ -44,7 +44,7 @@
 	    {% endif %}
 	    </p>
 	    <p>{{ video["created"] }}</p>
-	    <p>{{ video["desc"] }}
+	    <p>{{ video["desc"]|e }}
 	    </p>
 	    <p id="compartir">Compartir
 		    <span class="soc_net">en fb</span>
@@ -82,7 +82,7 @@ function getActorName(uid)
 	$( ".actor" ).text(actor_name)
 </script>
     <div id=uservoice>
-	{% include "uservoice.html" %}
+	{% include "inc_uservoice.html" %}
     </div>
 </body>
 </html>

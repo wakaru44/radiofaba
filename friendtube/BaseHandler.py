@@ -43,8 +43,8 @@ class BaseHandler(webapp2.RequestHandler):
     """
     @property
     def current_user(self):
-        log.warning("The instance was called from: " + self.app.active_instance.request.application_url)
-        log.warning("The instance was called from: " + get_application_id())
+        log.info("The instance was called from: " + self.app.active_instance.request.application_url)
+        log.info("The instance was called from: " + get_application_id())
         if self.session.get("user"):
             # User is logged in
             return self.session.get("user")
@@ -110,7 +110,7 @@ class BaseHandler(webapp2.RequestHandler):
         """
         return self.session_store.get_session()
 
-    def render(self, values = {}, template = "home.html", user = None):
+    def render(self, values = {}, template = "home-0.0.html", user = None):
         """render the values in the template.
         by default it goes to the index page"""
         # There are some default values that we will always use
@@ -141,14 +141,15 @@ class BaseHandler(webapp2.RequestHandler):
             else:
                 cu = user
             graph = facebook.GraphAPI(cu["access_token"])
-            log.debug("doing Query: " + query)
+            log.debug("doing Query: " + repr(query))
             if fql:
                 # Perform the fql query
                 result = graph.fql(query)
+                #log.debug("fql result: " + repr(result)) # noisy
             else:
                 # Its a graph api query
                 result = graph.get_object(query)
-                ##log.debug( u"result"+ repr(result))
+                log.debug("graph result: " + repr(result))
         except LogoutException as e:
             log.exception(e)
             raise # this should be catched the later the better, on the caller

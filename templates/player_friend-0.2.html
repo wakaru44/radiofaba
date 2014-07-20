@@ -1,0 +1,60 @@
+<!DOCTYPE HTML>
+<html lang="es">
+<head>
+{% include "inc_meta.html" %}
+{% include "inc_headScripts.html" %}
+	
+	<link rel="stylesheet" type="text/css" media="screen and (max-width:1900px)" href="style/player-0.2b.css">	
+    
+</head>
+
+<body class=" __plain_text_READY__">
+
+<!-- This loads the YouTube IFrame Player API code -->
+<script src="http://www.youtube.com/player_api"></script>
+
+<div id="fb-root"></div> <!-- fb button -->
+
+<div id="header"><h1>FriendTube</h1></div>
+				    
+<div id="content">
+	{% include "inc_usertab.html" %} 
+
+	<div id="subtitle"><p class="text-leyend">Latest videos shared by <span id="this_friend">one of your friends</span></p>
+		<p id="this_friends_profile">:D </p>
+       	</div>
+	<br>
+	<br>
+	<br>
+	{% include "inc_error.html" %}
+	{% include "inc_data.html" %}
+
+        {% if friends %}
+        <div id=friend_list>
+    	    <p> Other friends sharing videos.</p>
+	    <p class="advice" > You can browse by their particular playlist </p>
+    	    <ul>
+    		    {% for friend in friends %}
+    		    <li>
+    		    <span><a href="/friend?friend={{friend["id"]}}" target="_blank">
+    		    <img src="{{ friend["pic"] }}" alt="picture of {{ friend["name"] }}" />
+				    {{ friend["name"] }}</a></span>
+    		    </li>
+    		    {% endfor %}
+    	    </ul>
+        </div>
+	{% endif %}
+
+
+	{% include "inc_video_listing.html" %}
+
+</div>
+{% include "inc_user2name_translator.html" %}
+{% include "inc_uservoice.html" %}
+{% include "inc_analytics.html" %}
+
+</body>
+</html>
+
+
+
