@@ -23,7 +23,15 @@
 <!-- load fb button -->
 {% include "inc_fbbutton2.html" %}
 
-<div id="header"><h1>FriendTube</h1></div>
+<div id="header">
+	<h1>FriendTube</h1>
+	<div class="fb-like"
+		id= "mylike"
+		data-href="http://friendtu.be"
+		data-layout="standard" data-action="like"
+		data-show-faces="true" data-share="true">
+	</div>
+</div>
 				    
 <div id="content">
 	{% include "inc_usertab.html" %} 

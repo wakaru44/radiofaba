@@ -14,13 +14,22 @@
 	
 	#header{
 		width:60%;
-		height:500px;
+		height:370px;
 		margin:0 auto 0 auto;
 		background-repeat: no-repeat;
 		position: absolute;
-		z-index:-1;
+		z-index:1;
 		}
 		
+	#mylike{
+		margin: 20px 160px;
+		color: white
+	}
+
+	span#u_0_3{
+		color:white;
+	}
+
 	#content{
 		width:80%;
 		box-shadow:10px 10px 10px 5px rgba(72,72,72,0.2);	
