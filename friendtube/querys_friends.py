@@ -115,11 +115,11 @@ fql_list_of_good_source_friends_and_others = """SELECT
                     )
                 AND
                     strpos(attachment.href, 'youtu') >= 0
-                LIMIT 100000
+                LIMIT 10000
             ) 
         AND
             strpos(attachment.href, 'youtu') >= 0
-        LIMIT 1000000
+        LIMIT 100000
 """
 
 fql_list_of_good_source_friends = """SELECT
