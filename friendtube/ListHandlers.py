@@ -181,8 +181,9 @@ class ListHandlerWithFriends(ListHandler):
             log.info("Showing latest videos and panel of friends")
             query = querys.compose_multiquery([
                         querys.filters_newsfeed,
-                        querys.fql_friends_profiles.format(querys.fql_list_of_good_source_friends_and_others) # few but somehow good results
-                        #querys.fql_friends_profiles.format(querys.fql_friends) # too few results
+                        querys.fql_friends_profiles.format(querys.fql_friends) # with v1 works all right
+                        #querys.fql_friends_profiles.format(querys.fql_list_of_good_source_friends_and_others) # few but somehow good results
+                        #querys.fql_friends_profiles.format(querys.fql_friends) # too few results with v2
                         #querys.fql_friends_profiles.format(querys.fql_friends_on_newsfeed)  # too many irrelevant results
             ])
             parsed_results = self.get_video_and_friends_listing(query, fql=True) # NOTE we can override the query here.
