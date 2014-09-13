@@ -27,7 +27,7 @@ class ListHandler(BS.BaseHandler):
             if parsed_list["error"] == "Please relogin again":
                 raise LogoutException("The user must login again")
                 #log.warning("Self redirecting to logout")
-                #error = self.redirect("/logout")  # If we detect logged out here, go home
+            #error = self.redirect("/logout")  # If we detect logged out here, go home
             else:
             # with the old, show sample data, this should be activated
             ### And render
@@ -147,10 +147,8 @@ class FromAFriendHandler(ListHandler):
 class MultiQueryListHandler(ListHandler):
     """uses a multifql custom method.
     the multiquerys are isued as json encoded querys, with the fql flag on.
-    It can me hand made, or can be formed with the querys.compose_multi method.
+    It can be hand made, or can be formed with the querys.compose_multi method.
     """
-    #TODO we still need to handle the multiple results to be able to do
-    #something with this.
     def get(self):
         from mock import patch
         with patch("friendtube.parsers.clean_list", lambda x: x):
