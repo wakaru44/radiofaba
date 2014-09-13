@@ -20,3 +20,6 @@ script:
   #- nosetests --with-color  tests/test_parsers.py # no color matey. but the fabric guy does it.
   # nosetests --with-gae
   bash -x run_tests.sh
+
+notifications:
+          webhooks: http://ben.ingary.net/hubot
