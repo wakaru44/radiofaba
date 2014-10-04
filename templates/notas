@@ -1,0 +1,8 @@
+Los archivos que empiezan por inc_* son para incluir en otras plantillas (asi que no incluyen el tag <html>)
+
+El resto de archivos html deben ser plantillas completas
+
+
+Normalmente, las versiones pares (2,4,6) corresponden con las versiones editadas por juan, mientras que las de yoli corresponden con las impares.
+
+

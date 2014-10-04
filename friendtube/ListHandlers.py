@@ -128,6 +128,7 @@ class FromAFriendHandler(ListHandler):
         """Shows the list of videos from a specific friend.
         """
         #TODO this is quite dangerous in a production app....
+        # the only check we are making is that is a number.
         # but for now, seems useful...
         try:
             friend = self.request.params["friend"]
@@ -242,10 +243,11 @@ class ListHandlerWithFriends(ListHandler):
                 if qname == "query1":
                     #- selecting specific querys through name
                     video_list_parsed = rparse.parse_fb_result_listing({"data": qresult}) # gets the listing in our format and structure
-                    #listing = rparse.clean_list(video_list_parsed)  # eliminate duplicates
+                    listing = rparse.clean_list(video_list_parsed)  # eliminate duplicates
                     #log.debug("clean res: " + repr(video_list_parsed)) #noisy
                     querys_results.append({ "name": qname,  
-                                     "payload": video_list_parsed})
+                                     "payload": listing})
+                                     #"payload": video_list_parsed})
                 else:
                     #- the default behaviour for unnamed querys
                     querys_results.append({"name": qname,

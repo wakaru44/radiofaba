@@ -3,6 +3,10 @@ from mock import Mock, MagicMock, patch
 
 import friendtube.parsers as pr
 
+# needed to test clean_list
+import sampleresult_clean_list as samples
+import friendtube.parsers as rparse
+
 ## class test_get_embed_youtube():
 ##     def test_nothing_raises_exception(self):
 ##         assert_raises(AssertionError,pr.get_embed_youtube)
@@ -276,11 +280,36 @@ class test_clean_list_removes_duplicates():
         clean = pr.clean_list(things)
         eq_(len(clean), 2)
 
-    @nottest
     def test_add_actors(self):
+        """It is supposed to add actors to the dupes"""
         #TODO: write this test
-        things = self.data
-        clean = pr.clean_list(things)
-        print len(clean)
-        assert("this" == "valid")
+        data = samples.result_one_dupe
+        video_list_parsed = rparse.parse_fb_result_listing(data)
+        vidsn = len(video_list_parsed) 
+        cleaned = pr.clean_list(video_list_parsed)
+        not_alone = filter(None, 
+               map(lambda x: True if len(x["actor"]) >1 else None,
+                   cleaned))
+
+
+        eq_(len(not_alone) , 1 )
+
+
+    def test_clean_list_sample_works(self):
+        """it parses a regular list and removes one duplicate"""
+        data = samples.result_one_dupe
+        video_list_parsed = rparse.parse_fb_result_listing(data)
+        vidsn = len(video_list_parsed) 
+        clean = pr.clean_list(video_list_parsed)
+        eq_(len(clean), vidsn -1 ) # it removes 1 dup
+
+
+    def test_clean_list_sample_noactor(self):
+        """when there is no actor, we assume is sample data"""
+        data = samples.result_noactornotime
+        video_list_parsed = rparse.parse_fb_result_listing(data)
+        vidsn = len(video_list_parsed) 
+        clean = pr.clean_list(video_list_parsed)
+        eq_(len(clean), vidsn ) # it removes 1 dup
+
 
