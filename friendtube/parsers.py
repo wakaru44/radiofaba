@@ -128,7 +128,7 @@ def parse_description(element = None):
     except KeyError:
         return None
 
-    return u"{0}\n<br />\n ---------------------<br /> {1}".format(
+    return u"{0}\n<br />\n <hr /><br /> {1}".format(
                             shorten_comment(desc),
                             shorten_comment(msg)
                             )
@@ -179,8 +179,7 @@ def shorten_comment(comment = None, limit = 100):
 def clean_list(posts):
     """takes a list of videos (already parsed) and returns it clean with 
     the actors summed up in one single  list"""
-    # NOT WORKING
-    #TODO: implement this asap
+    #TODO: implement this asap in all listings. So far, it seems working
     cleaned = []
     while len(posts) > 0 :
         elem = posts.pop()

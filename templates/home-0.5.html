@@ -4,7 +4,7 @@
 
 {% include "inc_meta.html" %}
 	
-	<link rel="stylesheet" type="text/css" media="screen and (max-width:1900px)" href="style/home-0.4.css">	
+	<link rel="stylesheet" type="text/css" media="screen and (max-width:1900px)" href="style/home-0.5.css">	
     
 </head>
 
@@ -24,24 +24,7 @@
 		</div>
 				    
 	<div id="content">      
-
-		<div id="user">
-
-		    {% if current_user %}
-		      <p>
-			<a href="{{ current_user.profile_url }}">
-			<img src="http://graph.facebook.com/v2.0/{{ current_user.id }}/picture?type=square"/></a>
-		      </p>
-		      <p>Hello, {{ current_user.name|escape }}</p>
-		      <fb:login-button autologoutlink="true" scope="read_stream"></fb:login-button>
-		    {% else %}
-		      <p>
-		      <a></a><img/><!-- @YOLI: esto esta aqui como chapuza porque cuando estas deslogueado el boton se descoloca-->
-		      <fb:login-button autologoutlink="true" scope="read_stream"></fb:login-button>
-		      </p>
-		    {% endif %}
-		</div>
-
+		<div id="user"></div>
 	<div id="subtitle"><p class="text-leyend">
 	Enjoy the videos you and your friends share on facebook like a TV 
 	<br>
@@ -68,6 +51,24 @@
 
     {% include "inc_error.html" %}
    
+		<div id="reuser">
+
+		    {% if current_user %}
+		      <p>
+			<a href="{{ current_user.profile_url }}">
+			<img src="http://graph.facebook.com/v2.0/{{ current_user.id }}/picture?type=square"/></a>
+		      </p>
+		      <p>Hello, {{ current_user.name|escape }}</p>
+		      <fb:login-button autologoutlink="true" scope="read_stream"></fb:login-button>
+		    {% else %}
+		      <p>
+		      <a></a><img/><!-- @YOLI: esto esta aqui como chapuza porque cuando estas deslogueado el boton se descoloca-->
+		      <fb:login-button autologoutlink="true" scope="read_stream"></fb:login-button>
+		      </p>
+		    {% endif %}
+		</div>
+
+
 {% include "inc_friendlisting.html" %}
 {% include "inc_data.html" %}
 {% include "inc_uservoice.html" %}
@@ -75,3 +76,4 @@
 
 </body>
 </html>
+

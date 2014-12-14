@@ -21,5 +21,5 @@ script:
   # nosetests --with-gae
   bash -x run_tests.sh
 
-notifications:
-          webhooks: http://ben.ingary.net/hubot
+#notifications:
+#          webhooks: http://ben.ingary.net/hubot

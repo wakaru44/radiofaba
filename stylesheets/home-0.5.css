@@ -1,4 +1,6 @@
 /* elementos comunes */
+@import url("fonts-0.3.css");
+@import url("player-0.3_color_standard.css");
 
 	* {
 		margin:0;
@@ -6,20 +8,17 @@
 		}
 	
 	body{
-		background-image: url("background.jpg");
-		font-family: Helvetica,Century Gothic,sans-serif;
-		color:black;
+		font-family: Bellota,Century Gothic,sans-serif;
 		font-size:15px;
 		line-height:1.8em;
 		}
-	
+		
 	#header{
 		width:60%;
-		height:370px;
+		height:170px;
 		margin:0 auto 0 auto;
-		background-image: url("square.png");
-		background-repeat: no-repeat;
 		position: absolute;
+		z-index: 100;
 		}
 		
 	#mylike{
@@ -28,27 +27,23 @@
 
 	#content{
 		width:80%;
-		background-color:rgba(255,255,255,1);
-		box-shadow:10px 10px 10px 5px rgba(72,72,72,0.2);	
-		margin-top: 0px;
-		margin-left: 10%;
-		margin-right: 10%;
+		margin: 0px 10%;
 		padding-bottom:50px;
+		opacity: 0.85;
 		}
 		
 		
 /* etiquetas creadas por ti (y derivadas de éstas) que he modificado */
 		
 	#user{
-		width:27%;
+		width:100%;
 		height:90px;
-		background-color:rgba(216,219,219,1);
 		border-bottom-right-radius:15px;
 		-moz-border-bottomright-radius:25px;
 		border-bottom-left-radius:15px;
 		-moz-border-bottomleftt-radius:25px;
-		box-shadow:2px 2px 8px #574D4B;	
-		margin-left:75%;
+		background-color:white; !important
+		box-shadow:none; !important
 		}
 	#user img{
 		margin:5% 5% 0 10%;
@@ -57,7 +52,6 @@
 	
 	#text-corpse{
 		width:90%;
-		background-color:rgba(216,219,219,0.8);
 		border-top-right-radius:15px;
 		-moz-border-topright-radius:25px;
 		border-top-left-radius:15px;
@@ -95,27 +89,53 @@
 		
 		h1{
 		font-family: Bellota,Century Gothic,sans-serif;
-		color:white;
-		text-shadow: 3px 3px #574D4B;
 		font-size:50px;
         font-weight: bold;
         margin-top:45px;
         margin-left:159px;
 		}
 		
+		.bigfont{
+			font-size:1.4em;
+		}
+
 		#subtitle{
 		width:94%;
-        font-family: Bellota,Century Gothic,sans-serif;
-		color:grey;
-		font-size:16px;
+		font-family: Bellota,Century Gothic,sans-serif;
+		font-size:1.4em;
 		text-align: right;
 		margin-top:120px;
+		}
+
+		#reuser{
+			text-align:center;
+			padding:0 auto;
+		}
+
+		#reuser p{
+			margin: auto;
+			padding:1em;
+			width:50%;
+			text-align:left;
+			
+		}
+		
+		#error{
+			text-align:center;
+			padding:0 auto;
+		}
+
+		#error p{
+			margin: auto;
+			padding:1em;
+			width:50%;
+			text-align:left;
+			
 		}
 		
 		.text-user{
 		text-align:justify;
-		font-family:Century Gothic,sans-serif;
-		color:black;
+		font-family: Bellota,Century Gothic,sans-serif;
 		font-size:13px;
 		line-height:2,5em;
 		padding-top:11px;		
@@ -123,13 +143,11 @@
 		
 		a:link{
 		text-decoration:none;
-		color:#678891;
 		}
 		a:visited{
 		text-decoration:none;
-		color:white;
 		}
 		a:hover{
 		text-decoration:none;
-		color:rgba(255,255,255,0.7);
 		}
+
