@@ -26,7 +26,7 @@ class HomeHandler(BS.BaseHandler):
             log.warning("The user is logged out")
             friends = {}
             friends["data"] = None
-            friends["error"] = "Log in with your facebook id"
+            friends["error"] = "Log in with your facebook id, and go to <a href=/list> the videos</a>"
             current_user = None
             # we should show the demo page anyway
         self.render({"friends" : friends["data"], "error":friends["error"] },
@@ -92,7 +92,7 @@ class DirectHomeHandler(HomeHandler):
             log.warning("The user is logged out")
             friends = {}
             friends["data"] = None
-            friends["error"] = "Log in with your facebook id"
+            friends["error"] = "Log in with your facebook id, and go to <a href=/list> the videos</a>"
             current_user = None
             # we should show the demo page anyway
         self.render({"friends" : friends["data"], "error":friends["error"] },
