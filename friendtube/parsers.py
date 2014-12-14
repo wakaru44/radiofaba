@@ -128,7 +128,7 @@ def parse_description(element = None):
     except KeyError:
         return None
 
-    return u"{0}\n<br />\n ---------------------<br /> {1}".format(
+    return u"{0}\n<br />\n <hr /><br /> {1}".format(
                             shorten_comment(desc),
                             shorten_comment(msg)
                             )

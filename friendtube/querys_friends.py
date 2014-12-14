@@ -115,11 +115,11 @@ fql_list_of_good_source_friends_and_others = """SELECT
                     )
                 AND
                     strpos(attachment.href, 'youtu') >= 0
-                LIMIT 100000
+                LIMIT 10
             ) 
         AND
             strpos(attachment.href, 'youtu') >= 0
-        LIMIT 1000000
+        LIMIT 100
 """
 
 fql_list_of_good_source_friends = """SELECT
@@ -144,4 +144,19 @@ fql_list_of_good_source_friends = """SELECT
             strpos(attachment.href, 'youtu') >= 0
         LIMIT 1000000
 """
+
+fql_list_of_good_source_friends_simple = """
+                SELECT 
+                    actor_id
+                FROM stream
+                WHERE filter_key in ( 
+                    Select filter_key
+                        from stream_filter
+                        where uid = me() 
+                    )
+                AND
+                    strpos(attachment.href, 'youtu') >= 0
+                LIMIT 100
+"""
+
 

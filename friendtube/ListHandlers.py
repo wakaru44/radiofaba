@@ -10,7 +10,7 @@ import friendtube.querys as querys
 import BaseHandler as BS
 from BaseHandler import LogoutException
 
-player_template = "player-0.2d.html"
+player_template = "player-0.3.html"
 with_friends_template = "player_withfriends-0.2.html"
 friends_template = "player_friend-0.2.html"
 future_template = "player-0.2c.html"

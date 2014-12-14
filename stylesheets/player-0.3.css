@@ -7,37 +7,33 @@
 	}
 	
 	body{
-		font-family: Helvetica,Century Gothic,sans-serif;
+		/*font-family: Helvetica,Century Gothic,sans-serif;*/
+		font-family: Bellota,Century Gothic,sans-serif;
 		font-size: 15px;
 		line-height: 1.8em;
 	}
 	
+		
 	#header{
 		width:60%;
-		height:370px;
+		height:170px;
 		margin:0 auto 0 auto;
-		background-repeat: no-repeat;
 		position: absolute;
 		z-index:1;
+
 		}
 		
 	#mylike{
 		margin: 20px 160px;
-		color: white
 	}
-/* CRAP?
-	span#u_0_3{
-		color:white;
-	}
-*/
+
+		.bigfont{
+			font-size:1.4em;
+		}
 
 	#content{
 		width:80%;
-		box-shadow:10px 10px 10px 5px rgba(72,72,72,0.2);	
-		margin: 0px 10%;/* CRAP?
-		margin-top: 0px;
-		margin-left: 10%;
-		margin-right: 10%;*/
+		margin: 0px 10%;
 		opacity: 0.85;
 		}
 
@@ -117,7 +113,6 @@
 	-moz-border-bottomright-radius:25px;
 	border-bottom-left-radius:15px;
 	-moz-border-bottomleftt-radius:25px;
-	box-shadow:2px 2px 8px #574D4B;	
 	margin-left:75%;
 }
 #user img{
@@ -126,7 +121,8 @@
 }
 	
 #user p {
-	font-family: Helvetica,Century Gothic,sans-serif;
+	/*font-family: Helvetica,Century Gothic,sans-serif;*/
+		font-family: Bellota,Century Gothic,sans-serif;
 	font-size: 15px;
 	line-height: 1.8em;
 }
@@ -137,7 +133,6 @@
 		
 		h1{
 		font-family: Bellota,Century Gothic,sans-serif;
-		text-shadow:5px 5px rgba(72,72,72,0.5);
 		font-size:50px;
         font-weight: bold;
         margin-top:23px;
@@ -153,7 +148,8 @@
 		
 		.text-title{
 		text-align:justify;
-		font-family:Century Gothic,sans-serif;
+		/*font-family:Century Gothic,sans-serif;*/
+		font-family: Bellota,Century Gothic,sans-serif;
 		font-size:18px;
 		line-height:1.8em;
 		}
@@ -170,13 +166,15 @@
 		
 		.text-small{
 		text-align:center;
-		font-family: Century Gothic,sans-serif;
+		/*font-family: Century Gothic,sans-serif;*/
+		font-family: Bellota,Century Gothic,sans-serif;
 		font-size:13px;
 		margin-top:105px;
 		}
 		
 		h2{
-		font-family: Georgia, Serif;
+		/*font-family: Georgia, Serif;*/
+		font-family: Bellota,Century Gothic,sans-serif;
 		font-style: italic;
 		font-size:25px;
 		margin-left:50px;
@@ -184,7 +182,8 @@
 		}
 		
 		h3{
-		font-family: Georgia, Serif;
+		/*font-family: Georgia, Serif;*/
+		font-family: Bellota,Century Gothic,sans-serif;
 		font-style: italic;
 		font-size:25px;
 		margin-left:50px;

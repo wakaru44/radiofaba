@@ -1,8 +1,7 @@
 
 	body{
 		color: black;
-		/*background-image: url("background.jpg");*/
-		background: top center no-repeat #B1C0C7 url("bg-square2.jpg");
+		background: top center no-repeat #B1C0C7 url("background.jpg");
 	}
 
 	#header{
@@ -14,13 +13,22 @@
 
 	#content{
 		background-color:rgba(255,255,255,1);
+		box-shadow:10px 10px 10px 5px rgba(72,72,72,0.2);	
 	}
 
+#subtitle{
 
+		color:grey;
+
+	}
 	#menu{
 		background-color:lightgrey;
 	}
 	
+	#mylike{
+		color: white
+	}
+
 	.video{
 		background-color:rgba(216,219,219,0.8);
 	}
@@ -35,14 +43,20 @@
 
 #user{
 	background-color:rgba(216,219,219,1);
+		box-shadow:2px 2px 8px #574D4B;	
 }
 
 #user p {
 	color: black;
 }
 
+		.text-user{
+		color:black;
+	}
 		h1{
 		color:white;
+		text-shadow: 3px 3px #574D4B;
+		/*text-shadow:5px 5px rgba(72,72,72,0.5); /*player */
 
 
 	}
@@ -64,6 +78,9 @@
 		color:rgba(255,255,255,0.7);
 	}
 
+	#text-corpse{
+		background-color:rgba(216,219,219,0.8);
+	}
 		h2{
 		color:#8a1e03;
 	}
@@ -74,10 +91,12 @@
 
 		a:link{
 		color:#0F6958;
+		/*color:#678891; //found in home */
 	}
 
 		a:visited{
 		color:#0F6958;
+		/*color:white; //found in home */
 	}
 
 	a:hover{

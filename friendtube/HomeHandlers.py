@@ -10,7 +10,7 @@ import BaseHandler as BS
 from BaseHandler import LogoutException
 
 
-home_template = "home-0.4.html"  # the normal home
+home_template = "home-0.5.html"  # the normal home
 post_template = "home.html"  #used by default in the post for home
 canvas_template = "canvas-0.2.html"  # used for the facebook canvas page
 
