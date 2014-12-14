@@ -1,0 +1,88 @@
+
+	body{
+		color: black;
+		/*background-image: url("background.jpg");*/
+		background: top center no-repeat #B1C0C7 url("bg-square2.jpg");
+	}
+
+	#header{
+		/*background-image: url("square.png");*/
+	}
+	#header h1{
+		color:#C11;
+	}
+
+	#content{
+		background-color:rgba(255,255,255,1);
+	}
+
+
+	#menu{
+		background-color:lightgrey;
+	}
+	
+	.video{
+		background-color:rgba(216,219,219,0.8);
+	}
+
+    .video-box{
+		background-color:;
+	}
+
+     .text-box{
+		background-color:rgba(255,255,255,0.4);
+	}
+
+#user{
+	background-color:rgba(216,219,219,1);
+}
+
+#user p {
+	color: black;
+}
+
+		h1{
+		color:white;
+
+
+	}
+
+		.text-leyend{
+		color:grey;
+	}
+
+		.text-title{
+		color:#6B8387;
+
+	}
+
+		.text-video{
+		color:#949681;
+	}
+
+		.text-small{
+		color:rgba(255,255,255,0.7);
+	}
+
+		h2{
+		color:#8a1e03;
+	}
+
+		h3{
+		color:#8a1e03;
+	}
+
+		a:link{
+		color:#0F6958;
+	}
+
+		a:visited{
+		color:#0F6958;
+	}
+
+	a:hover{
+		color:rgba(255,255,255,0.7);
+	}
+
+			
+			
