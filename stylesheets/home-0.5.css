@@ -1,0 +1,153 @@
+/* elementos comunes */
+@import url("fonts-0.3.css");
+@import url("player-0.3_color_standard.css");
+
+	* {
+		margin:0;
+		padding:0;
+		}
+	
+	body{
+		font-family: Bellota,Century Gothic,sans-serif;
+		font-size:15px;
+		line-height:1.8em;
+		}
+		
+	#header{
+		width:60%;
+		height:170px;
+		margin:0 auto 0 auto;
+		position: absolute;
+		z-index: 100;
+		}
+		
+	#mylike{
+		margin: 20px 160px;
+	}
+
+	#content{
+		width:80%;
+		margin: 0px 10%;
+		padding-bottom:50px;
+		opacity: 0.85;
+		}
+		
+		
+/* etiquetas creadas por ti (y derivadas de éstas) que he modificado */
+		
+	#user{
+		width:100%;
+		height:90px;
+		border-bottom-right-radius:15px;
+		-moz-border-bottomright-radius:25px;
+		border-bottom-left-radius:15px;
+		-moz-border-bottomleftt-radius:25px;
+		background-color:white; !important
+		box-shadow:none; !important
+		}
+	#user img{
+		margin:5% 5% 0 10%;
+		float:left;
+		}
+	
+	#text-corpse{
+		width:90%;
+		border-top-right-radius:15px;
+		-moz-border-topright-radius:25px;
+		border-top-left-radius:15px;
+		-moz-border-topleftt-radius:25px;
+		border-bottom-right-radius:15px;
+		-moz-border-bottomright-radius:25px;
+		border-bottom-left-radius:15px;
+		-moz-border-bottomleftt-radius:25px;
+		margin-top: 25px;
+		margin-left:5%;
+    	}
+
+     .text-box{
+		text-align: left;
+		margin-left:50px;
+		padding-top:50px;
+    	}
+    
+     #friend_list{
+	     margin: 3em auto 0;
+		text-align: left;
+		padding:0 0 2em;
+	}
+
+	ul {
+		list-style:none;
+		}
+
+ 	 #friend_list img{
+    	margin-left:50px;
+    	}
+
+
+/* textos a mayores */
+		
+		h1{
+		font-family: Bellota,Century Gothic,sans-serif;
+		font-size:50px;
+        font-weight: bold;
+        margin-top:45px;
+        margin-left:159px;
+		}
+		
+		.bigfont{
+			font-size:1.4em;
+		}
+
+		#subtitle{
+		width:94%;
+		font-family: Bellota,Century Gothic,sans-serif;
+		font-size:1.4em;
+		text-align: right;
+		margin-top:120px;
+		}
+
+		#reuser{
+			text-align:center;
+			padding:0 auto;
+		}
+
+		#reuser p{
+			margin: auto;
+			padding:1em;
+			width:50%;
+			text-align:left;
+			
+		}
+		
+		#error{
+			text-align:center;
+			padding:0 auto;
+		}
+
+		#error p{
+			margin: auto;
+			padding:1em;
+			width:50%;
+			text-align:left;
+			
+		}
+		
+		.text-user{
+		text-align:justify;
+		font-family: Bellota,Century Gothic,sans-serif;
+		font-size:13px;
+		line-height:2,5em;
+		padding-top:11px;		
+		}
+		
+		a:link{
+		text-decoration:none;
+		}
+		a:visited{
+		text-decoration:none;
+		}
+		a:hover{
+		text-decoration:none;
+		}
+

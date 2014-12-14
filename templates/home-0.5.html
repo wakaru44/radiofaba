@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+
+{% include "inc_meta.html" %}
+	
+	<link rel="stylesheet" type="text/css" media="screen and (max-width:1900px)" href="style/home-0.5.css">	
+    
+</head>
+
+<body>
+
+<!-- moving to include fbbutton 	<div id="fb-root"></div> -->
+    {% include "inc_fbbutton.html" %}
+ 
+	<div id="header">
+		<h1>FriendTube</h1>
+		<div class="fb-like"
+			id= "mylike"
+			data-href="http://friendtu.be"
+			data-layout="standard" data-action="like"
+			data-show-faces="true" data-share="true">
+		</div>
+		</div>
+				    
+	<div id="content">      
+		<div id="user"></div>
+	<div id="subtitle"><p class="text-leyend">
+	Enjoy the videos you and your friends share on facebook like a TV 
+	<br>
+	Start playing one video and the rest will follow automaticlly
+	</p> </div>
+
+    {% if current_user %}
+    <div id="text-corpse">
+	    <div>
+	    </div>
+            <div>
+		    	<p class="text-box">Now you can view <a href="/withfriends">The videos and navigate among your friends</a>
+		    	Or review <a href="/ownlist">your own videos shared by you</a>
+			</p>
+			<p class="text-box">or <a href="/list">simply the videos</a> like the classic playlist
+			or <a href="/mobile">a Mobile version (still in beta)</a>
+			</p>
+	    </div>
+    <div><!-- corpse -->
+    {% endif %}
+    
+
+
+
+    {% include "inc_error.html" %}
+   
+		<div id="reuser">
+
+		    {% if current_user %}
+		      <p>
+			<a href="{{ current_user.profile_url }}">
+			<img src="http://graph.facebook.com/v2.0/{{ current_user.id }}/picture?type=square"/></a>
+		      </p>
+		      <p>Hello, {{ current_user.name|escape }}</p>
+		      <fb:login-button autologoutlink="true" scope="read_stream"></fb:login-button>
+		    {% else %}
+		      <p>
+		      <a></a><img/><!-- @YOLI: esto esta aqui como chapuza porque cuando estas deslogueado el boton se descoloca-->
+		      <fb:login-button autologoutlink="true" scope="read_stream"></fb:login-button>
+		      </p>
+		    {% endif %}
+		</div>
+
+
+{% include "inc_friendlisting.html" %}
+{% include "inc_data.html" %}
+{% include "inc_uservoice.html" %}
+{% include "inc_analytics.html" %}
+
+</body>
+</html>
+

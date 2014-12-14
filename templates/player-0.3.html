@@ -1,0 +1,63 @@
+<!DOCTYPE HTML>
+<html lang="es">
+<head>
+{% include "inc_meta.html" %}
+{% include "inc_headScripts.html" %}
+	
+	<link rel="stylesheet" type="text/css" media="screen and (max-width:1900px)" href="style/player-0.3.css">	
+	<link rel="stylesheet" type="text/css" media="screen and (max-width:1900px)" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+
+	<!-- experimenting with jQuery tooltips -->
+	 <script>
+		$(function() {
+			$( document ).tooltip();
+		});
+	 </script>
+    
+</head>
+
+<body class=" __plain_text_READY__">
+
+<!-- This loads the YouTube IFrame Player API code -->
+<script src="http://www.youtube.com/player_api"></script>
+<!-- load fb button -->
+{% include "inc_fbbutton.html" %}
+
+<div id="header">
+	<h1>FriendTube</h1>
+	<div class="fb-like"
+		id= "mylike"
+		data-href="http://friendtu.be"
+		data-layout="standard" data-action="like"
+		data-show-faces="true" data-share="true">
+	</div>
+</div>
+				    
+<div id="content">
+	{% include "inc_usertab.html" %} 
+
+	<div id="subtitle">
+		<p class="text-leyend">Start playing one video on the playlist, and the rest will be played automaticlly.
+		<br />
+		You can drag and drop to sort the list as you like, and even delete from the list those videos you dont want to play now.
+		<br />
+		In this grey menu, you can select other lists of videos.
+		</p>
+		<p id="menu"><a href="/ownlist">Your videos</a> | <a href="/withfriends">Browse by friend</a></p>
+	</div>
+<br>
+<br>
+<br>
+		{% include "inc_error.html" %}
+		{% include "inc_data.html" %}
+
+	{% include "inc_video_listing.html" %}
+	{% include "inc_user2name_translator.html" %}
+	{% include "inc_uservoice.html" %}
+	{% include "inc_analytics.html" %}
+
+</body>
+</html>
+
+
+
