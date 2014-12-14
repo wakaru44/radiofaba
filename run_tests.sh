@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Scripts to help running tests. 
+# This way, we can change the behaviour of the build
+# tools depending on the environment we are running on.
+
 ########################################
 echo "Launching regular tests"
 
